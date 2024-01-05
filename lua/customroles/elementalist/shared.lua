@@ -11,9 +11,9 @@ CreateConVar("ttt_elementalist_allow_lifesteal_upgrades", "1", FCVAR_REPLICATED,
 -- Durations & associated chances
 CreateConVar("ttt_elementalist_frostbite_effect_duration", "3", FCVAR_REPLICATED, "How long the Frostbite slow & freeze effect lasts. Value must be greater than 0 and less than 6", 1, 5)
 CreateConVar("ttt_elementalist_frostbite+_freeze_chance", "5", FCVAR_REPLICATED, "The percent chance shooting a victim which has been slowed by Frostbite will instead freeze them. Value must be greater than 0 and less than 101", 1, 100)
-CreateConVar("ttt_elementalist_pyromancer_burn_duration", "3", FCVAR_REPLICATED, "How long the Pryomancer effect should burn the victim for. 100 damage would scale for the full length. Value must be greater than 0 and less than 11", 1, 10)
+CreateConVar("ttt_elementalist_pyromancer_burn_duration", "3", FCVAR_REPLICATED, "How long the Pryomancer effect should burn the victim for. 100 damage would scale for the full length. Value must be greater than 0 and less than 6", 1, 5)
 CreateConVar("ttt_elementalist_pyromancer+_explode_chance", "5", FCVAR_REPLICATED, "The percent chance shooting a victim ignited by Pyromancer will cause them to explode. Value must be greater than 0 and less than 101", 1, 100)
-CreateConVar("ttt_elementalist_midnight_dim_duration", "50", FCVAR_REPLICATED, "How long the Midnight screen dimming effect should last. Value must be greater than 0 and less than 101", 1, 100)
+CreateConVar("ttt_elementalist_midnight_dim_duration", "3", FCVAR_REPLICATED, "How long the Midnight screen dimming effect should last. Value must be greater than 0 and less than 6", 1, 5)
 CreateConVar("ttt_elementalist_midnight+_blindness_chance", "5", FCVAR_REPLICATED, "The percent chance shooting a victim affected by Midnight will instead completely blind them. Value must be greater than 0 and less than 101", 1, 100)
 
 -- One-offs and associated chances

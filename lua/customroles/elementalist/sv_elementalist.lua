@@ -41,7 +41,6 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
     end
 
     -- Att is a valid elementalist damaging a valid player
-    local attId = att:SteamID64()
     local vicId = ent:SteamID64()
     local damage = math.Clamp(dmginfo:GetDamage(), 1, 100)
     local scale = damage * 0.01
@@ -163,9 +162,9 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
 
         local eyeang = ent:EyeAngles()
         if eyeang then
-            local j = GetConVar("ttt_elementalist_discharge_punch_power"):GetInt() * damage
-            eyeang.pitch = math.Clamp(eyeang.pitch + math.Rand(-j, j), -90, 90)
-            eyeang.yaw = math.Clamp(eyeang.yaw + math.Rand(-j, j), -90, 90)
+            local punchPower = GetConVar("ttt_elementalist_discharge_punch_power"):GetInt() * damage
+            eyeang.pitch = math.Clamp(eyeang.pitch + math.Rand(-punchPower, punchPower), -90, 90)
+            eyeang.yaw = math.Clamp(eyeang.yaw + math.Rand(-punchPower, punchPower), -90, 90)
             ent:SetEyeAngles(eyeang)
         end
 

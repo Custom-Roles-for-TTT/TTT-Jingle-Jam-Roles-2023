@@ -5,8 +5,11 @@ local IceOverlay, DarkOverlay = {
 }
 
 -- I ripped this from my other addon lol
-function CreateIceOverlay()
+function CreateIceOverlay(maxOverlay)
     if IsValid(IceOverlay) and ispanel(IceOverlay) then return end
+
+    local alphaCounter = 0
+    if maxOverlay then alphaCounter = 230 end
 
     timer.Simple(2, function() LocalPlayer():SetDSP(14, false) end) --We're assuming the player is emitting the ice-over sound
 
@@ -25,9 +28,8 @@ function CreateIceOverlay()
     overlayPanel:SetSize(IceOverlay:GetWide(), IceOverlay:GetTall())
     overlayPanel:SetPos(0, 0)
     overlayPanel.Paint = function()
-        overlayPanel.alphaCounter = overlayPanel.alphaCounter or 0
-        if overlayPanel.alphaCounter <= 200 then overlayPanel.alphaCounter = overlayPanel.alphaCounter + 0.5 end
-        surface.SetDrawColor(255, 255, 255, overlayPanel.alphaCounter)
+        if alphaCounter <= 125 then alphaCounter = alphaCounter + 0.5 end
+        surface.SetDrawColor(255, 255, 255, alphaCounter)
         surface.SetMaterial(IceOverlayMat)
         surface.DrawTexturedRect(0, 0, overlayPanel:GetWide(), overlayPanel:GetTall())
     end
@@ -67,7 +69,7 @@ end)
 net.Receive("BeginIceScreen", function(len)
     local frozen = net.ReadBool()
 
-    CreateIceOverlay()
+    CreateIceOverlay(frozen)
 end)
 
 net.Receive("EndIceScreen", function(len)
