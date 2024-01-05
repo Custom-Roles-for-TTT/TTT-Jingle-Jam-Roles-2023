@@ -35,18 +35,21 @@ SWEP.AllowDrop              = false
 SWEP.NoSights               = true
 
 function SWEP:PlaceTracker()
-    self.Weapon:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
-    self.Weapon:SetNextSecondaryFire( CurTime() + self.Primary.Delay )
+    self:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
+    self:SetNextSecondaryFire( CurTime() + self.Primary.Delay )
 
     if SERVER then
         local ply = self:GetOwner()
-        local trace = ply:GetEyeTrace()
-        local traceEnt = trace.Entity
 
-        if IsValid(traceEnt) and traceEnt:IsPlayer() and traceEnt:Alive() and not GAMEMODE.PHYSICIAN:IsPlayerBeingTracked(ply, traceEnt) and (ply:EyePos() - trace.HitPos):Length() < 100 then
-            self.Weapon:SendWeaponAnim(ACT_VM_HITCENTER)
-            GAMEMODE.PHYSICIAN:AddNewTrackedPlayer(ply, traceEnt)
-            traceEnt:EmitSound("buttons/combine_button7.wav")
+        if ply then
+            local trace = ply:GetEyeTrace()
+            local traceEnt = trace.Entity
+
+            if IsValid(traceEnt) and traceEnt:IsPlayer() and traceEnt:Alive() and not GAMEMODE.PHYSICIAN:IsPlayerBeingTracked(ply, traceEnt) and (ply:EyePos() - trace.HitPos):Length() < 100 then
+                self:SendWeaponAnim(ACT_VM_HITCENTER)
+                GAMEMODE.PHYSICIAN:AddNewTrackedPlayer(ply, traceEnt)
+                traceEnt:EmitSound("buttons/combine_button7.wav")
+            end
         end
     end
 end
