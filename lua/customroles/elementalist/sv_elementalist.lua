@@ -84,7 +84,6 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
     end
 
     if att:HasEquipmentItem(EQUIP_ELEMENTALIST_PYROMANCER) then
-        local timerId = vicId .. "_isBurning"
         local fixTimerId = vicId .. "_IsBurningShotgunFix"
 
         if att:HasEquipmentItem(EQUIP_ELEMENTALIST_PYROMANCER_UP) and IgnitedPlayers[vicId] and GetChanceConVarOutcome("ttt_elementalist_pyromancer+_explode_chance") then
