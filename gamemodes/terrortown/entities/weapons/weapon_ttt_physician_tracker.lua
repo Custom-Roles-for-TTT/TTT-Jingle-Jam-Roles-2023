@@ -29,6 +29,7 @@ SWEP.Primary.Delay          = 0.75
 
 SWEP.Kind                   = WEAPON_EQUIP
 SWEP.InLoadoutFor           = {ROLE_PHYSICIAN}
+SWEP.Category               = WEAPON_CATEGORY_ROLE
 
 SWEP.AllowDelete            = false
 SWEP.AllowDrop              = false
