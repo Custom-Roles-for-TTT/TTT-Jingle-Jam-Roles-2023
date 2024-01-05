@@ -11,7 +11,7 @@ function PHYSICIAN:ResetAllTrackedPlayers()
 end
 
 function PHYSICIAN:AddNewTrackedPlayer(physician, trackedPly)
-    if physician:GetRole() != ROLE_PHYSICIAN then
+    if physician:GetRole() ~= ROLE_PHYSICIAN then
         return
     end
 

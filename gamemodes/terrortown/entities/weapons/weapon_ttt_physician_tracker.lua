@@ -60,5 +60,5 @@ function SWEP:SecondaryAttack()
 end
 
 function SWEP:Drop()
-    return 
+    return
 end

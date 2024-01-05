@@ -96,7 +96,7 @@ hook.Add("TTTBoughtItem", "Reset Physician Scoreboard On Upgrade Purchased", fun
 end)
 
 hook.Add("TTTPlayerRoleChanged", "Reset Scoreboard On Given Physician Role", function(_, oldRole, newRole)
-    if oldRole != ROLE_PHYSICIAN and newRole == ROLE_PHYSICIAN then
+    if oldRole ~= ROLE_PHYSICIAN and newRole == ROLE_PHYSICIAN then
         ResetScoreboard()
     end
 end)
