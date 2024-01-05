@@ -87,3 +87,9 @@ end)
 net.Receive("EndDimScreen", function(len)
     EndDarkOverlay()
 end)
+
+hook.Add("TTTTutorialRoleText", "SummonerTutorialRoleText", function(role)
+    if role == ROLE_ELEMENTALIST then
+        return "The Elementalist is a member of the traitor team who has access to special powers that enhance their gunshots. The powers are purchased using credits in the traitor menu."
+    end
+end)
