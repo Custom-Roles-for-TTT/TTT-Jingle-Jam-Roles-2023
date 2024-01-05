@@ -17,8 +17,8 @@ function PHYSICIAN:AddNewTrackedPlayer(physician, trackedPly)
 
     local physicianSteamId = physician:SteamID64()
 
-    self.tracking[physicianSteamId] = self.tracking[physicianSteamId] or {physicianSteamId = 1}
-    self.tracking[physicianSteamId][trackedPly:SteamID64()] = 1
+    self.tracking[physicianSteamId] = self.tracking[physicianSteamId] or {physicianSteamId = PHYSICIAN_TRACKER_ACTIVE}
+    self.tracking[physicianSteamId][trackedPly:SteamID64()] = PHYSICIAN_TRACKER_ACTIVE
 end
 
 function PHYSICIAN:DestructTracker(plyToDestruct, plyCauser) -- Doing anything with plyCauser?
@@ -26,7 +26,7 @@ function PHYSICIAN:DestructTracker(plyToDestruct, plyCauser) -- Doing anything w
         local plyId = v:SteamID64()
 
         if self.tracking[plyId] then
-            self.tracking[plyId][plyToDestruct:SteamID64()] = 2
+            self.tracking[plyId][plyToDestruct:SteamID64()] = PHYSICIAN_TRACKER_DEAD
         end
     end
 end
@@ -58,7 +58,7 @@ net.Receive("GetAllPhysicianTrackedPlayers", function(len, ply)
     for _, p in pairs(player.GetAll()) do
         local plyId = p:SteamID64()
         if PHYSICIAN.tracking[physicianSteamId][plyId] and (not p:Alive() or plyPos:DistToSqr(p:GetPos()) > maxDist) then
-            distanceOverride[plyId] = 2
+            distanceOverride[plyId] = PHYSICIAN_TRACKER_DEAD
         end
     end
 

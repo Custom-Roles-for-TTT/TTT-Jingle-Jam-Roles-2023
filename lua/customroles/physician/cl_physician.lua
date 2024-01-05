@@ -36,12 +36,12 @@ end
 function PHYSICIAN:GetPlayerStatusText(ply)
     local status = self:GetAllPhysicianTrackedPlayers()[ply:SteamID64()]
 
-    if status and status > 0 then
-        if status == 1 then
+    if status and status > PHYSICIAN_TRACKER_INACTIVE then
+        if status == PHYSICIAN_TRACKER_ACTIVE then
             local text, color = self:GetStatusFromHealth(ply)
 
             return text, color
-        elseif status == 2 then
+        elseif status == PHYSICIAN_TRACKER_DEAD then
             return "No Signal", healthcolors.death
         end
     end
