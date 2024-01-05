@@ -104,7 +104,7 @@ end)
 hook.Add("TTTScoreboardColumns", "Physician Health Column", function(basePanel)
     local ply = LocalPlayer()
 
-    if ply:GetRole() == ROLE_PHYSICIAN then
+    if ply:IsPhysician() then
         local columnLabel
         if ply:HasEquipmentItem(EQUIP_PHS_TRACKER) then
             columnLabel = "Status"
