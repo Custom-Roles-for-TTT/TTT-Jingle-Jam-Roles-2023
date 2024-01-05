@@ -1018,6 +1018,7 @@ globals = {
 
     -- JJ2023
     "EQUIP_PHS_TRACKER",
+    "PHYSICIAN",
     "ROLE_PHYSICIAN"
 }
 std = {

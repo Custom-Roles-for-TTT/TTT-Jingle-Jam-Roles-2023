@@ -16,7 +16,7 @@ function PHYSICIAN:AddNewTrackedPlayer(physician, trackedPly)
     end
 
     local physicianSteamId = physician:SteamID64()
-    
+
     self.tracking[physicianSteamId] = self.tracking[physicianSteamId] or {physicianSteamId = 1}
     self.tracking[physicianSteamId][trackedPly:SteamID64()] = 1
 end
@@ -24,7 +24,7 @@ end
 function PHYSICIAN:DestructTracker(plyToDestruct, plyCauser) -- Doing anything with plyCauser?
     for _, v in ipairs(player.GetAll()) do
         local plyId = v:SteamID64()
-        
+
         if self.tracking[plyId] then
             self.tracking[plyId][plyToDestruct:SteamID64()] = 2
         end
@@ -44,8 +44,8 @@ net.Receive("GetAllPhysicianTrackedPlayers", function(len, ply)
 
     local distanceOverride = {}
     local plyPos = ply:GetPos()
-    local maxDist = nil
-    
+    local maxDist
+
     if ply:HasEquipmentItem(EQUIP_PHS_TRACKER) then
         maxDist = GetConVar("ttt_physician_tracker_range_boosted"):GetInt()
     else
@@ -55,9 +55,9 @@ net.Receive("GetAllPhysicianTrackedPlayers", function(len, ply)
     maxDist = maxDist * 10
     maxDist = maxDist * maxDist
 
-    for _, ply in pairs(player.GetAll()) do
-        local plyId = ply:SteamID64()
-        if PHYSICIAN.tracking[physicianSteamId][plyId] and (not ply:Alive() or plyPos:DistToSqr(ply:GetPos()) > maxDist) then
+    for _, p in pairs(player.GetAll()) do
+        local plyId = p:SteamID64()
+        if PHYSICIAN.tracking[physicianSteamId][plyId] and (not p:Alive() or plyPos:DistToSqr(p:GetPos()) > maxDist) then
             distanceOverride[plyId] = 2
         end
     end

@@ -26,7 +26,7 @@ function PHYSICIAN:GetAllPhysicianTrackedPlayers()
     if CurTime() > nextGet then
         net.Start("GetAllPhysicianTrackedPlayers")
         net.SendToServer()
-        
+
         nextGet = CurTime() + nextGetOffset
     end
 
@@ -105,22 +105,20 @@ hook.Add("TTTScoreboardColumns", "Physician Health Column", function(basePanel)
     local ply = LocalPlayer()
 
     if ply:GetRole() == ROLE_PHYSICIAN then
-        local columnLabel = ""
-
+        local columnLabel
         if ply:HasEquipmentItem(EQUIP_PHS_TRACKER) then
             columnLabel = "Status"
         else
             columnLabel = "Heartrate"
         end
 
-        basePanel:AddColumn(columnLabel, function(ply, dLabelPanel)
-            local text, color = PHYSICIAN:GetPlayerStatusText(ply)
+        basePanel:AddColumn(columnLabel, function(p, dLabelPanel)
+            local text, color = PHYSICIAN:GetPlayerStatusText(p)
 
             dLabelPanel:SetTextColor(color or healthcolors.death)
 
             return text or ""
-        end,
-        90)
+        end, 90)
     end
 end)
 
