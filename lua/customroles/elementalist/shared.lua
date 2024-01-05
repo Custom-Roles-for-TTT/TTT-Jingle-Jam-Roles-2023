@@ -1,29 +1,4 @@
 --// Logan Christianson
--- Allowing of individual effect upgrades
-CreateConVar("ttt_elementalist_allow_effect_upgrades", "1", FCVAR_REPLICATED, "Controls whether elemental effect \"upgrades\" should be available for purchase", 0, 1)
-CreateConVar("ttt_elementalist_allow_pyromancer_upgrades", "1", FCVAR_REPLICATED, "Controls whether the Pyromancer upgrade(s) should be available in the elementalist shop", 0, 1)
-CreateConVar("ttt_elementalist_allow_frostbite_upgrades", "1", FCVAR_REPLICATED, "Controls whether the Frostbite upgrade(s) should be available in the elementalist shop", 0, 1)
-CreateConVar("ttt_elementalist_allow_windburn_upgrades", "1", FCVAR_REPLICATED, "Controls whether the Windburn upgrade(s) should be available in the elementalist shop", 0, 1)
-CreateConVar("ttt_elementalist_allow_discharge_upgrades", "1", FCVAR_REPLICATED, "Controls whether the Discharge upgrade(s) should be available in the elementalist shop", 0, 1)
-CreateConVar("ttt_elementalist_allow_midnight_upgrades", "1", FCVAR_REPLICATED, "Controls whether the Midnight upgrade(s) should be available in the elementalist shop", 0, 1)
-CreateConVar("ttt_elementalist_allow_lifesteal_upgrades", "1", FCVAR_REPLICATED, "Controls whether the Lifesteal upgrade(s) should be available in the elementalist shop", 0, 1)
-
--- Durations & associated chances
-CreateConVar("ttt_elementalist_frostbite_effect_duration", "3", FCVAR_REPLICATED, "How long the Frostbite slow & freeze effect lasts. Value must be greater than 0 and less than 6", 1, 5)
-CreateConVar("ttt_elementalist_frostbite+_freeze_chance", "5", FCVAR_REPLICATED, "The percent chance shooting a victim which has been slowed by Frostbite will instead freeze them. Value must be greater than 0 and less than 101", 1, 100)
-CreateConVar("ttt_elementalist_pyromancer_burn_duration", "3", FCVAR_REPLICATED, "How long the Pryomancer effect should burn the victim for. 100 damage would scale for the full length. Value must be greater than 0 and less than 6", 1, 5)
-CreateConVar("ttt_elementalist_pyromancer+_explode_chance", "5", FCVAR_REPLICATED, "The percent chance shooting a victim ignited by Pyromancer will cause them to explode. Value must be greater than 0 and less than 101", 1, 100)
-CreateConVar("ttt_elementalist_midnight_dim_duration", "3", FCVAR_REPLICATED, "How long the Midnight screen dimming effect should last. Value must be greater than 0 and less than 6", 1, 5)
-CreateConVar("ttt_elementalist_midnight+_blindness_chance", "5", FCVAR_REPLICATED, "The percent chance shooting a victim affected by Midnight will instead completely blind them. Value must be greater than 0 and less than 101", 1, 100)
-
--- One-offs and associated chances
-CreateConVar("ttt_elementalist_windburn_push_power", "700", FCVAR_REPLICATED, "How much push power the windburn effect should apply to victims, scales with damage done. Must be greater than 299 and less than 1001", 300, 1000)
-CreateConVar("ttt_elementalist_windburn+_launch_chance", "5", FCVAR_REPLICATED, "The percent chance shooting a victim will launch instead of push them. Value must be greater than 0 and less than 101", 1, 100)
-CreateConVar("ttt_elementalist_discharge_punch_power", "5", FCVAR_REPLICATED, "How much view punch power the discharge effect should apply to victims, scales with damage done. Must be greater than 0 and less than 11", 1, 10)
-CreateConVar("ttt_elementalist_discharge+_input_chance", "5", FCVAR_REPLICATED, "The percent chance shooting a victim will cause them to apply a random input in additional to the view punch. Value must be greater than 0 and less than 101", 1, 100)
-CreateConVar("ttt_elementalist_lifesteal_heal_percentage", "30", FCVAR_REPLICATED, "What percent of damage done by shooting should be converted into health for the Elementalist. Must be greater than 0 and less than 101", 1, 100)
-CreateConVar("ttt_elementalist_lifesteal+_execute_amount", "15", FCVAR_REPLICATED, "How much life a victim must reach before Lifesteal+ will execute them. Value must be greater than 0 and less than 101", 1, 100)
-
 local ROLE = {}
 
 ROLE.nameraw = "elementalist"
@@ -47,94 +22,121 @@ ROLE.translations = {}
 
 ROLE.convars = {}
 
--- Set One
-    table.insert(ROLE.convars, {
-        cvar = "ttt_elementalist_allow_effect_upgrades",
-        type = ROLE_CONVAR_TYPE_BOOL
-    })
-    table.insert(ROLE.convars, {
-        cvar = "ttt_elementalist_allow_pyromancer_upgrades",
-        type = ROLE_CONVAR_TYPE_BOOL
-    })
-    table.insert(ROLE.convars, {
-        cvar = "ttt_elementalist_allow_frostbite_upgrades",
-        type = ROLE_CONVAR_TYPE_BOOL
-    })
-    table.insert(ROLE.convars, {
-        cvar = "ttt_elementalist_allow_windburn_upgrades",
-        type = ROLE_CONVAR_TYPE_BOOL
-    })
-    table.insert(ROLE.convars, {
-        cvar = "ttt_elementalist_allow_discharge_upgrades",
-        type = ROLE_CONVAR_TYPE_BOOL
-    })
-    table.insert(ROLE.convars, {
-        cvar = "ttt_elementalist_allow_discharge_upgrades",
-        type = ROLE_CONVAR_TYPE_BOOL
-    })
-    table.insert(ROLE.convars, {
-        cvar = "ttt_elementalist_allow_midnight_upgrades",
-        type = ROLE_CONVAR_TYPE_BOOL
-    })
-    table.insert(ROLE.convars, {
-        cvar = "ttt_elementalist_allow_lifesteal_upgrades",
-        type = ROLE_CONVAR_TYPE_BOOL
-    })
--- end
+if SERVER then
+    -- Allowing of individual effect upgrades
+    CreateConVar("ttt_elementalist_allow_effect_upgrades", "1", FCVAR_NONE, "Controls whether elemental effect \"upgrades\" should be available for purchase", 0, 1)
+    CreateConVar("ttt_elementalist_allow_pyromancer_upgrades", "1", FCVAR_NONE, "Controls whether the Pyromancer upgrade(s) should be available in the elementalist shop", 0, 1)
+    CreateConVar("ttt_elementalist_allow_frostbite_upgrades", "1", FCVAR_NONE, "Controls whether the Frostbite upgrade(s) should be available in the elementalist shop", 0, 1)
+    CreateConVar("ttt_elementalist_allow_windburn_upgrades", "1", FCVAR_NONE, "Controls whether the Windburn upgrade(s) should be available in the elementalist shop", 0, 1)
+    CreateConVar("ttt_elementalist_allow_discharge_upgrades", "1", FCVAR_NONE, "Controls whether the Discharge upgrade(s) should be available in the elementalist shop", 0, 1)
+    CreateConVar("ttt_elementalist_allow_midnight_upgrades", "1", FCVAR_NONE, "Controls whether the Midnight upgrade(s) should be available in the elementalist shop", 0, 1)
+    CreateConVar("ttt_elementalist_allow_lifesteal_upgrades", "1", FCVAR_NONE, "Controls whether the Lifesteal upgrade(s) should be available in the elementalist shop", 0, 1)
 
--- Set Two
-    table.insert(ROLE.convars, {
-        cvar = "ttt_elementalist_frostbite_effect_duration",
-        type = ROLE_CONVAR_TYPE_NUM
-    })
-    table.insert(ROLE.convars, {
-        cvar = "ttt_elementalist_frostbite+_freeze_chance",
-        type = ROLE_CONVAR_TYPE_NUM
-    })
-    table.insert(ROLE.convars, {
-        cvar = "ttt_elementalist_pyromancer_burn_duration",
-        type = ROLE_CONVAR_TYPE_NUM
-    })
-    table.insert(ROLE.convars, {
-        cvar = "ttt_elementalist_pyromancer+_explode_chance",
-        type = ROLE_CONVAR_TYPE_NUM
-    })
-    table.insert(ROLE.convars, {
-        cvar = "ttt_elementalist_midnight_dim_duration",
-        type = ROLE_CONVAR_TYPE_NUM
-    })
-    table.insert(ROLE.convars, {
-        cvar = "ttt_elementalist_midnight+_blindness_chance",
-        type = ROLE_CONVAR_TYPE_NUM
-    })
--- end
+    -- Durations & associated chances
+    CreateConVar("ttt_elementalist_frostbite_effect_duration", "3", FCVAR_NONE, "How long the Frostbite slow & freeze effect lasts. Value must be greater than 0 and less than 6", 1, 5)
+    CreateConVar("ttt_elementalist_frostbite+_freeze_chance", "5", FCVAR_NONE, "The percent chance shooting a victim which has been slowed by Frostbite will instead freeze them. Value must be greater than 0 and less than 101", 1, 100)
+    CreateConVar("ttt_elementalist_pyromancer_burn_duration", "3", FCVAR_NONE, "How long the Pryomancer effect should burn the victim for. 100 damage would scale for the full length. Value must be greater than 0 and less than 6", 1, 5)
+    CreateConVar("ttt_elementalist_pyromancer+_explode_chance", "5", FCVAR_NONE, "The percent chance shooting a victim ignited by Pyromancer will cause them to explode. Value must be greater than 0 and less than 101", 1, 100)
+    CreateConVar("ttt_elementalist_midnight_dim_duration", "3", FCVAR_NONE, "How long the Midnight screen dimming effect should last. Value must be greater than 0 and less than 6", 1, 5)
+    CreateConVar("ttt_elementalist_midnight+_blindness_chance", "5", FCVAR_NONE, "The percent chance shooting a victim affected by Midnight will instead completely blind them. Value must be greater than 0 and less than 101", 1, 100)
 
--- Set Three
-    table.insert(ROLE.convars, {
-        cvar = "ttt_elementalist_windburn_push_power",
-        type = ROLE_CONVAR_TYPE_NUM
-    })
-    table.insert(ROLE.convars, {
-        cvar = "ttt_elementalist_windburn+_launch_chance",
-        type = ROLE_CONVAR_TYPE_NUM
-    })
-    table.insert(ROLE.convars, {
-        cvar = "ttt_elementalist_discharge_punch_power",
-        type = ROLE_CONVAR_TYPE_NUM
-    })
-    table.insert(ROLE.convars, {
-        cvar = "ttt_elementalist_discharge+_input_chance",
-        type = ROLE_CONVAR_TYPE_NUM
-    })
-    table.insert(ROLE.convars, {
-        cvar = "ttt_elementalist_lifesteal_heal_percentage",
-        type = ROLE_CONVAR_TYPE_NUM
-    })
-    table.insert(ROLE.convars, {
-        cvar = "ttt_elementalist_lifesteal+_execute_amount",
-        type = ROLE_CONVAR_TYPE_NUM
-    })
--- end
+    -- One-offs and associated chances
+    CreateConVar("ttt_elementalist_windburn_push_power", "700", FCVAR_NONE, "How much push power the windburn effect should apply to victims, scales with damage done. Must be greater than 299 and less than 1001", 300, 1000)
+    CreateConVar("ttt_elementalist_windburn+_launch_chance", "5", FCVAR_NONE, "The percent chance shooting a victim will launch instead of push them. Value must be greater than 0 and less than 101", 1, 100)
+    CreateConVar("ttt_elementalist_discharge_punch_power", "5", FCVAR_NONE, "How much view punch power the discharge effect should apply to victims, scales with damage done. Must be greater than 0 and less than 11", 1, 10)
+    CreateConVar("ttt_elementalist_discharge+_input_chance", "5", FCVAR_NONE, "The percent chance shooting a victim will cause them to apply a random input in additional to the view punch. Value must be greater than 0 and less than 101", 1, 100)
+    CreateConVar("ttt_elementalist_lifesteal_heal_percentage", "30", FCVAR_NONE, "What percent of damage done by shooting should be converted into health for the Elementalist. Must be greater than 0 and less than 101", 1, 100)
+    CreateConVar("ttt_elementalist_lifesteal+_execute_amount", "15", FCVAR_NONE, "How much life a victim must reach before Lifesteal+ will execute them. Value must be greater than 0 and less than 101", 1, 100)
+
+    -- Set One
+        table.insert(ROLE.convars, {
+            cvar = "ttt_elementalist_allow_effect_upgrades",
+            type = ROLE_CONVAR_TYPE_BOOL
+        })
+        table.insert(ROLE.convars, {
+            cvar = "ttt_elementalist_allow_pyromancer_upgrades",
+            type = ROLE_CONVAR_TYPE_BOOL
+        })
+        table.insert(ROLE.convars, {
+            cvar = "ttt_elementalist_allow_frostbite_upgrades",
+            type = ROLE_CONVAR_TYPE_BOOL
+        })
+        table.insert(ROLE.convars, {
+            cvar = "ttt_elementalist_allow_windburn_upgrades",
+            type = ROLE_CONVAR_TYPE_BOOL
+        })
+        table.insert(ROLE.convars, {
+            cvar = "ttt_elementalist_allow_discharge_upgrades",
+            type = ROLE_CONVAR_TYPE_BOOL
+        })
+        table.insert(ROLE.convars, {
+            cvar = "ttt_elementalist_allow_discharge_upgrades",
+            type = ROLE_CONVAR_TYPE_BOOL
+        })
+        table.insert(ROLE.convars, {
+            cvar = "ttt_elementalist_allow_midnight_upgrades",
+            type = ROLE_CONVAR_TYPE_BOOL
+        })
+        table.insert(ROLE.convars, {
+            cvar = "ttt_elementalist_allow_lifesteal_upgrades",
+            type = ROLE_CONVAR_TYPE_BOOL
+        })
+    -- end
+
+    -- Set Two
+        table.insert(ROLE.convars, {
+            cvar = "ttt_elementalist_frostbite_effect_duration",
+            type = ROLE_CONVAR_TYPE_NUM
+        })
+        table.insert(ROLE.convars, {
+            cvar = "ttt_elementalist_frostbite+_freeze_chance",
+            type = ROLE_CONVAR_TYPE_NUM
+        })
+        table.insert(ROLE.convars, {
+            cvar = "ttt_elementalist_pyromancer_burn_duration",
+            type = ROLE_CONVAR_TYPE_NUM
+        })
+        table.insert(ROLE.convars, {
+            cvar = "ttt_elementalist_pyromancer+_explode_chance",
+            type = ROLE_CONVAR_TYPE_NUM
+        })
+        table.insert(ROLE.convars, {
+            cvar = "ttt_elementalist_midnight_dim_duration",
+            type = ROLE_CONVAR_TYPE_NUM
+        })
+        table.insert(ROLE.convars, {
+            cvar = "ttt_elementalist_midnight+_blindness_chance",
+            type = ROLE_CONVAR_TYPE_NUM
+        })
+    -- end
+
+    -- Set Three
+        table.insert(ROLE.convars, {
+            cvar = "ttt_elementalist_windburn_push_power",
+            type = ROLE_CONVAR_TYPE_NUM
+        })
+        table.insert(ROLE.convars, {
+            cvar = "ttt_elementalist_windburn+_launch_chance",
+            type = ROLE_CONVAR_TYPE_NUM
+        })
+        table.insert(ROLE.convars, {
+            cvar = "ttt_elementalist_discharge_punch_power",
+            type = ROLE_CONVAR_TYPE_NUM
+        })
+        table.insert(ROLE.convars, {
+            cvar = "ttt_elementalist_discharge+_input_chance",
+            type = ROLE_CONVAR_TYPE_NUM
+        })
+        table.insert(ROLE.convars, {
+            cvar = "ttt_elementalist_lifesteal_heal_percentage",
+            type = ROLE_CONVAR_TYPE_NUM
+        })
+        table.insert(ROLE.convars, {
+            cvar = "ttt_elementalist_lifesteal+_execute_amount",
+            type = ROLE_CONVAR_TYPE_NUM
+        })
+    -- end
+end
 
 RegisterRole(ROLE)
 
