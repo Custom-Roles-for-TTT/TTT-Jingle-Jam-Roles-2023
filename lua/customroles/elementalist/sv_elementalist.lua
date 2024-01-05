@@ -7,7 +7,7 @@ util.AddNetworkString("EndDimScreen")
 local GetConVar = GetConVar
 
 local function IsValidPlayerEnt(ent)
-    return ent and IsValid(ent) and ent:IsPlayer() and ent:Alive()
+    return IsPlayer(ent) and ent:Alive()
 end
 
 local function GetChanceConVarOutcome(conVarName)
@@ -36,7 +36,7 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
         return
     end
 
-    if not att:IsRole(ROLE_ELEMENTALIST) then
+    if not att:IsElementalist() then
         return
     end
 
@@ -112,7 +112,7 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
         else
             --Base functionality
             IgnitedPlayers[vicId] = true
-            local timerID = vicId .. "_IsBurning"
+            local timerId = vicId .. "_IsBurning"
 
             local timeToBurn = 1 + (GetConVar("ttt_elementalist_pyromancer_burn_duration"):GetInt() * scale)
 
@@ -219,7 +219,7 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
         end
 
         net.Start("BeginDimScreen")
-            net.WriteUInt(BlindedPlayers[vidId], 6)
+            net.WriteUInt(BlindedPlayers[vicId], 6)
         net.Send(ent)
 
         local function EndBlind()
