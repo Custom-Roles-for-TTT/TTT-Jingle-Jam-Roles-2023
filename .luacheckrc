@@ -504,6 +504,7 @@ globals = {
     "isentity",
     "isfunction",
     "isnumber",
+    "ispanel",
     "isstring",
     "istable",
     "next",
@@ -1016,26 +1017,25 @@ globals = {
     -- CR Namespaces
     "CRHUD",
 
-    -- JJ2022
-    "FAKER_READY",
-    "FAKER_MISSING_LOS",
-    "FAKER_MISSING_RANGE",
-    "FAKER_MISSING_BOTH",
-    "FAKER_WEAPON_NONE",
-    "FAKER_WEAPON_FAKE",
-    "FAKER_WEAPON_USED",
-    "KRAMPUS_NAUGHTY_NONE",
-    "KRAMPUS_NAUGHTY_DAMAGE",
-    "KRAMPUS_NAUGHTY_KILL",
-    "KRAMPUS_NAUGHTY_OTHER",
-    "ROLE_DETECTOCLOWN",
-    "ROLE_FAKER",
-    "ROLE_KRAMPUS",
-    "WIN_DETECTOCLOWN",
-    "WIN_FAKER",
-    "WIN_KRAMPUS",
-    "MarkPlayerNaughty",
-    "SetDetectoclownTeam"
+    -- JJ2023
+    "EQUIP_ELEMENTALIST_DISCHARGE",
+    "EQUIP_ELEMENTALIST_DISCHARGE_UP",
+    "EQUIP_ELEMENTALIST_FROSTBITE",
+    "EQUIP_ELEMENTALIST_FROSTBITE_UP",
+    "EQUIP_ELEMENTALIST_LIFESTEAL",
+    "EQUIP_ELEMENTALIST_LIFESTEAL_UP",
+    "EQUIP_ELEMENTALIST_MIDNIGHT",
+    "EQUIP_ELEMENTALIST_MIDNIGHT_UP",
+    "EQUIP_ELEMENTALIST_PYROMANCER",
+    "EQUIP_ELEMENTALIST_PYROMANCER_UP",
+    "EQUIP_ELEMENTALIST_WINDBURN",
+    "EQUIP_ELEMENTALIST_WINDBURN_UP",
+    "ROLE_ELEMENTALIST",
+    "CloseIceOverlay",
+    "CreateIceOverlay",
+    "EndDarkOverlay",
+    "StartBlindOverlay",
+    "StartDarkOverlay"
 }
 std = {
     globals = {

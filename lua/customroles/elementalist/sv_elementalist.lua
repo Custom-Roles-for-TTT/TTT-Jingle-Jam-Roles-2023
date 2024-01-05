@@ -61,7 +61,7 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
         else
             --Base fucntionality
             ChilledPlayers[vicId] = 1 - (MovementSlow * 0.01)
-            
+
             net.Start("BeginIceScreen")
                 net.WriteBool(false)
             net.Send(ent)
@@ -107,7 +107,7 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
                 explosion:Spawn()
                 explosion:SetKeyValue("iMagnitude", ent:Health() * 2)
                 explosion:Fire("Explode", 0, 0)
-                util.BlastDamage(explosion, att, ent:GetPos(), ent:Health() * 4, ent:Health()) 
+                util.BlastDamage(explosion, att, ent:GetPos(), ent:Health() * 4, ent:Health())
             end
         else
             --Base functionality
@@ -208,14 +208,14 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
     end
 
     if att:HasEquipmentItem(EQUIP_ELEMENTALIST_MIDNIGHT) then
-        
+
         if att:HasEquipmentItem(EQUIP_ELEMENTALIST_MIDNIGHT_UP) and BlindedPlayers[vicId] and GetChanceConVarOutcome("ttt_elementalist_midnight+_blindness_chance") then
             --Upgrade functionality
             BlindedPlayers[vicId] = 100
         else
             --Base functionality
             BlindedPlayers[vicId] = BlindedPlayers[vicId] or 0
-            BlindedPlayers[vicId] = math.Clamp(BlindedPlayers[vicId] + damage, 0, 50)            
+            BlindedPlayers[vicId] = math.Clamp(BlindedPlayers[vicId] + damage, 0, 50)
         end
 
         net.Start("BeginDimScreen")
@@ -265,7 +265,7 @@ local function ResetEffects(ply)
 
     timer.Remove(id .. "_IsSlowed")
     net.Start("EndIceScreen")
-    net.Send(ply) 
+    net.Send(ply)
 
     ply:Extinguish()
     timer.Remove(id .. "_IsBurning")

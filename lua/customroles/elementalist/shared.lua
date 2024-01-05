@@ -24,7 +24,7 @@ CreateConVar("ttt_elementalist_discharge+_input_chance", "5", FCVAR_REPLICATED, 
 CreateConVar("ttt_elementalist_lifesteal_heal_percentage", "30", FCVAR_REPLICATED, "What percent of damage done by shooting should be converted into health for the Elementalist. Must be greater than 0 and less than 101", 1, 100)
 CreateConVar("ttt_elementalist_lifesteal+_execute_amount", "15", FCVAR_REPLICATED, "How much life a victim must reach before Lifesteal+ will execute them. Value must be greater than 0 and less than 101", 1, 100)
 
-local ROLE = ROLE or {}
+local ROLE = {}
 
 ROLE.nameraw = "elementalist"
 ROLE.name = "Elementalist"
@@ -181,7 +181,7 @@ hook.Add("Initialize", "Elementalist Shop Items Init", function()
             name        = "Pyromancer",
             desc        = "Shoot players to ignite them, duration scaling with damage done."
         })
-        
+
         if allowEffectUpgrades then
             table.insert(EquipmentItems[ROLE_ELEMENTALIST], {
                 id          = EQUIP_ELEMENTALIST_PYROMANCER_UP,
@@ -205,7 +205,7 @@ hook.Add("Initialize", "Elementalist Shop Items Init", function()
             name        = "Windburn",
             desc        = "Shooting players pushes them backwards and away from you, force of push scaling with damage done."
         })
-        
+
         if allowEffectUpgrades then
             table.insert(EquipmentItems[ROLE_ELEMENTALIST], {
                 id          = EQUIP_ELEMENTALIST_WINDBURN_UP,
@@ -229,7 +229,7 @@ hook.Add("Initialize", "Elementalist Shop Items Init", function()
             name        = "Discharge",
             desc        = "Shoot players to shock them, punching their view based on damage done, disorienting them."
         })
-        
+
         if allowEffectUpgrades then
             table.insert(EquipmentItems[ROLE_ELEMENTALIST], {
                 id          = EQUIP_ELEMENTALIST_DISCHARGE_UP,
