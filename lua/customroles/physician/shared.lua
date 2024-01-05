@@ -23,9 +23,9 @@ ROLE.shopsyncroles = {ROLE_DETECTIVE}
 
 ROLE.translations = {}
 
-PHYSICIAN_TRACKER_INACTIVE = 0  // Player is untracked
-PHYSICIAN_TRACKER_ACTIVE = 1    // Player is being tracked
-PHYSICIAN_TRACKER_DEAD = 2      // Player is dead (or, potentially in future, has destroyed their tracker)
+PHYSICIAN_TRACKER_INACTIVE = 0  -- Player is untracked
+PHYSICIAN_TRACKER_ACTIVE = 1    -- Player is being tracked
+PHYSICIAN_TRACKER_DEAD = 2      -- Player is dead (or, potentially in future, has destroyed their tracker)
 
 hook.Add("Initialize", "Physician_Health_Tracker_Equipment", function()
     EQUIP_PHS_TRACKER = EQUIP_PHS_TRACKER or GenerateNewEquipmentID()
