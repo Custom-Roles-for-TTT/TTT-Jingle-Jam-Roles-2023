@@ -122,7 +122,7 @@ hook.Add("TTTScoreboardColumns", "Physician Health Column", function(basePanel)
     end
 end)
 
-hook.Add("TTTTutorialRoleText", "SummonerTutorialRoleText", function(playerRole)
+hook.Add("TTTTutorialRoleText", "PhysicianTutorialRoleText", function(playerRole)
     local function getStyleString(role)
         local roleColor = ROLE_COLORS[role]
         return "<span style='color: rgb(" .. roleColor.r .. ", " .. roleColor.g .. ", " .. roleColor.b .. ")'>"
