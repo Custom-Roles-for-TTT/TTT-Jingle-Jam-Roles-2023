@@ -138,7 +138,7 @@ hook.Add("TTTTutorialRoleText", "SummonerTutorialRoleText", function(playerRole)
 
         html = html .. divStart .. "To use, equip the" .. getStyleString(ROLE_PHYSICIAN) .. " Health Tracker" .. styleEnd .. " and left or right click on a terrorist. In your scoreboard, their health status should begin to display. Don't let them get too far away or the" .. getStyleString(ROLE_TRAITOR) .. " tracker connection will fail" .. styleEnd .. ".<div>"
 
-        html = html .. divStart .. "An upgrade for the tracker is available in your" .. getStyleString(ROLE_DETECTIVE) .. "shop" .. styleEnd .. ", along with everything else available to a" .. getStyleString(ROLE_DETECTIVE) .. " Detective" .. styleEnd .. ".</div>"
+        html = html .. divStart .. "An upgrade for the tracker is available in your" .. getStyleString(ROLE_DETECTIVE) .. "shop" .. styleEnd .. ", along with everything else available to a " .. getStyleString(ROLE_DETECTIVE) .. ROLE_STRING_EXT[ROLE_DETECTIVE] .. styleEnd .. ".</div>"
 
         return html
     end
