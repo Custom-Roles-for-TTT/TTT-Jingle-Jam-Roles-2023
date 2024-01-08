@@ -123,7 +123,23 @@ hook.Add("TTTScoreboardColumns", "Physician Health Column", function(basePanel)
 end)
 
 hook.Add("TTTTutorialRoleText", "SummonerTutorialRoleText", function(role)
+    local function getStyleString(role)
+        local roleColor = ROLE_COLORS[role]
+        return "<span style='color: rgb(" .. roleColor.r .. ", " .. roleColor.g .. ", " .. roleColor.b .. ")'>"
+    end
+
     if role == ROLE_PHYSICIAN then
-        return "The Physician is a member of the detective team who has access to a Health Tracker which can be used to track the health status of players a tracker has been placed on. They otherwise have full access to the default Detective shop."
+        local divStart = "<div style='margin-top: 10px;'>"
+        local styleEnd = "</span>"
+
+        local html = "The " .. ROLE_STRINGS[ROLE_PHYSICIAN] .. " is a member of the " .. getStyleString(ROLE_INNOCENT) .. "innocent team" .. styleEnd .. " whose job is to find and eliminate their enemies."
+
+        html = html .. divStart .. "They have access to a special" .. getStyleString(ROLE_PHYSICIAN) .. " Health Tracker" .. styleEnd .. " which can allow them to actively track the health of others.</div>"
+
+        html = html .. divStart .. "To use, equip the" .. getStyleString(ROLE_PHYSICIAN) .. " Health Tracker" .. styleEnd .. " and left or right click on a terrorist. In your scoreboard, their health status should begin to display. Don't let them get too far away or the" .. getStyleString(ROLE_TRAITOR) .. " tracker connection will fail" .. styleEnd .. ".<div>"
+
+        html = html .. divStart .. "An upgrade for the tracker is available in your" .. getStyleString(ROLE_DETECTIVE) .. "shop" .. styleEnd .. ", along with everything else available to a" .. getStyleString(ROLE_DETECTIVE) .. " Detective" .. styleEnd .. ".</div>"
+
+        return html
     end
 end)

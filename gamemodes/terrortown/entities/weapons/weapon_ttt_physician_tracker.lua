@@ -11,7 +11,7 @@ if CLIENT then
    SWEP.DrawCrosshair       = false
    SWEP.ViewModelFlip       = false
 
-   SWEP.Icon                = "vgui/ttt/icon_flare"
+   SWEP.Icon                = "vgui/ttt/roles/phy/shop/icon_physician_scanner_upgrade"
 end
 
 SWEP.Base                   = "weapon_tttbase"
@@ -27,7 +27,7 @@ SWEP.Primary.Automatic      = false
 SWEP.Primary.Ammo           = "none"
 SWEP.Primary.Delay          = 0.75
 
-SWEP.Kind                   = WEAPON_EQUIP
+SWEP.Kind                   = WEAPON_ROLE
 SWEP.InLoadoutFor           = {ROLE_PHYSICIAN}
 SWEP.Category               = WEAPON_CATEGORY_ROLE
 
