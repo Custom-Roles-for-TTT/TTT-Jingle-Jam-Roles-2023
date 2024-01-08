@@ -41,6 +41,7 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
     end
 
     -- Att is a valid elementalist damaging a valid player
+    local ROLE = ROLE_DATA_EXTERNAL[ROLE_ELEMENTALIST]
     local vicId = ent:SteamID64()
     local damage = math.Clamp(dmginfo:GetDamage(), 1, 100)
     local scale = damage * 0.01

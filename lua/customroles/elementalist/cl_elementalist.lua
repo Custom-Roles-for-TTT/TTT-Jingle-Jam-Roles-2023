@@ -106,6 +106,7 @@ hook.Add("TTTTutorialRoleText", "SummonerTutorialRoleText", function(playerRole)
 
         html = html .. divStart .. "The powerups available are:<ul>"
 
+        local ROLE = ROLE_DATA_EXTERNAL[ROLE_ELEMENTALIST]
         local allowUpgradedEffects = ROLE.ConvarTierUpgrades:GetBool()
 
         if ROLE.ConvarPyroUpgrades:GetBool() then
