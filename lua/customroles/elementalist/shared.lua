@@ -91,7 +91,7 @@ if SERVER then
             cvar = "ttt_elementalist_midnight+_blindness_chance",
             type = ROLE_CONVAR_TYPE_NUM
         })
-    -- 
+    --
 
     -- Set Three
         table.insert(ROLE.convars, {

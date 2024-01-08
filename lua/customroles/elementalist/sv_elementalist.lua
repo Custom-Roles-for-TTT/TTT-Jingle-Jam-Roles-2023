@@ -139,8 +139,11 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
             --Upgrade functionality
             ent:SetVelocity(ent:GetVelocity() + Vector(0, 0, 1000 + (1000 * scale)))
 
-            if ply.SetJumpLevel and ply.GetMaxJumpLevel then
-                ply:SetJumpLevel(ply:GetMaxJumpLevel() + 1)
+            if ent.SetJumpLevel and ent.GetMaxJumpLevel then
+                -- Wait a tick to make sure they're actually off the ground before disabling double jumping
+                timer.Simple(0, function()
+                    ent:SetJumpLevel(ent:GetMaxJumpLevel() + 1)
+                end)
             end
         else
             --Base functionality

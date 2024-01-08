@@ -158,7 +158,7 @@ hook.Add("TTTTutorialRoleText", "SummonerTutorialRoleText", function(playerRole)
         end
 
         html = html .. "</ul>" .. styleEnd
-        
+
         if allowUpgradedEffects then
             html = html .. divStart .. "The '+' version of the upgrades cannot be purchased until the regular version has been acquired."
         end
