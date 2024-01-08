@@ -90,8 +90,78 @@ net.Receive("EndDimScreen", function(len)
     EndDarkOverlay()
 end)
 
-hook.Add("TTTTutorialRoleText", "SummonerTutorialRoleText", function(role)
-    if role == ROLE_ELEMENTALIST then
-        return "The Elementalist is a member of the traitor team who has access to special powers that enhance their gunshots. The powers are purchased using credits in the traitor menu."
+hook.Add("TTTTutorialRoleText", "SummonerTutorialRoleText", function(playerRole)
+    local function getStyleString(role)
+        local roleColor = ROLE_COLORS[role]
+        return "<span style='color: rgb(" .. roleColor.r .. ", " .. roleColor.g .. ", " .. roleColor.b .. ")'>"
+    end
+
+    if playerRole == ROLE_ELEMENTALIST then
+        local divStart = "<div style='margin-top: 10px;'>"
+        local styleEnd = "</span>"
+
+        local html = "The " .. ROLE_STRINGS[ROLE_ELEMENTALIST] .. " is a member of the " .. getStyleString(ROLE_TRAITOR) .. ROLE_STRINGS_EXT[ROLE_TRAITOR] .. " team" .. styleEnd .. " whose goal is to eliminate all innocents and independents."
+
+        html = html .. divStart .. "They have access to special powerups in the " .. getStyleString(ROLE_ELEMENTALIST) .. "traitor shop" .. styleEnd .. " which do a variety of things when they shoot other terrorists.</div>"
+
+        html = html .. divStart .. "The powerups available are:<ul>"
+
+        local allowUpgradedEffects = ROLE.ConvarTierUpgrades:GetBool()
+
+        if ROLE.ConvarPyroUpgrades:GetBool() then
+            html = html .. "<li>Pyromancer"
+            if allowUpgradedEffects then
+                html = html .. " and Pyromancer+"
+            end
+            html = html .. ".</li>"
+        end
+
+        if ROLE.ConvarFrostUpgrades:GetBool() then
+            html = html .. "<li>Frostbite"
+            if allowUpgradedEffects then
+                html = html .. " and Frostbite+"
+            end
+            html = html .. ".</li>"
+        end
+
+        if ROLE.ConvarWindUpgrades:GetBool() then
+            html = html .. "<li>Windburn"
+            if allowUpgradedEffects then
+                html = html .. " and Windburn+"
+            end
+            html = html .. ".</li>"
+        end
+
+        if ROLE.ConvarDischargeUpgrades:GetBool() then
+            html = html .. "<li>Discharge"
+            if allowUpgradedEffects then
+                html = html .. " and Discharge+"
+            end
+            html = html .. ".</li>"
+        end
+
+        if ROLE.ConvarMidnightUpgrades:GetBool() then
+            html = html .. "<li>Midnight"
+            if allowUpgradedEffects then
+                html = html .. " and Midnight+"
+            end
+            html = html .. ".</li>"
+        end
+
+        if ROLE.ConvarLifeUpgrades:GetBool() then
+            html = html .. "<li>Lifesteal"
+            if allowUpgradedEffects then
+                html = html .. " and Lifesteal+"
+            end
+            html = html .. ".</li>"
+        end
+
+        html = html .. "</ul>" .. styleEnd
+        
+        if allowUpgradedEffects then
+            html = html .. divStart .. "The '+' version of the upgrades cannot be purchased until the regular version has been acquired."
+        end
+
+        return html
     end
 end)

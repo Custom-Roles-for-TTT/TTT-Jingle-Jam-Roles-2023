@@ -47,7 +47,7 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
 
     if att:HasEquipmentItem(EQUIP_ELEMENTALIST_FROSTBITE) then
         local MovementSlow = math.Round(math.Clamp(20 + (scale * 20), 20, 40))
-        local Timer = GetConVar("ttt_elementalist_frostbite_effect_duration"):GetInt()
+        local Timer = ROLE.ConvarFrostEffectDur:GetInt()
 
         if att:HasEquipmentItem(EQUIP_ELEMENTALIST_FROSTBITE_UP) and ChilledPlayers[vicId] and GetChanceConVarOutcome("ttt_elementalist_frostbite+_freeze_chance") then
             --Upgrade functionality
@@ -112,7 +112,7 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
             IgnitedPlayers[vicId] = true
             local timerId = vicId .. "_IsBurning"
 
-            local timeToBurn = 1 + (GetConVar("ttt_elementalist_pyromancer_burn_duration"):GetInt() * scale)
+            local timeToBurn = 1 + (ROLE.ConvarPyroBurnDur * scale)
 
             -- This isn't a very dynamic way of doing this, it always uses the newest time, even if smaller
             ent:Ignite(timeToBurn, 400 * scale)
@@ -141,7 +141,7 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
             --Base functionality
             local dir = ent:GetPos() - att:GetPos()
             local dirNormal = dir:GetNormalized()
-            local forceScale = 300 + (GetConVar("ttt_elementalist_windburn_push_power"):GetInt() * scale) -- Based on the crowbar push effect
+            local forceScale = 300 + (ROLE.ConvarWindPushPow:GetInt() * scale) -- Based on the crowbar push effect
             local pushForce = Vector(dirNormal.x * forceScale, dirNormal.y * forceScale, dirNormal.z * forceScale * 0.5)
 
             ent:SetVelocity(ent:GetVelocity() + pushForce)
@@ -161,7 +161,7 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
 
         local eyeang = ent:EyeAngles()
         if eyeang then
-            local punchPower = GetConVar("ttt_elementalist_discharge_punch_power"):GetInt() * damage
+            local punchPower = ROLE.ConvarDisPunchPow:GetInt() * damage
             eyeang.pitch = math.Clamp(eyeang.pitch + math.Rand(-punchPower, punchPower), -90, 90)
             eyeang.yaw = math.Clamp(eyeang.yaw + math.Rand(-punchPower, punchPower), -90, 90)
             ent:SetEyeAngles(eyeang)
@@ -228,22 +228,22 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
         end
 
         if not timer.Exists(vicId .. "_IsBlind") then
-            timer.Create(vicId .. "_IsBlind", GetConVar("ttt_elementalist_midnight_dim_duration"):GetInt(), 1, EndBlind)
+            timer.Create(vicId .. "_IsBlind", ROLE.ConvarMidEffectDur:GetInt(), 1, EndBlind)
         else
-            timer.Adjust(vicId .. "_IsBlind", GetConVar("ttt_elementalist_midnight_dim_duration"):GetInt(), 1, EndBlind)
+            timer.Adjust(vicId .. "_IsBlind", ROLE.ConvarMidEffectDur:GetInt(), 1, EndBlind)
         end
     end
 
     if att:HasEquipmentItem(EQUIP_ELEMENTALIST_LIFESTEAL) then
         --Base functionality
-        local healPercent = GetConVar("ttt_elementalist_lifesteal_heal_percentage"):GetInt() * 0.01
+        local healPercent = ROLE.ConvarLifeHealPer:GetInt() * 0.01
         local healAmount = math.Round(damage * healPercent, 0)
 
         if att:HasEquipmentItem(EQUIP_ELEMENTALIST_LIFESTEAL_UP) then
             --Upgrade functionality
             local healthDiff = math.Clamp(ent:Health() - damage, 0, ent:GetMaxHealth())
 
-            if healthDiff < GetConVar("ttt_elementalist_lifesteal+_execute_amount"):GetInt() then
+            if healthDiff < ROLE.ConvarLifeExecute:GetInt() then
                 dmginfo:SetDamage(1000)
                 healAmount = healAmount + math.Round(healthDiff * 0.33, 0)
             end
