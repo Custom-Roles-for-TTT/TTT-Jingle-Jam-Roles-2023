@@ -100,7 +100,7 @@ hook.Add("TTTTutorialRoleText", "SummonerTutorialRoleText", function(playerRole)
         local divStart = "<div style='margin-top: 10px;'>"
         local styleEnd = "</span>"
 
-        local html = "The " .. ROLE_STRINGS[ROLE_ELEMENTALIST] .. " is a member of the " .. getStyleString(ROLE_TRAITOR) .. ROLE_STRINGS_EXT[ROLE_TRAITOR] .. " team" .. styleEnd .. " whose goal is to eliminate all innocents and independents."
+        local html = "The " .. ROLE_STRINGS[ROLE_ELEMENTALIST] .. " is a member of the " .. getStyleString(ROLE_TRAITOR) .. "traitor team" .. styleEnd .. " whose goal is to eliminate all innocents and independents."
 
         html = html .. divStart .. "They have access to special powerups in the " .. getStyleString(ROLE_ELEMENTALIST) .. "traitor shop" .. styleEnd .. " which do a variety of things when they shoot other terrorists.</div>"
 
