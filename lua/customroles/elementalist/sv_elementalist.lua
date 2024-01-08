@@ -138,6 +138,10 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
         if att:HasEquipmentItem(EQUIP_ELEMENTALIST_WINDBURN_UP) and GetChanceConVarOutcome("ttt_elementalist_windburn+_launch_chance") then
             --Upgrade functionality
             ent:SetVelocity(ent:GetVelocity() + Vector(0, 0, 1000 + (1000 * scale)))
+
+            if ply.SetJumpLevel and ply.GetMaxJumpLevel then
+                ply:SetJumpLevel(ply:GetMaxJumpLevel() + 1)
+            end
         else
             --Base functionality
             local dir = ent:GetPos() - att:GetPos()
