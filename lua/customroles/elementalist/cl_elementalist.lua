@@ -1,6 +1,7 @@
 --// Logan Christianson
-local IceOverlay, DarkOverlay = {
-	["$pp_colour_brightness"] = 0,
+local shouldDrawDarkOverlay = false
+local IceOverlay, DarkOverlay = nil, {
+	["$pp_colour_brightness"] = 1,
 	["$pp_colour_colour"] = 1
 }
 
@@ -49,6 +50,8 @@ end
 function StartDarkOverlay(percent)
     local actualPercent = percent * 0.01
 
+    shouldDrawDarkOverlay = true
+
     DarkOverlay = {
         ["$pp_colour_brightness"] = -0.25 * actualPercent,
         ["$pp_colour_colour"] = 1 - (1 * actualPercent)
@@ -56,6 +59,8 @@ function StartDarkOverlay(percent)
 end
 
 function EndDarkOverlay()
+    shouldDrawDarkOverlay = false
+
     DarkOverlay = {
         ["$pp_colour_brightness"] = 0,
         ["$pp_colour_colour"] = 1
@@ -63,7 +68,9 @@ function EndDarkOverlay()
 end
 
 hook.Add("RenderScreenspaceEffects", "ElementalistScreenDimming", function()
-    DrawColorModify(DarkOverlay)
+    if shouldDrawDarkOverlay then
+        DrawColorModify(DarkOverlay)
+    end
 end)
 
 net.Receive("BeginIceScreen", function(len)
@@ -102,9 +109,9 @@ hook.Add("TTTTutorialRoleText", "SummonerTutorialRoleText", function(playerRole)
 
         local html = "The " .. ROLE_STRINGS[ROLE_ELEMENTALIST] .. " is a member of the " .. getStyleString(ROLE_TRAITOR) .. "traitor team" .. styleEnd .. " whose goal is to eliminate all innocents and independents."
 
-        html = html .. divStart .. "They have access to special powerups in the " .. getStyleString(ROLE_ELEMENTALIST) .. "traitor shop" .. styleEnd .. " which do a variety of things when they shoot other terrorists.</div>"
+        html = html .. divStart .. "They have access to " .. getStyleString(ROLE_ELEMENTALIST) .. "special powerups" .. styleEnd .. " in the " .. getStyleString(ROLE_TRAITOR) .. "traitor shop" .. styleEnd .. " which do a variety of things when they shoot other terrorists.</div>"
 
-        html = html .. divStart .. "The powerups available are:<ul>"
+        html = html .. divStart .. "The powerups available are:<ul style='margin-bottom: 0px; padding-bottom: 0px;'>"
 
         local ROLE = ROLE_DATA_EXTERNAL[ROLE_ELEMENTALIST]
         local allowUpgradedEffects = ROLE.ConvarTierUpgrades:GetBool()
@@ -114,7 +121,7 @@ hook.Add("TTTTutorialRoleText", "SummonerTutorialRoleText", function(playerRole)
             if allowUpgradedEffects then
                 html = html .. " and Pyromancer+"
             end
-            html = html .. ".</li>"
+            html = html .. "</li>"
         end
 
         if ROLE.ConvarFrostUpgrades:GetBool() then
@@ -122,7 +129,7 @@ hook.Add("TTTTutorialRoleText", "SummonerTutorialRoleText", function(playerRole)
             if allowUpgradedEffects then
                 html = html .. " and Frostbite+"
             end
-            html = html .. ".</li>"
+            html = html .. "</li>"
         end
 
         if ROLE.ConvarWindUpgrades:GetBool() then
@@ -130,7 +137,7 @@ hook.Add("TTTTutorialRoleText", "SummonerTutorialRoleText", function(playerRole)
             if allowUpgradedEffects then
                 html = html .. " and Windburn+"
             end
-            html = html .. ".</li>"
+            html = html .. "</li>"
         end
 
         if ROLE.ConvarDischargeUpgrades:GetBool() then
@@ -138,7 +145,7 @@ hook.Add("TTTTutorialRoleText", "SummonerTutorialRoleText", function(playerRole)
             if allowUpgradedEffects then
                 html = html .. " and Discharge+"
             end
-            html = html .. ".</li>"
+            html = html .. "</li>"
         end
 
         if ROLE.ConvarMidnightUpgrades:GetBool() then
@@ -146,7 +153,7 @@ hook.Add("TTTTutorialRoleText", "SummonerTutorialRoleText", function(playerRole)
             if allowUpgradedEffects then
                 html = html .. " and Midnight+"
             end
-            html = html .. ".</li>"
+            html = html .. "</li>"
         end
 
         if ROLE.ConvarLifeUpgrades:GetBool() then
@@ -154,7 +161,7 @@ hook.Add("TTTTutorialRoleText", "SummonerTutorialRoleText", function(playerRole)
             if allowUpgradedEffects then
                 html = html .. " and Lifesteal+"
             end
-            html = html .. ".</li>"
+            html = html .. "</li>"
         end
 
         html = html .. "</ul>" .. styleEnd
