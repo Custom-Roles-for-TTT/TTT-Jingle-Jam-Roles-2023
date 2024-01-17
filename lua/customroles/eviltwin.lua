@@ -90,7 +90,7 @@ if CLIENT then
         if not IsPlayer(ent) then return end
 
         if cli:IsActiveEvilTwin() and ent:IsActiveGoodTwin() then
-            return StringUpper(ROLE_STRINGS[ROLE_GOODTWIN]), ROLE_COLORS_RADAR[ROLE_GOODTWIN]
+            return string.upper(ROLE_STRINGS[ROLE_GOODTWIN]), ROLE_COLORS_RADAR[ROLE_GOODTWIN]
         end
     end)
 

@@ -18,7 +18,7 @@ if SERVER then
         local players = {}
         local choices = {}
 
-        for _, v in ipairs(GetAllPlayers()) do
+        for _, v in ipairs(player.GetAll()) do
             if IsValid(v) then
                 if not v:IsSpec() then
                     table.insert(players, v)
@@ -31,8 +31,8 @@ if SERVER then
 
         if twins_min_players:GetInt() ~= 0 and #players < twins_min_players:GetInt() then return end
 
-        if TTTULX and TTTULX.PlysMarkedForNextRound then -- TODO: Actually make this table globally accessible
-            for k, _ in pairs(TTTULX.PlysMarkedForNextRound) do
+        if CRULX and CRULX.PlysMarkedForNextRound then -- TODO: Actually make this table globally accessible
+            for k, _ in pairs(CRULX.PlysMarkedForNextRound) do
                 local ply = player.GetBySteamID64(k)
                 if table.HasValue(choices, ply) then
                     table.RemoveByValue(choices, ply)
@@ -55,7 +55,7 @@ if SERVER then
     hook.Add("TTTBeginRound", "Twins_TTTBeginRound", function()
         local goodTwin = nil
         local evilTwin = nil
-        for _, v in ipairs(GetAllPlayers()) do
+        for _, v in ipairs(player.GetAll()) do
             if v:IsGoodTwin() then
                 if goodTwin ~= nil then return end
                 goodTwin = v

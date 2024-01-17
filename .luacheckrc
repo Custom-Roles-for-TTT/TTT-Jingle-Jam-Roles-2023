@@ -933,7 +933,9 @@ globals = {
     "ROLE_DEPUTY",
     "ROLE_DOCTOR",
     "ROLE_DRUNK",
+    "ROLE_EVILTWIN",
     "ROLE_GLITCH",
+    "ROLE_GOODTWIN",
     "ROLE_HYPNOTIST",
     "ROLE_IMPERSONATOR",
     "ROLE_INFECTED",
@@ -1015,6 +1017,7 @@ globals = {
 
     -- CR Namespaces
     "CRHUD",
+    "CRULX",
 
     -- JJ2022
     "FAKER_READY",
