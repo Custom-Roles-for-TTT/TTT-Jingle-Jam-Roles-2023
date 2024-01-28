@@ -292,9 +292,22 @@ if CLIENT then
     --------------
 
     AddHook("TTTTutorialRoleText", "Renegade_TTTTutorialRoleText", function(role, titleLabel)
-        if role == ROLE_RENEGADE then
-            -- TODO
+        if role ~= ROLE_RENEGADE then return end
+
+        local T = LANG.GetTranslation
+        local traitorColor = ROLE_COLORS[ROLE_TRAITOR]
+        local roleColor = ROLE_COLORS[ROLE_RENEGADE]
+        local html = "The " .. ROLE_STRINGS[ROLE_RENEGADE] .. " is an <span style='color: rgb(" .. roleColor.r .. ", " .. roleColor.g .. ", " .. roleColor.b .. ")'>independent</span> role whose goal is to be the last player alive."
+
+        html = html .. "<span style='display: block; margin-top: 10px;'>The " .. ROLE_STRINGS[ROLE_RENEGADE] .. " <span style='color: rgb(" .. traitorColor.r .. ", " .. traitorColor.g .. ", " .. traitorColor.b .. ")'>knows who the " .. T("traitors") .. " are</span> and the " .. T("traitors") .. " <span style='color: rgb(" .. traitorColor.r .. ", " .. traitorColor.g .. ", " .. traitorColor.b .. ")'>know who the " .. ROLE_STRINGS[ROLE_RENEGADE] .. " is</span>."
+        if renegade_show_glitch:GetBool() then
+            html = html .. " They can also see the " .. ROLE_STRINGS[ROLE_GLITCH] .. " as " .. ROLE_STRINGS_EXT[ROLE_TRAITOR] .. " as well."
         end
+        html = html .. "</span>"
+
+        html = html .. "<span style='display: block; margin-top: 10px;'>The " .. ROLE_STRINGS[ROLE_RENEGADE] .. " can also read and send messages in <span style='color: rgb(" .. traitorColor.r .. ", " .. traitorColor.g .. ", " .. traitorColor.b .. ")'>" .. T("traitor") .. "</span> chat.</span>"
+
+        return html
     end)
 end
 
