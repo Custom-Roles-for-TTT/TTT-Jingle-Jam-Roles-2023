@@ -1,9 +1,12 @@
 local hook = hook
 local player = player
+local string = string
 local table = table
 
 local AddHook = hook.Add
 local GetAllPlayers = player.GetAll
+local StringUpper = string.upper
+local StringLower = string.lower
 local TableInsert = table.insert
 
 local ROLE = {}
@@ -14,15 +17,30 @@ ROLE.nameplural = "Renegades"
 ROLE.nameext = "a Renegade"
 ROLE.nameshort = "ren"
 
-ROLE.desc = [[You are {role}!]]
--- TODO: List the traitors
+ROLE.desc = [[You are {role}! Beware of the {traitors}!
+You can see who they are, but they can see who you are as well.
+Create a silent partnership or secretly work to undermine them,
+it's completely up to you!
+
+These are the {traitors}:
+{traitorlist}]]
 
 ROLE.team = ROLE_TEAM_INDEPENDENT
 
 ROLE.translations = {
     ["english"] = {
-        ["win_renegade"] = "",
-        ["ev_win_renegade"] = ""
+        ["win_renegade"] = "The {role} has overpowered their enemies to win!",
+        ["ev_win_renegade"] = "The powerful {renegade} has fought their way to victory!",
+        ["info_popup_renegade_glitch"] = [[You are {role}! Beware of the {traitors}!
+You can see who they are, but they can see who you are as well.
+Create a silent partnership or secretly work to undermine them,
+it's completely up to you!
+
+BUT BEWARE! There was {aglitch} in the system and one among the
+{traitors} does not seek the same goal.
+
+These may or may not be the {traitors}:
+{traitorlist}]]
     }
 }
 
@@ -31,16 +49,22 @@ ROLE.shop = {}
 ROLE.canseejesters = true
 ROLE.canseemia = true
 
+local renegade_show_glitch = CreateConVar("ttt_renegade_show_glitch", "0", FCVAR_REPLICATED, "Whether to allow the renegade to see the glitch. They will show as an unknown traitor", 0, 1)
+
 ROLE.convars = {}
 TableInsert(ROLE.convars, {
     cvar = "ttt_renegade_warn_all",
+    type = ROLE_CONVAR_TYPE_BOOL
+})
+TableInsert(ROLE.convars, {
+    cvar = "ttt_renegade_show_glitch",
     type = ROLE_CONVAR_TYPE_BOOL
 })
 
 if SERVER then
     AddCSLuaFile()
 
-    local renegade_warn_all = CreateConVar("ttt_renegade_warn_all", "0", FCVAR_REPLICATED)
+    local renegade_warn_all = CreateConVar("ttt_renegade_warn_all", "0", FCVAR_REPLICATED, "Whether to warn all players there is a renegade in the round. If disabled, only traitors are warned", 0, 1)
 
     ------------------
     -- ANNOUNCEMENT --
@@ -51,18 +75,29 @@ if SERVER then
         timer.Simple(1.5, function()
             local plys = GetAllPlayers()
 
-            local hasRenegade = false
+            local renegade = nil
+            local hasGlitch = false
             for _, v in ipairs(plys) do
                 if v:IsRenegade() then
-                    hasRenegade = true
+                    renegade = v
+                elseif v:IsGlitch() then
+                    hasGlitch = true
                 end
             end
 
-            if hasRenegade then
+            if renegade then
                 for _, v in ipairs(plys) do
-                    local isTraitor = v:IsTraitorTeam()
-                    -- Warn this player about the Renegade if they are a traitor or we are configured to warn everyone
-                    if not v:IsRenegade() and (isTraitor or renegade_warn_all:GetBool()) then
+                    -- Warn the Renegade about the glitch, if there is one
+                    -- Do this in the loop in case there are multiple renegades
+                    if v:IsRenegade() then
+                        if hasGlitch and renegade_show_glitch:GetBool() then
+                            v:QueueMessage(MSG_PRINTBOTH, "There is " .. ROLE_STRINGS_EXT[ROLE_GLITCH] .. ".")
+                        end
+                        continue
+                    end
+
+                    -- Warn this player about the renegade if they are a traitor or we are configured to warn everyone
+                    if v:IsTraitorTeam() or renegade_warn_all:GetBool() then
                         v:QueueMessage(MSG_PRINTBOTH, "There is " .. ROLE_STRINGS_EXT[ROLE_RENEGADE] .. ".")
                     end
                 end
@@ -120,9 +155,111 @@ if CLIENT then
     -- TARGET ID --
     ---------------
 
-    -- TODO: Show traitors with red question mark icon on target ID and scoreboard
-    -- TODO: Show renegade to traitors on target ID and scoreboard
-    -- TODO: ConVar so that the Renegade also sees the Glitch as a traitor (not sure whether this should be enabled or disabled by default)
+    AddHook("TTTTargetIDPlayerRoleIcon", "Renegade_TTTTargetIDPlayerRoleIcon", function(ply, cli, role, noz, color_role, hideBeggar, showJester, hideBodysnatcher)
+        if cli:IsActiveRenegade() and (ply:IsTraitorTeam() or (renegade_show_glitch:GetBool() and ply:IsGlitch())) then
+            local icon_overridden, _, _ = ply:IsTargetIDOverridden(cli)
+            if icon_overridden then return end
+
+            return ROLE_NONE, false, ROLE_TRAITOR
+        elseif cli:IsTraitorTeam() and ply:IsActiveRenegade() then
+            return ROLE_RENEGADE, false, ROLE_RENEGADE
+        end
+    end)
+
+    AddHook("TTTTargetIDPlayerRing", "Renegade_TTTTargetIDPlayerRing", function(ent, cli, ring_visible)
+        if GetRoundState() < ROUND_ACTIVE then return end
+        if not IsPlayer(ent) then return end
+
+        if cli:IsActiveRenegade() and (ent:IsTraitorTeam() or (renegade_show_glitch:GetBool() and ent:IsGlitch())) then
+            local _, ring_overridden, _ = ent:IsTargetIDOverridden(cli)
+            if ring_overridden then return end
+
+            return true, ROLE_COLORS_RADAR[ROLE_TRAITOR]
+        elseif cli:IsTraitorTeam() and ent:IsActiveRenegade() then
+            return true, ROLE_COLORS_RADAR[ROLE_RENEGADE]
+        end
+    end)
+
+    AddHook("TTTTargetIDPlayerText", "Renegade_TTTTargetIDPlayerText", function(ent, cli, text, col, secondary_text)
+        if GetRoundState() < ROUND_ACTIVE then return end
+        if not IsPlayer(ent) then return end
+
+        if cli:IsActiveRenegade() and (ent:IsTraitorTeam() or (renegade_show_glitch:GetBool() and ent:IsGlitch())) then
+            local _, _, text_overridden = ent:IsTargetIDOverridden(cli)
+            if text_overridden then return end
+
+            local role_string = LANG.GetParamTranslation("target_unknown_team", { targettype = LANG.GetTranslation("traitor")})
+            return StringUpper(role_string), ROLE_COLORS_RADAR[ROLE_TRAITOR]
+        elseif IsPlayer(ent) and cli:IsTraitorTeam() and ent:IsActiveRenegade() then
+            return StringUpper(ROLE_STRINGS[ROLE_RENEGADE]), ROLE_COLORS_RADAR[ROLE_RENEGADE]
+        end
+    end)
+
+    ROLE.istargetidoverridden = function(ply, target)
+        if not IsPlayer(target) then return end
+
+        local visible = (ply:IsActiveRenegade() and (target:IsTraitorTeam() or (renegade_show_glitch:GetBool() and target:IsGlitch()))) or
+                        (ply:IsTraitorTeam() and target:IsActiveRenegade())
+        ------ icon,    ring,    text
+        return visible, visible, visible
+    end
+
+    ----------------
+    -- SCOREBOARD --
+    ----------------
+
+    AddHook("TTTScoreboardPlayerRole", "Renegade_TTTScoreboardPlayerRole", function(ply, cli, color, roleFileName)
+        if cli:IsActiveRenegade() and (ply:IsTraitorTeam() or (renegade_show_glitch:GetBool() and ply:IsGlitch())) then
+            local _, role_overridden = ply:IsScoreboardInfoOverridden(cli)
+            if role_overridden then return end
+
+            return ROLE_COLORS_SCOREBOARD[ROLE_TRAITOR], ROLE_STRINGS_SHORT[ROLE_NONE]
+        end
+        if (cli:IsTraitorTeam() and ply:IsActiveRenegade()) or (cli == ply and cli:IsRenegade()) then
+            return ROLE_COLORS_SCOREBOARD[ROLE_RENEGADE], ROLE_STRINGS_SHORT[ROLE_RENEGADE]
+        end
+    end)
+
+    ROLE.isscoreboardinfooverridden = function(ply, target)
+        if not IsPlayer(target) then return end
+
+        local visible = (ply:IsActiveRenegade() and (target:IsTraitorTeam() or (renegade_show_glitch:GetBool() and target:IsGlitch()))) or
+                        (ply:IsTraitorTeam() and target:IsActiveRenegade())
+        ------ name,  role
+        return false, visible
+    end
+
+    ----------------
+    -- ROLE POPUP --
+    ----------------
+
+    AddHook("TTTRolePopupParams", "Renegade_TTTRolePopupParams", function(cli)
+        if not cli:IsRenegade() then return end
+
+        local traitorlist = ""
+        for _, ply in ipairs(GetAllPlayers()) do
+            if ply:IsTraitorTeam() then
+                traitorlist = traitorlist .. string.rep(" ", 42) .. ply:Nick() .. "\n"
+            -- Don't show the list of comrades if there is a glitch
+            elseif renegade_show_glitch:GetBool() and ply:IsGlitch() then
+                traitorlist = traitorlist .. string.rep(" ", 42) .. ply:Nick() .. "\n"
+            end
+        end
+
+        return { traitorlist = traitorlist }
+    end)
+
+    AddHook("TTTRolePopupRoleStringOverride", "Renegade_TTTRolePopupRoleStringOverride", function(cli, roleString)
+        if not cli:IsRenegade() then return end
+        if not renegade_show_glitch:GetBool() then return end
+
+        for _, ply in ipairs(GetAllPlayers()) do
+            -- Show a different popup if there is a glitch
+            if renegade_show_glitch:GetBool() and ply:IsGlitch() then
+                return roleString .. "_glitch"
+            end
+        end
+    end)
 
     ----------------
     -- WIN CHECKS --
@@ -130,7 +267,7 @@ if CLIENT then
 
     AddHook("TTTScoringWinTitle", "Renegade_TTTScoringWinTitle", function(wintype, wintitles, title, secondary_win_role)
         if wintype == WIN_RENEGADE then
-            return { txt = "hilite_win_role_singular", params = { role = string.upper(ROLE_STRINGS[ROLE_RENEGADE]) }, c = ROLE_COLORS[ROLE_RENEGADE] }
+            return { txt = "hilite_win_role_singular", params = { role = StringUpper(ROLE_STRINGS[ROLE_RENEGADE]) }, c = ROLE_COLORS[ROLE_RENEGADE] }
         end
     end)
 
@@ -140,7 +277,7 @@ if CLIENT then
 
     AddHook("TTTEventFinishText", "Renegade_TTTEventFinishText", function(e)
         if e.win == WIN_RENEGADE then
-            return LANG.GetParamTranslation("ev_win_renegade", { role = string.lower(ROLE_STRINGS[ROLE_RENEGADE]) })
+            return LANG.GetParamTranslation("ev_win_renegade", { role = StringLower(ROLE_STRINGS[ROLE_RENEGADE]) })
         end
     end)
 
