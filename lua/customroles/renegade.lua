@@ -178,16 +178,26 @@ if SERVER then
     end)
 
     -- Allow renegades to read traitor chat
-    AddHook("TTTBeforeTeamChat", "Renegade_TTTBeforeTeamChat", function(sender, msg, targets)
+    AddHook("TTTBeforeTeamChat", "Renegade_TTTBeforeTeamChat", function(sender, msg, targets, from_chat)
         if not IsPlayer(sender) or not sender:Alive() or sender:IsSpec() then return end
 
-        -- Make sure all traitor team messages are sent to renegades too
+        -- Send traitor chat messages to renegades, but use a separate message so we can override their role to always show "traitor"
         if sender:IsTraitorTeam() then
+            -- Don't send the chat message unless this is being called from the chat method so we don't get duplicates
+            if not from_chat then return end
+
+            local renegades = {}
             for _, v in ipairs(GetAllPlayers()) do
                 if v:IsActive() and v:IsRenegade() then
-                    TableInsert(targets, v)
+                    TableInsert(renegades, v)
                 end
             end
+
+            net.Start("TTT_RoleChat")
+            net.WriteInt(ROLE_TRAITOR, 8)
+            net.WriteEntity(sender)
+            net.WriteString(msg)
+            net.Send(renegades)
         -- Send renegade messages to traitors and themselves
         elseif sender:IsRenegade() then
             for _, v in ipairs(GetAllPlayers()) do
@@ -199,7 +209,6 @@ if SERVER then
     end)
 
     -- TODO: Traitor voice
-    -- TODO: Prevent renegade from seeing traitor roles in chat prefix
 end
 
 if CLIENT then
