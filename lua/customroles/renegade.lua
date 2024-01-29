@@ -145,8 +145,61 @@ if SERVER then
     -- TRAITOR CHAT --
     ------------------
 
-    -- TODO: Show traitor team messages to renegade
-    -- TODO: Allow renegade to send messages to traitor team
+    -- Allow renegade to send messages to traitor team
+    AddHook("PlayerSay", "Renegade_PlayerSay", function(ply, text, team_only)
+        if not team_only then return end
+        if not IsPlayer(ply) or not ply:Alive() or ply:IsSpec() then return end
+        if not ply:IsRenegade() then return end
+
+        local hasGlitch = false
+        local targets = {}
+        for _, v in pairs(GetAllPlayers()) do
+            if v:IsGlitch() then
+                hasGlitch = true
+            elseif v:IsTraitorTeam() or v:IsRenegade() then
+                TableInsert(targets, v)
+            end
+        end
+
+        -- Don't send chat messages if there is a glitch, but only tell them there is a glitch if they are allowed to see
+        if hasGlitch then
+            if renegade_show_glitch:GetBoo() then
+                ply:PrintMessage(HUD_PRINTTALK, "The glitch is scrambling your communications")
+            end
+        -- Send the message as a role message to all traitors and renegades
+        else
+            net.Start("TTT_RoleChat")
+            net.WriteInt(ply:GetRole(), 8)
+            net.WriteEntity(ply)
+            net.WriteString(text)
+            net.Send(targets)
+        end
+        return ""
+    end)
+
+    -- Allow renegades to read traitor chat
+    AddHook("TTTBeforeTeamChat", "Renegade_TTTBeforeTeamChat", function(sender, msg, targets)
+        if not IsPlayer(sender) or not sender:Alive() or sender:IsSpec() then return end
+
+        -- Make sure all traitor team messages are sent to renegades too
+        if sender:IsTraitorTeam() then
+            for _, v in ipairs(GetAllPlayers()) do
+                if v:IsActive() and v:IsRenegade() then
+                    TableInsert(targets, v)
+                end
+            end
+        -- Send renegade messages to traitors and themselves
+        elseif sender:IsRenegade() then
+            for _, v in ipairs(GetAllPlayers()) do
+                if v:IsActive() and (v:IsRenegade() or v:IsTraitorTeam()) then
+                    TableInsert(targets, v)
+                end
+            end
+        end
+    end)
+
+    -- TODO: Traitor voice
+    -- TODO: Prevent renegade from seeing traitor roles in chat prefix
 end
 
 if CLIENT then
