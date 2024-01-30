@@ -161,11 +161,9 @@ if SERVER then
             end
         end
 
-        -- Don't send chat messages if there is a glitch, but only tell them there is a glitch if they are allowed to see
+        -- Don't send chat messages if there is a glitch
         if hasGlitch then
-            if renegade_show_glitch:GetBoo() then
-                ply:PrintMessage(HUD_PRINTTALK, "The glitch is scrambling your communications")
-            end
+            ply:PrintMessage(HUD_PRINTTALK, "The glitch is scrambling your communications")
         -- Send the message as a role message to all traitors and renegades
         else
             net.Start("TTT_RoleChat")
@@ -208,8 +206,34 @@ if SERVER then
         end
     end)
 
-    -- TODO: Traitor voice
+    --- Allow renegades and traitors to see that eachother is speaking
+    AddHook("TTTTeamVoiceChatTargets", "Renegade_TTTTeamVoiceChatTargets", function(speaker, targets)
+        if not IsPlayer(speaker) or not speaker:Alive() or speaker:IsSpec() then return end
+
+        -- Add renegades to the traitor team target list
+        if speaker:IsTraitorTeam() then
+            for _, v in ipairs(GetAllPlayers()) do
+                if v:IsActive() and v:IsRenegade() then
+                    TableInsert(targets, v)
+                end
+            end
+        -- Send renegade messages to traitors and themselves
+        elseif speaker:IsRenegade() then
+            for _, v in ipairs(GetAllPlayers()) do
+                if v:IsActive() and (v:IsRenegade() or v:IsTraitorTeam()) then
+                    TableInsert(targets, v)
+                end
+            end
+        end
+    end)
 end
+
+-- Allow renegades to speak to and listen to traitors
+AddHook("TTTCanUseTraitorVoice", "Renegade_TTTCanUseHearTraitorVoice", function(ply)
+    if IsPlayer(ply) and ply:IsRenegade() then
+        return true
+    end
+end)
 
 if CLIENT then
 
