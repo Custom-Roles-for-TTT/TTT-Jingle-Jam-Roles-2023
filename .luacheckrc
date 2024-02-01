@@ -1031,6 +1031,8 @@ globals = {
     "EQUIP_ELEMENTALIST_WINDBURN",
     "EQUIP_ELEMENTALIST_WINDBURN_UP",
     "ROLE_ELEMENTALIST",
+    "ROLE_RENEGADE",
+    "WIN_RENEGADE",
     "CloseIceOverlay",
     "CreateIceOverlay",
     "EndDarkOverlay",
