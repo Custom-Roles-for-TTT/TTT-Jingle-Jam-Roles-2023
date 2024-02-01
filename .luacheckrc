@@ -1023,6 +1023,8 @@ globals = {
     "PHYSICIAN_TRACKER_DEAD",
     "PHYSICIAN_TRACKER_INACTIVE",
     "ROLE_PHYSICIAN"
+    "ROLE_RENEGADE",
+    "WIN_RENEGADE"
 }
 std = {
     globals = {
