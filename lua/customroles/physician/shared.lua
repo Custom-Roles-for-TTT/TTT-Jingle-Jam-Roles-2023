@@ -7,9 +7,9 @@ ROLE.nameplural = "Physicians"
 ROLE.nameext = "a Physician"
 ROLE.nameshort = "phy"
 
-ROLE.desc = [[You are a {role}! {comrades}
+ROLE.desc = [[You are a {role}!
 
-Use your Tracker device to plant trackers on players to monitor their heartbeat.
+Use your Health Tracker device to plant trackers on players to monitor their heartbeat.
 Open the scoreboard to view tracked player's health status, but beware its limited range!
 
 Press {menukey} to access the standard equipment shop, featuring an upgrade for your tracker.]]
@@ -18,8 +18,6 @@ ROLE.team = ROLE_TEAM_DETECTIVE
 ROLE.shopsyncroles = {ROLE_DETECTIVE}
 
 ROLE.loadout = {"weapon_ttt_physician_tracker"}
-
-ROLE.shopsyncroles = {ROLE_DETECTIVE}
 
 ROLE.translations = {}
 
@@ -43,13 +41,13 @@ hook.Add("TTTPrepareRound", "Physician_Equipment_TTTPrepareRound", function()
 
         -- If we haven't already registered this item, add it to the list
         if not table.HasItemWithPropertyValue(EquipmentItems[ROLE_PHYSICIAN], "id", EQUIP_PHS_TRACKER) then
-    table.insert(EquipmentItems[ROLE_PHYSICIAN], {
-        id          = EQUIP_PHS_TRACKER,
-        type        = "item_passive",
+            table.insert(EquipmentItems[ROLE_PHYSICIAN], {
+                id          = EQUIP_PHS_TRACKER,
+                type        = "item_passive",
                 material    = "vgui/ttt/roles/phy/shop/icon_physician_scanner_upgrade",
-        name        = "Health Tracker Upgrade",
-        desc        = "Upgrades the range and information quality from the Health Tracker."
-    })
+                name        = "Health Tracker Upgrade",
+                desc        = "Upgrades the range and information quality from the Health Tracker."
+            })
         end
     end
 end)
