@@ -27,16 +27,31 @@ PHYSICIAN_TRACKER_INACTIVE = 0  -- Player is untracked
 PHYSICIAN_TRACKER_ACTIVE = 1    -- Player is being tracked
 PHYSICIAN_TRACKER_DEAD = 2      -- Player is dead (or, potentially in future, has destroyed their tracker)
 
-hook.Add("Initialize", "Physician_Initialize", function()
+hook.Add("TTTPrepareRound", "Physician_Equipment_TTTPrepareRound", function()
     EQUIP_PHS_TRACKER = EQUIP_PHS_TRACKER or GenerateNewEquipmentID()
 
+    if DefaultEquipment then
+        DefaultEquipment[ROLE_PHYSICIAN] = {
+            EQUIP_PHS_TRACKER
+        }
+    end
+
+    if EquipmentItems then
+        if not EquipmentItems[ROLE_PHYSICIAN] then
+            EquipmentItems[ROLE_PHYSICIAN] = {}
+        end
+
+        -- If we haven't already registered this item, add it to the list
+        if not table.HasItemWithPropertyValue(EquipmentItems[ROLE_PHYSICIAN], "id", EQUIP_PHS_TRACKER) then
     table.insert(EquipmentItems[ROLE_PHYSICIAN], {
         id          = EQUIP_PHS_TRACKER,
         type        = "item_passive",
-        material    = "vgui/ttt/",
+                material    = "vgui/ttt/roles/phy/shop/icon_physician_scanner_upgrade",
         name        = "Health Tracker Upgrade",
         desc        = "Upgrades the range and information quality from the Health Tracker."
     })
+        end
+    end
 end)
 
 if SERVER then
