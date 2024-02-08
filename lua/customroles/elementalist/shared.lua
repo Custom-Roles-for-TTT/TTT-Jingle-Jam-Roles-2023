@@ -146,22 +146,57 @@ if SERVER then
     AddCSLuaFile()
 end
 
-hook.Add("Initialize", "Elementalist_Initialize", function()
-    local allowEffectUpgrades = ROLE.ConvarTierUpgrades:GetBool()
-
+hook.Add("TTTPrepareRound", "Elementalist_Equipment_TTTPrepareRound", function()
     EQUIP_ELEMENTALIST_FROSTBITE = EQUIP_ELEMENTALIST_FROSTBITE or GenerateNewEquipmentID()
     EQUIP_ELEMENTALIST_FROSTBITE_UP = EQUIP_ELEMENTALIST_FROSTBITE_UP or GenerateNewEquipmentID()
+    EQUIP_ELEMENTALIST_PYROMANCER = EQUIP_ELEMENTALIST_PYROMANCER or GenerateNewEquipmentID()
+    EQUIP_ELEMENTALIST_PYROMANCER_UP = EQUIP_ELEMENTALIST_PYROMANCER_UP or GenerateNewEquipmentID()
+    EQUIP_ELEMENTALIST_WINDBURN = EQUIP_ELEMENTALIST_WINDBURN or GenerateNewEquipmentID()
+    EQUIP_ELEMENTALIST_WINDBURN_UP = EQUIP_ELEMENTALIST_WINDBURN_UP or GenerateNewEquipmentID()
+    EQUIP_ELEMENTALIST_DISCHARGE = EQUIP_ELEMENTALIST_DISCHARGE or GenerateNewEquipmentID()
+    EQUIP_ELEMENTALIST_DISCHARGE_UP = EQUIP_ELEMENTALIST_DISCHARGE_UP or GenerateNewEquipmentID()
+    EQUIP_ELEMENTALIST_MIDNIGHT = EQUIP_ELEMENTALIST_MIDNIGHT or GenerateNewEquipmentID()
+    EQUIP_ELEMENTALIST_MIDNIGHT_UP = EQUIP_ELEMENTALIST_MIDNIGHT_UP or GenerateNewEquipmentID()
+    EQUIP_ELEMENTALIST_LIFESTEAL = EQUIP_ELEMENTALIST_LIFESTEAL or GenerateNewEquipmentID()
+    EQUIP_ELEMENTALIST_LIFESTEAL_UP = EQUIP_ELEMENTALIST_LIFESTEAL_UP or GenerateNewEquipmentID()
+
+    if DefaultEquipment then
+        DefaultEquipment[ROLE_ELEMENTALIST] = {
+            EQUIP_ELEMENTALIST_FROSTBITE,
+            EQUIP_ELEMENTALIST_FROSTBITE_UP,
+            EQUIP_ELEMENTALIST_PYROMANCER,
+            EQUIP_ELEMENTALIST_PYROMANCER_UP,
+            EQUIP_ELEMENTALIST_WINDBURN,
+            EQUIP_ELEMENTALIST_WINDBURN_UP,
+            EQUIP_ELEMENTALIST_DISCHARGE,
+            EQUIP_ELEMENTALIST_DISCHARGE_UP,
+            EQUIP_ELEMENTALIST_MIDNIGHT,
+            EQUIP_ELEMENTALIST_MIDNIGHT_UP,
+            EQUIP_ELEMENTALIST_LIFESTEAL,
+            EQUIP_ELEMENTALIST_LIFESTEAL_UP
+        }
+    end
+
+    if not EquipmentItems then return end
+
+    if not EquipmentItems[ROLE_ELEMENTALIST] then
+        EquipmentItems[ROLE_ELEMENTALIST] = {}
+    end
+
+    local allowEffectUpgrades = ROLE.ConvarTierUpgrades:GetBool()
 
     if ROLE.ConvarFrostUpgrades:GetBool() then
-        table.insert(EquipmentItems[ROLE_ELEMENTALIST], {
-            id          = EQUIP_ELEMENTALIST_FROSTBITE,
-            type        = "item_passive",
-            material    = "vgui/ttt/roles/elm/upgrades/frostbite",
-            name        = "Frostbite",
-            desc        = "Shoot players to slow down their movement, strength of slow depending on damage done."
-        })
+        if not table.HasItemWithPropertyValue(EquipmentItems[ROLE_ELEMENTALIST], "id", EQUIP_ELEMENTALIST_FROSTBITE) then
+            table.insert(EquipmentItems[ROLE_ELEMENTALIST], {
+                id          = EQUIP_ELEMENTALIST_FROSTBITE,
+                type        = "item_passive",
+                material    = "vgui/ttt/roles/elm/upgrades/frostbite",
+                name        = "Frostbite",
+                desc        = "Shoot players to slow down their movement, strength of slow depending on damage done."
+            })
+        end
 
-        if allowEffectUpgrades then
+        if allowEffectUpgrades and not table.HasItemWithPropertyValue(EquipmentItems[ROLE_ELEMENTALIST], "id", EQUIP_ELEMENTALIST_FROSTBITE_UP) then
             table.insert(EquipmentItems[ROLE_ELEMENTALIST], {
                 id          = EQUIP_ELEMENTALIST_FROSTBITE_UP,
                 type        = "item_passive",
@@ -173,19 +208,18 @@ hook.Add("Initialize", "Elementalist_Initialize", function()
         end
     end
 
-    EQUIP_ELEMENTALIST_PYROMANCER = EQUIP_ELEMENTALIST_PYROMANCER or GenerateNewEquipmentID()
-    EQUIP_ELEMENTALIST_PYROMANCER_UP = EQUIP_ELEMENTALIST_PYROMANCER_UP or GenerateNewEquipmentID()
-
     if ROLE.ConvarPyroUpgrades:GetBool() then
-        table.insert(EquipmentItems[ROLE_ELEMENTALIST], {
-            id          = EQUIP_ELEMENTALIST_PYROMANCER,
-            type        = "item_passive",
-            material    = "vgui/ttt/roles/elm/upgrades/pyromancer",
-            name        = "Pyromancer",
-            desc        = "Shoot players to ignite them, duration scaling with damage done."
-        })
+        if not table.HasItemWithPropertyValue(EquipmentItems[ROLE_ELEMENTALIST], "id", EQUIP_ELEMENTALIST_PYROMANCER) then
+            table.insert(EquipmentItems[ROLE_ELEMENTALIST], {
+                id          = EQUIP_ELEMENTALIST_PYROMANCER,
+                type        = "item_passive",
+                material    = "vgui/ttt/roles/elm/upgrades/pyromancer",
+                name        = "Pyromancer",
+                desc        = "Shoot players to ignite them, duration scaling with damage done."
+            })
+        end
 
-        if allowEffectUpgrades then
+        if allowEffectUpgrades and not table.HasItemWithPropertyValue(EquipmentItems[ROLE_ELEMENTALIST], "id", EQUIP_ELEMENTALIST_PYROMANCER_UP) then
             table.insert(EquipmentItems[ROLE_ELEMENTALIST], {
                 id          = EQUIP_ELEMENTALIST_PYROMANCER_UP,
                 type        = "item_passive",
@@ -197,19 +231,18 @@ hook.Add("Initialize", "Elementalist_Initialize", function()
         end
     end
 
-    EQUIP_ELEMENTALIST_WINDBURN = EQUIP_ELEMENTALIST_WINDBURN or GenerateNewEquipmentID()
-    EQUIP_ELEMENTALIST_WINDBURN_UP = EQUIP_ELEMENTALIST_WINDBURN_UP or GenerateNewEquipmentID()
-
     if ROLE.ConvarWindUpgrades:GetBool() then
-        table.insert(EquipmentItems[ROLE_ELEMENTALIST], {
-            id          = EQUIP_ELEMENTALIST_WINDBURN,
-            type        = "item_passive",
-            material    = "vgui/ttt/roles/elm/upgrades/windburn",
-            name        = "Windburn",
-            desc        = "Shooting players pushes them backwards and away from you, force of push scaling with damage done."
-        })
+        if not table.HasItemWithPropertyValue(EquipmentItems[ROLE_ELEMENTALIST], "id", EQUIP_ELEMENTALIST_WINDBURN) then
+            table.insert(EquipmentItems[ROLE_ELEMENTALIST], {
+                id          = EQUIP_ELEMENTALIST_WINDBURN,
+                type        = "item_passive",
+                material    = "vgui/ttt/roles/elm/upgrades/windburn",
+                name        = "Windburn",
+                desc        = "Shooting players pushes them backwards and away from you, force of push scaling with damage done."
+            })
+        end
 
-        if allowEffectUpgrades then
+        if allowEffectUpgrades and not table.HasItemWithPropertyValue(EquipmentItems[ROLE_ELEMENTALIST], "id", EQUIP_ELEMENTALIST_WINDBURN_UP) then
             table.insert(EquipmentItems[ROLE_ELEMENTALIST], {
                 id          = EQUIP_ELEMENTALIST_WINDBURN_UP,
                 type        = "item_passive",
@@ -221,19 +254,18 @@ hook.Add("Initialize", "Elementalist_Initialize", function()
         end
     end
 
-    EQUIP_ELEMENTALIST_DISCHARGE = EQUIP_ELEMENTALIST_DISCHARGE or GenerateNewEquipmentID()
-    EQUIP_ELEMENTALIST_DISCHARGE_UP = EQUIP_ELEMENTALIST_DISCHARGE_UP or GenerateNewEquipmentID()
-
     if ROLE.ConvarDischargeUpgrades:GetBool() then
-        table.insert(EquipmentItems[ROLE_ELEMENTALIST], {
-            id          = EQUIP_ELEMENTALIST_DISCHARGE,
-            type        = "item_passive",
-            material    = "vgui/ttt/roles/elm/upgrades/discharge",
-            name        = "Discharge",
-            desc        = "Shoot players to shock them, punching their view based on damage done, disorienting them."
-        })
+        if not table.HasItemWithPropertyValue(EquipmentItems[ROLE_ELEMENTALIST], "id", EQUIP_ELEMENTALIST_DISCHARGE) then
+            table.insert(EquipmentItems[ROLE_ELEMENTALIST], {
+                id          = EQUIP_ELEMENTALIST_DISCHARGE,
+                type        = "item_passive",
+                material    = "vgui/ttt/roles/elm/upgrades/discharge",
+                name        = "Discharge",
+                desc        = "Shoot players to shock them, punching their view based on damage done, disorienting them."
+            })
+        end
 
-        if allowEffectUpgrades then
+        if allowEffectUpgrades and not table.HasItemWithPropertyValue(EquipmentItems[ROLE_ELEMENTALIST], "id", EQUIP_ELEMENTALIST_DISCHARGE_UP) then
             table.insert(EquipmentItems[ROLE_ELEMENTALIST], {
                 id          = EQUIP_ELEMENTALIST_DISCHARGE_UP,
                 type        = "item_passive",
@@ -245,19 +277,18 @@ hook.Add("Initialize", "Elementalist_Initialize", function()
         end
     end
 
-    EQUIP_ELEMENTALIST_MIDNIGHT = EQUIP_ELEMENTALIST_MIDNIGHT or GenerateNewEquipmentID()
-    EQUIP_ELEMENTALIST_MIDNIGHT_UP = EQUIP_ELEMENTALIST_MIDNIGHT_UP or GenerateNewEquipmentID()
-
     if ROLE.ConvarMidnightUpgrades:GetBool() then
-        table.insert(EquipmentItems[ROLE_ELEMENTALIST], {
-            id          = EQUIP_ELEMENTALIST_MIDNIGHT,
-            type        = "item_passive",
-            material    = "vgui/ttt/roles/elm/upgrades/midnight",
-            name        = "Midnight",
-            desc        = "Shoot players to begin blinding them, dimming their screen and making it difficult for them to see."
-        })
+        if not table.HasItemWithPropertyValue(EquipmentItems[ROLE_ELEMENTALIST], "id", EQUIP_ELEMENTALIST_MIDNIGHT) then
+            table.insert(EquipmentItems[ROLE_ELEMENTALIST], {
+                id          = EQUIP_ELEMENTALIST_MIDNIGHT,
+                type        = "item_passive",
+                material    = "vgui/ttt/roles/elm/upgrades/midnight",
+                name        = "Midnight",
+                desc        = "Shoot players to begin blinding them, dimming their screen and making it difficult for them to see."
+            })
+        end
 
-        if allowEffectUpgrades then
+        if allowEffectUpgrades and not table.HasItemWithPropertyValue(EquipmentItems[ROLE_ELEMENTALIST], "id", EQUIP_ELEMENTALIST_MIDNIGHT_UP) then
             table.insert(EquipmentItems[ROLE_ELEMENTALIST], {
                 id          = EQUIP_ELEMENTALIST_MIDNIGHT_UP,
                 type        = "item_passive",
@@ -269,19 +300,18 @@ hook.Add("Initialize", "Elementalist_Initialize", function()
         end
     end
 
-    EQUIP_ELEMENTALIST_LIFESTEAL = EQUIP_ELEMENTALIST_LIFESTEAL or GenerateNewEquipmentID()
-    EQUIP_ELEMENTALIST_LIFESTEAL_UP = EQUIP_ELEMENTALIST_LIFESTEAL_UP or GenerateNewEquipmentID()
-
     if ROLE.ConvarLifeUpgrades:GetBool() then
-        table.insert(EquipmentItems[ROLE_ELEMENTALIST], {
-            id          = EQUIP_ELEMENTALIST_LIFESTEAL,
-            type        = "item_passive",
-            material    = "vgui/ttt/roles/elm/upgrades/lifesteal",
-            name        = "Lifesteal",
-            desc        = "Shoot players to steal their life force, one bullet at a time."
-        })
+        if not table.HasItemWithPropertyValue(EquipmentItems[ROLE_ELEMENTALIST], "id", EQUIP_ELEMENTALIST_LIFESTEAL) then
+            table.insert(EquipmentItems[ROLE_ELEMENTALIST], {
+                id          = EQUIP_ELEMENTALIST_LIFESTEAL,
+                type        = "item_passive",
+                material    = "vgui/ttt/roles/elm/upgrades/lifesteal",
+                name        = "Lifesteal",
+                desc        = "Shoot players to steal their life force, one bullet at a time."
+            })
+        end
 
-        if allowEffectUpgrades then
+        if allowEffectUpgrades and not table.HasItemWithPropertyValue(EquipmentItems[ROLE_ELEMENTALIST], "id", EQUIP_ELEMENTALIST_LIFESTEAL_UP) then
             table.insert(EquipmentItems[ROLE_ELEMENTALIST], {
                 id          = EQUIP_ELEMENTALIST_LIFESTEAL_UP,
                 type        = "item_passive",

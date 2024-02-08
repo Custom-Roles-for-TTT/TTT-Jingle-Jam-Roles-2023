@@ -37,11 +37,9 @@ function PHYSICIAN:GetPlayerStatusText(ply)
 
     if status and status > PHYSICIAN_TRACKER_INACTIVE then
         if status == PHYSICIAN_TRACKER_ACTIVE then
-            local text, color = self:GetStatusFromHealth(ply)
-
-            return text, color
+            return self:GetStatusFromHealth(ply)
         elseif status == PHYSICIAN_TRACKER_DEAD then
-            return "No Signal", healthcolors.death
+            return LANG.GetTranslation("phy_dead"), healthcolors.death
         end
     end
 end
@@ -50,31 +48,22 @@ function PHYSICIAN:GetStatusFromHealth(ply)
     local currentHealth = ply:Health()
     local maxHealth = ply:GetMaxHealth()
 
+    local T = LANG.GetTranslation
     if currentHealth < 1 or not LocalPlayer():Alive() then
-        return "No Signal"
+        return T("phy_dead"), healthcolors.death
     end
 
     if LocalPlayer():HasEquipmentItem(EQUIP_PHS_TRACKER) then
-        if currentHealth > maxHealth * 0.9 then
-            return "Healthy", healthcolors.healthy
-        elseif currentHealth > maxHealth * 0.7 then
-            return "Hurt", healthcolors.hurt
-        elseif currentHealth > maxHealth * 0.45 then
-            return "Injured", healthcolors.wounded
-        elseif currentHealth > maxHealth * 0.2 then
-            return "Wounded", healthcolors.badwound
-        else
-            return "Near Death", healthcolors.death
-        end
-    else
-        if currentHealth > maxHealth * 0.67 then
-            return "Normal", healthcolors.healthy
-        elseif currentHealth > maxHealth * 0.33 then
-            return "Elevated", healthcolors.hurt
-        else
-            return "Dangerous", healthcolors.badwound
-        end
+        local healthLabel, healthColor = util.HealthToString(currentHealth, maxHealth)
+        return T(healthLabel), healthColor
     end
+
+    if currentHealth > maxHealth * 0.67 then
+        return T("phy_normal"), healthcolors.healthy
+    elseif currentHealth > maxHealth * 0.33 then
+        return T("phy_elevated"), healthcolors.hurt
+    end
+    return T("phy_dangerous"), healthcolors.badwound
 end
 
 net.Receive("GetAllPhysicianTrackedPlayersCallback", function(len)
@@ -107,10 +96,11 @@ hook.Add("TTTScoreboardColumns", "Physician_TTTScoreboardColumns", function(base
 
     if ply:IsPhysician() then
         local columnLabel
+        local T = LANG.GetTranslation
         if ply:HasEquipmentItem(EQUIP_PHS_TRACKER) then
-            columnLabel = "Status"
+            columnLabel = T("phy_col_status")
         else
-            columnLabel = "Heartrate"
+            columnLabel = T("phy_col_heartrate")
         end
 
         basePanel:AddColumn(columnLabel, function(p, dLabelPanel)
@@ -123,6 +113,17 @@ hook.Add("TTTScoreboardColumns", "Physician_TTTScoreboardColumns", function(base
     end
 end)
 
+hook.Add("Initialize", "Physician_Translations_Initialize", function()
+    -- Scoreboard
+    LANG.AddToLanguage("english", "phy_dead", "No Signal")
+    LANG.AddToLanguage("english", "phy_normal", "Normal")
+    LANG.AddToLanguage("english", "phy_elevated", "Elevated")
+    LANG.AddToLanguage("english", "phy_dangerous", "Dangerous")
+
+    LANG.AddToLanguage("english", "phy_col_status", "Status")
+    LANG.AddToLanguage("english", "phy_col_heartrate", "Heart Rate")
+end)
+
 hook.Add("TTTTutorialRoleText", "Physician_TTTTutorialRoleText", function(playerRole)
     local function getStyleString(role)
         local roleColor = ROLE_COLORS[role]
@@ -133,13 +134,13 @@ hook.Add("TTTTutorialRoleText", "Physician_TTTTutorialRoleText", function(player
         local divStart = "<div style='margin-top: 10px;'>"
         local styleEnd = "</span>"
 
-        local html = "The " .. ROLE_STRINGS[ROLE_PHYSICIAN] .. " is a member of the " .. getStyleString(ROLE_INNOCENT) .. "innocent team" .. styleEnd .. " whose job is to find and eliminate their enemies."
+        local html = "The " .. ROLE_STRINGS[ROLE_PHYSICIAN] .. " is a " .. ROLE_STRINGS[ROLE_DETECTIVE] .. " and a member of the " .. getStyleString(ROLE_INNOCENT) .. "innocent team" .. styleEnd .. " whose job is to find and eliminate their enemies."
 
         html = html .. divStart .. "They have access to a special" .. getStyleString(ROLE_PHYSICIAN) .. " Health Tracker" .. styleEnd .. " which can allow them to actively track the health of others.</div>"
 
-        html = html .. divStart .. "To use, equip the" .. getStyleString(ROLE_PHYSICIAN) .. " Health Tracker" .. styleEnd .. " and left or right click on a terrorist. In your scoreboard, their health status should begin to display. Don't let them get too far away or the" .. getStyleString(ROLE_TRAITOR) .. " tracker connection will fail" .. styleEnd .. ".<div>"
+        html = html .. divStart .. "To use, equip the" .. getStyleString(ROLE_PHYSICIAN) .. " Health Tracker" .. styleEnd .. " and left or right click on a player. In your scoreboard, their health status should begin to display. Don't let them get too far away or the" .. getStyleString(ROLE_TRAITOR) .. " tracker connection will fail" .. styleEnd .. ".<div>"
 
-        html = html .. divStart .. "An upgrade for the tracker is available in your" .. getStyleString(ROLE_DETECTIVE) .. "shop" .. styleEnd .. ", along with everything else available to a " .. getStyleString(ROLE_DETECTIVE) .. ROLE_STRINGS_EXT[ROLE_DETECTIVE] .. styleEnd .. ".</div>"
+        html = html .. divStart .. "An upgrade for the tracker is available in your " .. getStyleString(ROLE_DETECTIVE) .. "shop" .. styleEnd .. ", along with everything else available to a " .. getStyleString(ROLE_DETECTIVE) .. ROLE_STRINGS_EXT[ROLE_DETECTIVE] .. styleEnd .. ".</div>"
 
         return html
     end
