@@ -1,4 +1,4 @@
---// Logan Christianson
+-- Logan Christianson
 util.AddNetworkString("BeginIceScreen")
 util.AddNetworkString("EndIceScreen")
 util.AddNetworkString("BeginDimScreen")
@@ -17,19 +17,20 @@ local function GetChanceConVarOutcome(conVarName)
     return int <= toCompare
 end
 
-local ChilledPlayers = {}
-local IgnitedPlayers = {}
-local BlindedPlayers = {}
+local chilledPlayers = {}
+local ignitedPlayers = {}
+local blindedPlayers = {}
 
-hook.Add("TTTSpeedMultiplier", "Frostbite Effect", function(ply, mults)
-    local effect = ChilledPlayers[ply:SteamID64()]
+-- Frostbite effect
+hook.Add("TTTSpeedMultiplier", "Elementalist_TTTSpeedMultiplier", function(ply, mults)
+    local effect = chilledPlayers[ply:SteamID64()]
 
     if effect then
         table.Add(mults, effect)
     end
 end)
 
-hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
+hook.Add("EntityTakeDamage", "Elementalist_EntityTakeDamage", function(ent, dmginfo)
     local att = dmginfo:GetAttacker()
 
     if not IsValidPlayerEnt(ent) or not IsValidPlayerEnt(att) or not dmginfo:IsBulletDamage() then -- For some reason, crowbar attacks return true on this
@@ -50,9 +51,9 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
         local MovementSlow = math.Round(math.Clamp(20 + (scale * 20), 20, 40))
         local Timer = ROLE.ConvarFrostEffectDur:GetInt()
 
-        if att:HasEquipmentItem(EQUIP_ELEMENTALIST_FROSTBITE_UP) and ChilledPlayers[vicId] and GetChanceConVarOutcome("ttt_elementalist_frostbite+_freeze_chance") then
+        if att:HasEquipmentItem(EQUIP_ELEMENTALIST_FROSTBITE_UP) and chilledPlayers[vicId] and GetChanceConVarOutcome("ttt_elementalist_frostbite+_freeze_chance") then
             --Upgrade functionality
-            ChilledPlayers[vicId] = false
+            chilledPlayers[vicId] = false
             ent:Freeze(true)
 
             net.Start("BeginIceScreen")
@@ -60,7 +61,7 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
             net.Send(ent)
         else
             --Base fucntionality
-            ChilledPlayers[vicId] = 1 - (MovementSlow * 0.01)
+            chilledPlayers[vicId] = 1 - (MovementSlow * 0.01)
 
             net.Start("BeginIceScreen")
                 net.WriteBool(false)
@@ -69,7 +70,7 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
 
         local function EndFrostbite()
             if ent then
-                ChilledPlayers[vicId] = false
+                chilledPlayers[vicId] = false
                 ent:Freeze(false)
 
                 net.Start("EndIceScreen")
@@ -87,7 +88,7 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
     if att:HasEquipmentItem(EQUIP_ELEMENTALIST_PYROMANCER) then
         local fixTimerId = vicId .. "_IsBurningShotgunFix"
 
-        if att:HasEquipmentItem(EQUIP_ELEMENTALIST_PYROMANCER_UP) and IgnitedPlayers[vicId] and GetChanceConVarOutcome("ttt_elementalist_pyromancer+_explode_chance") then
+        if att:HasEquipmentItem(EQUIP_ELEMENTALIST_PYROMANCER_UP) and ignitedPlayers[vicId] and GetChanceConVarOutcome("ttt_elementalist_pyromancer+_explode_chance") then
             --Upgrade functionality
             if timer.Exists(fixTimerId) then return end
 
@@ -98,7 +99,7 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
             local explosion = ents.Create("env_explosion")
 
             if IsValid(explosion) then
-                IgnitedPlayers[vicId] = nil
+                ignitedPlayers[vicId] = nil
                 ent:Extinguish()
 
                 explosion:SetPos(ent:GetPos())
@@ -110,7 +111,7 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
             end
         else
             --Base functionality
-            IgnitedPlayers[vicId] = true
+            ignitedPlayers[vicId] = true
             local timerId = vicId .. "_IsBurning"
 
             local timeToBurn = 1 + (ROLE.ConvarPyroBurnDur * scale)
@@ -118,23 +119,22 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
             -- This isn't a very dynamic way of doing this, it always uses the newest time, even if smaller
             ent:Ignite(timeToBurn, 400 * scale)
 
-            local function removeBurningStatus()
+            local function RemoveBurningStatus()
                 if ent then
-                    IgnitedPlayers[ent:SteamID64()] = false
+                    ignitedPlayers[ent:SteamID64()] = false
                     ent:Extinguish()
                 end
             end
 
             if timer.Exists(timerId) then
-                timer.Adjust(timerId, timeToBurn, 1, removeBurningStatus)
+                timer.Adjust(timerId, timeToBurn, 1, RemoveBurningStatus)
             else
-                timer.Create(timerId, timeToBurn, 1, removeBurningStatus)
+                timer.Create(timerId, timeToBurn, 1, RemoveBurningStatus)
             end
         end
     end
 
     if att:HasEquipmentItem(EQUIP_ELEMENTALIST_WINDBURN) then
-
         if att:HasEquipmentItem(EQUIP_ELEMENTALIST_WINDBURN_UP) and GetChanceConVarOutcome("ttt_elementalist_windburn+_launch_chance") then
             --Upgrade functionality
             ent:SetVelocity(ent:GetVelocity() + Vector(0, 0, 1000 + (1000 * scale)))
@@ -177,7 +177,7 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
 
         if att:HasEquipmentItem(EQUIP_ELEMENTALIST_DISCHARGE_UP) and GetChanceConVarOutcome("ttt_elementalist_discharge+_input_chance") then
             --Upgrade functionality
-            local function forceAction(startCommand, endCommand)
+            local function ForceAction(startCommand, endCommand)
                 ent:ConCommand(startCommand)
 
                 timer.Simple(1, function()
@@ -190,46 +190,45 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
             local choice = math.random(3)
 
             if choice == 1 then
-                forceAction("+attack", "-attack")
+                ForceAction("+attack", "-attack")
             elseif choice == 2 then
                 local choice2 = math.random(2)
                 local choice3 = math.random(2)
 
                 if choice2 == 1 then
-                    forceAction("+forward", "-forward")
+                    ForceAction("+forward", "-forward")
                 end
                 if choice2 == 2 then
-                    forceAction("+back", "-back")
+                    ForceAction("+back", "-back")
                 end
                 if choice3 == 1 then
-                    forceAction("+moveleft", "-moveleft")
+                    ForceAction("+moveleft", "-moveleft")
                 end
                 if choice3 == 2 then
-                    forceAction("+moveright", "-moveright")
+                    ForceAction("+moveright", "-moveright")
                 end
             elseif choice == 3 then
-                forceAction("+jump", "-jump")
+                ForceAction("+jump", "-jump")
             end
         end
     end
 
     if att:HasEquipmentItem(EQUIP_ELEMENTALIST_MIDNIGHT) then
-
-        if att:HasEquipmentItem(EQUIP_ELEMENTALIST_MIDNIGHT_UP) and BlindedPlayers[vicId] and GetChanceConVarOutcome("ttt_elementalist_midnight+_blindness_chance") then
+        if att:HasEquipmentItem(EQUIP_ELEMENTALIST_MIDNIGHT_UP) and blindedPlayers[vicId] and GetChanceConVarOutcome("ttt_elementalist_midnight+_blindness_chance") then
             --Upgrade functionality
-            BlindedPlayers[vicId] = 100
+            blindedPlayers[vicId] = 100
         else
             --Base functionality
-            BlindedPlayers[vicId] = BlindedPlayers[vicId] or 0
-            BlindedPlayers[vicId] = math.Clamp(BlindedPlayers[vicId] + damage, 0, 50)
+            blindedPlayers[vicId] = blindedPlayers[vicId] or 0
+            blindedPlayers[vicId] = math.Clamp(blindedPlayers[vicId] + damage, 0, 50)
         end
 
         net.Start("BeginDimScreen")
-            net.WriteUInt(BlindedPlayers[vicId], 6)
+            net.WriteUInt(blindedPlayers[vicId], 6)
         net.Send(ent)
 
         local function EndBlind()
-            BlindedPlayers[vicId] = 0
+            blindedPlayers[vicId] = 0
 
             net.Start("EndDimScreen")
             net.Send(ent)
@@ -257,7 +256,7 @@ hook.Add("EntityTakeDamage", "Elementalist Effects", function(ent, dmginfo)
             end
         end
 
-        att:SetHealth(math.Clamp((att:Health() + healAmount), 0, att:GetMaxHealth()))
+        att:SetHealth(math.Clamp(att:Health() + healAmount, 0, att:GetMaxHealth()))
     end
 end)
 
@@ -265,9 +264,9 @@ end)
 local function ResetEffects(ply)
     local id = ply:SteamID64()
 
-    ChilledPlayers[id] = nil
-    IgnitedPlayers[id] = nil
-    BlindedPlayers[id] = nil
+    chilledPlayers[id] = nil
+    ignitedPlayers[id] = nil
+    blindedPlayers[id] = nil
 
     timer.Remove(id .. "_IsSlowed")
     net.Start("EndIceScreen")

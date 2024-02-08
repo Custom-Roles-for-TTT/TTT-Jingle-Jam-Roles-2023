@@ -1,4 +1,4 @@
---// Logan Christianson
+-- Logan Christianson
 local PHYSICIAN = PHYSICIAN or {}
 local nextGet = 0
 local nextGetOffset = 1
@@ -10,7 +10,6 @@ local healthcolors = {
     badwound= Color(255, 140, 0, 255),
     death   = Color(255, 0, 0, 255)
 };
-
 
 local function ResetScoreboard()
     if sboard_panel then
@@ -89,19 +88,21 @@ net.Receive("GetAllPhysicianTrackedPlayersCallback", function(len)
     end
 end)
 
-hook.Add("TTTBoughtItem", "Reset Physician Scoreboard On Upgrade Purchased", function(isItemNotWep, equipment)
+-- Reset scoreboard on upgrade purchased
+hook.Add("TTTBoughtItem", "Physician_TTTBoughtItem", function(isItemNotWep, equipment)
     if isItemNotWep and equipment == EQUIP_PHS_TRACKER then
         ResetScoreboard()
     end
 end)
 
-hook.Add("TTTPlayerRoleChanged", "Reset Scoreboard On Given Physician Role", function(_, oldRole, newRole)
+-- Reset scoreboard on given role
+hook.Add("TTTPlayerRoleChanged", "Physician_TTTPlayerRoleChanged", function(_, oldRole, newRole)
     if oldRole ~= ROLE_PHYSICIAN and newRole == ROLE_PHYSICIAN then
         ResetScoreboard()
     end
 end)
 
-hook.Add("TTTScoreboardColumns", "Physician Health Column", function(basePanel)
+hook.Add("TTTScoreboardColumns", "Physician_TTTScoreboardColumns", function(basePanel)
     local ply = LocalPlayer()
 
     if ply:IsPhysician() then
@@ -122,7 +123,7 @@ hook.Add("TTTScoreboardColumns", "Physician Health Column", function(basePanel)
     end
 end)
 
-hook.Add("TTTTutorialRoleText", "PhysicianTutorialRoleText", function(playerRole)
+hook.Add("TTTTutorialRoleText", "Physician_TTTTutorialRoleText", function(playerRole)
     local function getStyleString(role)
         local roleColor = ROLE_COLORS[role]
         return "<span style='color: rgb(" .. roleColor.r .. ", " .. roleColor.g .. ", " .. roleColor.b .. ")'>"

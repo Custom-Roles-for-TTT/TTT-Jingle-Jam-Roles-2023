@@ -1,4 +1,4 @@
---// Logan Christianson
+-- Logan Christianson
 AddCSLuaFile()
 
 util.AddNetworkString("GetAllPhysicianTrackedPlayers")
@@ -71,13 +71,15 @@ net.Receive("GetAllPhysicianTrackedPlayers", function(len, ply)
     net.Send(ply)
 end)
 
-hook.Add("TTTPlayerRoleChanged", "Reset Scoreboard On Given Physician Role", function(ply, _, newRole)
+-- Automatically track yourself as a phyiscian
+hook.Add("TTTPlayerRoleChanged", "Physician_TTTPlayerRoleChanged", function(ply, _, newRole)
     if newRole == ROLE_PHYSICIAN then
         PHYSICIAN:AddNewTrackedPlayer(ply, ply)
     end
 end)
 
-hook.Add("TTTPrepareRound", "Remove Old Physician Targets", function()
+-- Remove old targets
+hook.Add("TTTPrepareRound", "Physician_TTTPrepareRound", function()
     PHYSICIAN:ResetAllTrackedPlayers()
 end)
 
