@@ -1,86 +1,87 @@
---// Logan Christianson
-local shouldDrawDarkOverlay = false
-local IceOverlay, DarkOverlay = nil, {
+-- Logan Christianson
+local shouldDrawdarkOverlay = false
+local iceOverlay = nil
+local darkOverlay = {
 	["$pp_colour_brightness"] = 1,
 	["$pp_colour_colour"] = 1
 }
 
 -- I ripped this from my other addon lol
-function CreateIceOverlay(maxOverlay)
-    if IsValid(IceOverlay) and ispanel(IceOverlay) then return end
+local function CreateiceOverlay(maxOverlay)
+    if IsValid(iceOverlay) and ispanel(iceOverlay) then return end
 
     local alphaCounter = 0
     if maxOverlay then alphaCounter = 230 end
 
     timer.Simple(2, function() LocalPlayer():SetDSP(14, false) end) --We're assuming the player is emitting the ice-over sound
 
-    IceOverlay = vgui.Create("DFrame")
-    IceOverlay:SetSize(ScrW(), ScrH())
-    IceOverlay:SetPos(0, 0)
-    IceOverlay:SetTitle("")
-    IceOverlay:SetVisible(true)
-    IceOverlay:SetDraggable(false)
-    IceOverlay:ShowCloseButton(false)
-    IceOverlay.Paint = function()
+    iceOverlay = vgui.Create("DFrame")
+    iceOverlay:SetSize(ScrW(), ScrH())
+    iceOverlay:SetPos(0, 0)
+    iceOverlay:SetTitle("")
+    iceOverlay:SetVisible(true)
+    iceOverlay:SetDraggable(false)
+    iceOverlay:ShowCloseButton(false)
+    iceOverlay.Paint = function()
     end
 
-    local IceOverlayMat = Material("ui/roles/elm/frosted.png") --Smooth 1
-    local overlayPanel = vgui.Create("DPanel", IceOverlay)
-    overlayPanel:SetSize(IceOverlay:GetWide(), IceOverlay:GetTall())
+    local iceOverlayMat = Material("ui/roles/elm/frosted.png") --Smooth 1
+    local overlayPanel = vgui.Create("DPanel", iceOverlay)
+    overlayPanel:SetSize(iceOverlay:GetWide(), iceOverlay:GetTall())
     overlayPanel:SetPos(0, 0)
     overlayPanel.Paint = function()
         if alphaCounter <= 125 then alphaCounter = alphaCounter + 0.5 end
         surface.SetDrawColor(255, 255, 255, alphaCounter)
-        surface.SetMaterial(IceOverlayMat)
+        surface.SetMaterial(iceOverlayMat)
         surface.DrawTexturedRect(0, 0, overlayPanel:GetWide(), overlayPanel:GetTall())
     end
 end
 
-function CloseIceOverlay()
-    if IceOverlay and ispanel(IceOverlay) then IceOverlay:Remove() end
+local function CloseiceOverlay()
+    if iceOverlay and ispanel(iceOverlay) then iceOverlay:Remove() end
 end
 
-function StartBlindOverlay()
-    DarkOverlay = {
+local function StartBlindOverlay()
+    darkOverlay = {
         ["$pp_colour_brightness"] = -1,
         ["$pp_colour_colour"] = 0
     }
 end
 
-function StartDarkOverlay(percent)
+local function StartdarkOverlay(percent)
     local actualPercent = percent * 0.01
 
-    shouldDrawDarkOverlay = true
+    shouldDrawdarkOverlay = true
 
-    DarkOverlay = {
+    darkOverlay = {
         ["$pp_colour_brightness"] = -0.25 * actualPercent,
         ["$pp_colour_colour"] = 1 - (1 * actualPercent)
     }
 end
 
-function EndDarkOverlay()
-    shouldDrawDarkOverlay = false
+local function EnddarkOverlay()
+    shouldDrawdarkOverlay = false
 
-    DarkOverlay = {
+    darkOverlay = {
         ["$pp_colour_brightness"] = 0,
         ["$pp_colour_colour"] = 1
     }
 end
 
-hook.Add("RenderScreenspaceEffects", "ElementalistScreenDimming", function()
-    if shouldDrawDarkOverlay then
-        DrawColorModify(DarkOverlay)
+-- Screen dimming
+hook.Add("RenderScreenspaceEffects", "Elementalist_RenderScreenspaceEffects", function()
+    if shouldDrawdarkOverlay then
+        DrawColorModify(darkOverlay)
     end
 end)
 
 net.Receive("BeginIceScreen", function(len)
     local frozen = net.ReadBool()
-
-    CreateIceOverlay(frozen)
+    CreateiceOverlay(frozen)
 end)
 
 net.Receive("EndIceScreen", function(len)
-    CloseIceOverlay()
+    CloseiceOverlay()
 end)
 
 net.Receive("BeginDimScreen", function(len)
@@ -89,15 +90,15 @@ net.Receive("BeginDimScreen", function(len)
     if amount == 100 then
         StartBlindOverlay()
     else
-        StartDarkOverlay(amount)
+        StartdarkOverlay(amount)
     end
 end)
 
 net.Receive("EndDimScreen", function(len)
-    EndDarkOverlay()
+    EnddarkOverlay()
 end)
 
-hook.Add("TTTTutorialRoleText", "SummonerTutorialRoleText", function(playerRole)
+hook.Add("TTTTutorialRoleText", "Elementalist_TTTTutorialRoleText", function(playerRole)
     local function getStyleString(role)
         local roleColor = ROLE_COLORS[role]
         return "<span style='color: rgb(" .. roleColor.r .. ", " .. roleColor.g .. ", " .. roleColor.b .. ")'>"

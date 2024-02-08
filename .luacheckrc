@@ -1038,12 +1038,7 @@ globals = {
     "ROLE_ELEMENTALIST",
     "ROLE_PHYSICIAN",
     "ROLE_RENEGADE",
-    "WIN_RENEGADE",
-    "CloseIceOverlay",
-    "CreateIceOverlay",
-    "EndDarkOverlay",
-    "StartBlindOverlay",
-    "StartDarkOverlay"
+    "WIN_RENEGADE"
 }
 std = {
     globals = {

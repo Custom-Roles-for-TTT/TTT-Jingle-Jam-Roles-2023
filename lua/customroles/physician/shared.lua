@@ -1,4 +1,4 @@
---// Logan Christianson
+-- Logan Christianson
 local ROLE = {}
 
 ROLE.nameraw = "physician"
@@ -27,7 +27,7 @@ PHYSICIAN_TRACKER_INACTIVE = 0  -- Player is untracked
 PHYSICIAN_TRACKER_ACTIVE = 1    -- Player is being tracked
 PHYSICIAN_TRACKER_DEAD = 2      -- Player is dead (or, potentially in future, has destroyed their tracker)
 
-hook.Add("Initialize", "Physician_Health_Tracker_Equipment", function()
+hook.Add("Initialize", "Physician_Initialize", function()
     EQUIP_PHS_TRACKER = EQUIP_PHS_TRACKER or GenerateNewEquipmentID()
 
     table.insert(EquipmentItems[ROLE_PHYSICIAN], {
