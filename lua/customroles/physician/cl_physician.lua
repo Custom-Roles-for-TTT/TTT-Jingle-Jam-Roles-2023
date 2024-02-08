@@ -54,7 +54,7 @@ function PHYSICIAN:GetStatusFromHealth(ply)
     end
 
     if LocalPlayer():HasEquipmentItem(EQUIP_PHS_TRACKER) then
-        local healthLabel, healthColor = util.HealthToString(currentHealth, maxhealth)
+        local healthLabel, healthColor = util.HealthToString(currentHealth, maxHealth)
         return T(healthLabel), healthColor
     end
 
