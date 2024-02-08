@@ -504,6 +504,7 @@ globals = {
     "isentity",
     "isfunction",
     "isnumber",
+    "ispanel",
     "isstring",
     "istable",
     "next",
@@ -1017,14 +1018,32 @@ globals = {
     "CRHUD",
 
     -- JJ2023
+    "EQUIP_ELEMENTALIST_DISCHARGE",
+    "EQUIP_ELEMENTALIST_DISCHARGE_UP",
+    "EQUIP_ELEMENTALIST_FROSTBITE",
+    "EQUIP_ELEMENTALIST_FROSTBITE_UP",
+    "EQUIP_ELEMENTALIST_LIFESTEAL",
+    "EQUIP_ELEMENTALIST_LIFESTEAL_UP",
+    "EQUIP_ELEMENTALIST_MIDNIGHT",
+    "EQUIP_ELEMENTALIST_MIDNIGHT_UP",
+    "EQUIP_ELEMENTALIST_PYROMANCER",
+    "EQUIP_ELEMENTALIST_PYROMANCER_UP",
+    "EQUIP_ELEMENTALIST_WINDBURN",
+    "EQUIP_ELEMENTALIST_WINDBURN_UP",
     "EQUIP_PHS_TRACKER",
     "PHYSICIAN",
     "PHYSICIAN_TRACKER_ACTIVE",
     "PHYSICIAN_TRACKER_DEAD",
     "PHYSICIAN_TRACKER_INACTIVE",
+    "ROLE_ELEMENTALIST",
     "ROLE_PHYSICIAN",
     "ROLE_RENEGADE",
-    "WIN_RENEGADE"
+    "WIN_RENEGADE",
+    "CloseIceOverlay",
+    "CreateIceOverlay",
+    "EndDarkOverlay",
+    "StartBlindOverlay",
+    "StartDarkOverlay"
 }
 std = {
     globals = {
