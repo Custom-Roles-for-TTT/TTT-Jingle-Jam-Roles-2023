@@ -20,7 +20,20 @@ Press {menukey} to receive your equipment!]]
 
 ROLE.team = ROLE_TEAM_DETECTIVE
 
+local admin_power_rate = CreateConVar("ttt_admin_power_rate", 1.5, FCVAR_NONE, "How often (in seconds) the Admin gains power", 0.1, 10)
+local admin_starting_power = CreateConVar("ttt_admin_starting_power", 20, FCVAR_NONE, "How much power the Admin should spawn with", 0, 100)
+
 ROLE.convars = {}
+table.insert(ROLE.convars, {
+    cvar = "ttt_admin_power_rate",
+    type = ROLE_CONVAR_TYPE_NUM,
+    decimal = 1
+})
+table.insert(ROLE.convars, {
+    cvar = "ttt_admin_starting_power",
+    type = ROLE_CONVAR_TYPE_NUM,
+    decimal = 0
+})
 table.insert(ROLE.convars, {
     cvar = "ttt_admin_slap_cost",
     type = ROLE_CONVAR_TYPE_NUM,
@@ -90,8 +103,13 @@ table.insert(ROLE.convars, {
 ROLE.translations = {
     ["english"] = {
         ["adminmenu_help_pri"] = "Use {primaryfire} to open the admin menu",
+        ['admin_power_title'] = "ADMIN POWER"
     }
 }
+
+ROLE.onroleassigned = function(ply)
+    ply:SetNWInt("TTTAdminPower", admin_starting_power:GetInt())
+end
 
 RegisterRole(ROLE)
 
@@ -103,9 +121,65 @@ if SERVER then
     util.AddNetworkString("TTT_AdminBlindClient")
     util.AddNetworkString("TTT_AdminKickClient")
     util.AddNetworkString("TTT_AdminMessage")
+
+    hook.Add("TTTPrepareRound", "Admin_TTTPrepareRound", function()
+        for _, p in ipairs(player.GetAll()) do
+            p:SetNWInt("TTTAdminPower", 0)
+        end
+    end)
+
+    hook.Add("TTTBeginRound", "Admin_TTTBeginRound", function()
+        local time = admin_power_rate:GetFloat()
+        if time <= 0 then return end
+        timer.Create("AdminPowerTimer", time, 0, function()
+            for _, p in ipairs(player.GetAll()) do
+                if p:IsActiveAdmin() then
+                    local power = p:GetNWInt("TTTAdminPower")
+                    if power < 100 then
+                        power = power + 1
+                        p:SetNWInt("TTTAdminPower", power)
+                    end
+                end
+            end
+        end)
+    end)
+
+    hook.Add("TTTEndRound", "Admin_TTTEndRound", function()
+        for _, p in ipairs(player.GetAll()) do
+            p:SetNWInt("TTTAdminPower", 0)
+        end
+        timer.Remove("AdminPowerTimer")
+    end)
 end
 
 if CLIENT then
+    ---------
+    -- HUD --
+    ---------
+
+    -- TODO: Draw power bar
+
+    --------------
+    -- TUTORIAL --
+    --------------
+
+    hook.Add("TTTTutorialRoleText", "Admin_TTTTutorialRoleText", function(role, titleLabel)
+        if role == ROLE_ADMIN then
+            local roleColor = ROLE_COLORS[ROLE_ADMIN]
+            local detectiveColor = ROLE_COLORS[ROLE_DETECTIVE]
+
+            local html = "The " .. ROLE_STRINGS[ROLE_ADMIN] .. " is a " .. ROLE_STRINGS[ROLE_DETECTIVE] .. " and a member of the <span style='color: rgb(" .. roleColor.r .. ", " .. roleColor.g .. ", " .. roleColor.b .. ")'>innocent team</span> whose job is to find and eliminate their enemies."
+
+            html = html .. "<span style='display: block; margin-top: 10px;'>Instead of getting a DNA Scanner like a vanilla <span style='color: rgb(" .. detectiveColor.r .. ", " .. detectiveColor.g .. ", " .. detectiveColor.b .. ")'>" .. ROLE_STRINGS[ROLE_DETECTIVE] .. "</span>, they have the ability to open an admin menu and use powerful commands. Commands require admin power which generates over time.</span>"
+
+            return html
+        end
+    end)
+
+    -------------------
+    -- BLIND OVERLAY --
+    -------------------
+
     net.Receive("TTT_AdminBlindClient", function()
         if net.ReadBool() then
             hook.Add("HUDPaint", "Admin_HUDPaint_Blind", function()
@@ -115,6 +189,10 @@ if CLIENT then
             hook.Remove("HUDPaint", "Admin_HUDPaint_Blind")
         end
     end)
+
+    ----------------------
+    -- FAKE KICK SCREEN --
+    ----------------------
 
     surface.CreateFont("KickText", {
         font = "Tahoma",
@@ -200,6 +278,10 @@ if CLIENT then
 
         dframe:MakePopup()
     end)
+
+    ---------------------------
+    -- FAKE CONSOLE MESSAGES --
+    ---------------------------
 
     -- Colors copied from ULX and ULib
     local colorText = Color(151, 211, 255)
