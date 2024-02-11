@@ -65,6 +65,7 @@ SWEP.InLoadoutForDefault    = {ROLE_ADMIN}
 local admin_slap_cost = CreateConVar("ttt_admin_slap_cost", 10, FCVAR_REPLICATED, "The amount of admin power it costs to use the slap command. Set to 0 to disable", 0, 100)
 local admin_bring_cost = CreateConVar("ttt_admin_bring_cost", 15, FCVAR_REPLICATED, "The amount of admin power it costs to use the bring command. Set to 0 to disable", 0, 100)
 local admin_goto_cost = CreateConVar("ttt_admin_goto_cost", 15, FCVAR_REPLICATED, "The amount of admin power it costs to use the goto command. Set to 0 to disable", 0, 100)
+local admin_send_cost = CreateConVar("ttt_admin_send_cost", 20, FCVAR_REPLICATED, "The amount of admin power it costs to use the send command. Set to 0 to disable", 0, 100)
 local admin_jail_cost = CreateConVar("ttt_admin_jail_cost", 5, FCVAR_REPLICATED, "The amount of admin power it costs to use the jail command per second. Set to 0 to disable", 0, 100)
 local admin_ignite_cost = CreateConVar("ttt_admin_ignite_cost", 10, FCVAR_REPLICATED, "The amount of admin power it costs to use the ignite command per second. Set to 0 to disable", 0, 100)
 local admin_blind_cost = CreateConVar("ttt_admin_blind_cost", 10, FCVAR_REPLICATED, "The amount of admin power it costs to use the blind command per second. Set to 0 to disable", 0, 100)
@@ -105,9 +106,13 @@ function SWEP:PrimaryAttack()
     end
 end
 
-local function Slap(ply) -- Function modified from ULX and ULib
+local function Slap(admin, ply) -- Function modified from ULX and ULib
     if not SERVER then return end
-    if not IsPlayer(ply) or not ply:IsActive() then return false end
+    if not IsPlayer(ply) then return end
+    if not ply:IsActive() then
+        admin:PrintMessage(HUD_PRINTTALK, ply:Nick() .. " is dead. Your admin power was not used.")
+        return false
+    end
 
     local slapSounds = {
         "physics/body/body_medium_impact_hard1.wav",
@@ -139,14 +144,41 @@ local function Slap(ply) -- Function modified from ULX and ULib
     end
     ply:ViewPunch(Angle(angle_punch_pitch, angle_punch_yaw, 0))
 
+    net.Start("TTT_AdminMessage")
+    net.WriteUInt(3, 4)
+    net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+    net.WriteString(admin:SteamID64())
+    net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+    net.WriteString(" slapped ")
+    net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+    net.WriteString(ply:SteamID64())
+    net.Broadcast()
+
     return true
 end
 
-local function Teleport(from, to) -- Function modified from ULX and ULib
+local function Teleport(admin, from, to) -- Function modified from ULX and ULib
     if not SERVER then return end
-    if not IsPlayer(from) or not from:IsActive() then return false end
-    if not IsPlayer(to) or not to:IsActive() then return false end
-    if not to:IsInWorld() then return false end
+    if not IsPlayer(from) or not IsPlayer(to) then return end
+    if not from:IsActive() then
+        admin:PrintMessage(HUD_PRINTTALK, from:Nick() .. " is dead. Your admin power was not used.")
+        return false
+    end
+    if not to:IsActive() then
+        admin:PrintMessage(HUD_PRINTTALK, to:Nick() .. " is dead. Your admin power was not used.")
+        return false
+    end
+    if not to:IsInWorld() then
+        admin:PrintMessage(HUD_PRINTTALK, "Cannot find space to teleport to " .. to:Nick() .. ". Your admin power was not used.")
+        return false
+    end
+
+    if from:InVehicle() then
+        from:ExitVehicle()
+    end
+    if to:InVehicle() then
+        to:ExitVehicle()
+    end
 
     local yawForward = to:EyeAngles().yaw
     local directions = {
@@ -165,22 +197,83 @@ local function Teleport(from, to) -- Function modified from ULX and ULib
         t.endpos = to:GetPos() + Angle(0, dir, 0):Forward() * 50
         local tr = util.TraceEntity(t, from)
         if not tr.Hit then
-            if from:InVehicle() then
-                from:ExitVehicle()
-            end
             from:SetPos(tr.HitPos)
             from:SetEyeAngles((target - tr.HitPos):Angle())
             from:SetLocalVelocity(Vector(0, 0, 0))
+
             return true
         end
+    end
+
+    admin:PrintMessage(HUD_PRINTTALK, "Cannot find space to teleport to " .. to:Nick() .. ". Your admin power was not used.")
+    return false
+end
+
+local function Bring(admin, ply)
+    if Teleport(admin, ply, admin) then
+        net.Start("TTT_AdminMessage")
+        net.WriteUInt(3, 4)
+        net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+        net.WriteString(admin:SteamID64())
+        net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+        net.WriteString(" brought ")
+        net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+        net.WriteString(ply:SteamID64())
+        net.Broadcast()
+
+        return true
     end
 
     return false
 end
 
-local function Jail(ply, time) -- Function modified from ULX and ULib
+local function GoTo(admin, ply)
+    if Teleport(admin, admin, ply) then
+        net.Start("TTT_AdminMessage")
+        net.WriteUInt(3, 4)
+        net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+        net.WriteString(admin:SteamID64())
+        net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+        net.WriteString(" teleported to ")
+        net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+        net.WriteString(ply:SteamID64())
+        net.Broadcast()
+
+        return true
+    end
+
+    return false
+end
+
+local function Send(admin, from, to)
+    if Teleport(admin, from, to) then
+        net.Start("TTT_AdminMessage")
+        net.WriteUInt(5, 4)
+        net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+        net.WriteString(admin:SteamID64())
+        net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+        net.WriteString(" transported ")
+        net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+        net.WriteString(from:SteamID64())
+        net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+        net.WriteString(" to ")
+        net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+        net.WriteString(to:SteamID64())
+        net.Broadcast()
+
+        return true
+    end
+
+    return false
+end
+
+local function Jail(admin, ply, time) -- Function modified from ULX and ULib
     if not SERVER then return end
-    if not IsPlayer(ply) or not ply:IsActive() then return false end
+    if not IsPlayer(ply) then return end
+    if not ply:IsActive() then
+        admin:PrintMessage(HUD_PRINTTALK, ply:Nick() .. " is dead. Your admin power was not used.")
+        return false
+    end
 
     local jailWalls = {
         {pos = Vector(0, 0, -5), ang = Angle(90, 0, 0)},
@@ -194,7 +287,10 @@ local function Jail(ply, time) -- Function modified from ULX and ULib
     }
     local sid64 = ply:SteamID64()
 
-    if timer.Exists("AdminJail_" .. sid64) then return false end
+    if timer.Exists("AdminJail_" .. sid64) then
+        admin:PrintMessage(HUD_PRINTTALK, ply:Nick() .. " is already in jail. Your admin power was not used.")
+        return false
+    end
 
     if ply:InVehicle() then
         local vehicle = ply:GetParent()
@@ -249,24 +345,72 @@ local function Jail(ply, time) -- Function modified from ULX and ULib
         hook.Remove("PlayerDisconnected", "Admin_PlayerDisconnected_Jail_" .. sid64)
     end)
 
+    net.Start("TTT_AdminMessage")
+    net.WriteUInt(6, 4)
+    net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+    net.WriteString(admin:SteamID64())
+    net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+    net.WriteString(" jailed ")
+    net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+    net.WriteString(ply:SteamID64())
+    net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+    net.WriteString(" for ")
+    net.WriteUInt(ADMIN_MESSAGE_VARIABLE, 2)
+    net.WriteString(tostring(time))
+    net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+    net.WriteString(" seconds")
+    net.Broadcast()
+
     return true
 end
 
-local function Ignite(ply, time)
+local function Ignite(admin, ply, time)
     if not SERVER then return end
-    if not IsPlayer(ply) or not ply:IsActive() then return false end
-    if ply:IsOnFire() then return false end
+    if not ply:IsActive() then
+        admin:PrintMessage(HUD_PRINTTALK, ply:Nick() .. " is dead. Your admin power was not used.")
+        return false
+    end
+
+    if ply:IsOnFire() then
+        admin:PrintMessage(HUD_PRINTTALK, ply:Nick() .. " is already on fire. Your admin power was not used.")
+        return false
+    end
+
     ply:Ignite(time)
+
+    net.Start("TTT_AdminMessage")
+    net.WriteUInt(6, 4)
+    net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+    net.WriteString(admin:SteamID64())
+    net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+    net.WriteString(" ignited ")
+    net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+    net.WriteString(ply:SteamID64())
+    net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+    net.WriteString(" for ")
+    net.WriteUInt(ADMIN_MESSAGE_VARIABLE, 2)
+    net.WriteString(tostring(time))
+    net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+    net.WriteString(" seconds")
+    net.Broadcast()
+
     return true
 end
 
-local function Blind(ply, time) -- Function modified from ULX and ULib
+local function Blind(admin, ply, time) -- Function modified from ULX and ULib
     if not SERVER then return end
-    if not IsPlayer(ply) or not ply:IsActive() then return false end
+    if not IsPlayer(ply) then return end
+    if not ply:IsActive() then
+        admin:PrintMessage(HUD_PRINTTALK, ply:Nick() .. " is dead. Your admin power was not used.")
+        return false
+    end
 
     local sid64 = ply:SteamID64()
 
-    if timer.Exists("AdminBlind_" .. sid64) then return false end
+    if timer.Exists("AdminBlind_" .. sid64) then
+        admin:PrintMessage(HUD_PRINTTALK, ply:Nick() .. " is already blind. Your admin power was not used.")
+        return false
+    end
 
     net.Start("TTT_AdminBlind")
     net.WriteBool(true)
@@ -306,16 +450,39 @@ local function Blind(ply, time) -- Function modified from ULX and ULib
         hook.Remove("PlayerDeath", "Admin_PlayerDeath_Blind_" .. sid64)
     end)
 
+    net.Start("TTT_AdminMessage")
+    net.WriteUInt(6, 4)
+    net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+    net.WriteString(admin:SteamID64())
+    net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+    net.WriteString(" blinded ")
+    net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+    net.WriteString(ply:SteamID64())
+    net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+    net.WriteString(" for ")
+    net.WriteUInt(ADMIN_MESSAGE_VARIABLE, 2)
+    net.WriteString(tostring(time))
+    net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+    net.WriteString(" seconds")
+    net.Broadcast()
+
     return true
 end
 
-local function Freeze(ply, time)
+local function Freeze(admin, ply, time)
     if not SERVER then return end
-    if not IsPlayer(ply) or not ply:IsActive() then return false end
+    if not IsPlayer(ply) then return end
+    if not ply:IsActive() then
+        admin:PrintMessage(HUD_PRINTTALK, ply:Nick() .. " is dead. Your admin power was not used.")
+        return false
+    end
 
     local sid64 = ply:SteamID64()
 
-    if timer.Exists("AdminFreeze_" .. sid64) then return false end
+    if timer.Exists("AdminFreeze_" .. sid64) then
+        admin:PrintMessage(HUD_PRINTTALK, ply:Nick() .. " is already frozen. Your admin power was not used.")
+        return false
+    end
 
     if ply:InVehicle() then
         ply:ExitVehicle()
@@ -342,16 +509,39 @@ local function Freeze(ply, time)
         hook.Remove("TTTEndRound", "Admin_TTTEndRound_Freeze_" .. sid64)
     end)
 
+    net.Start("TTT_AdminMessage")
+    net.WriteUInt(6, 4)
+    net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+    net.WriteString(admin:SteamID64())
+    net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+    net.WriteString(" froze ")
+    net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+    net.WriteString(ply:SteamID64())
+    net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+    net.WriteString(" for ")
+    net.WriteUInt(ADMIN_MESSAGE_VARIABLE, 2)
+    net.WriteString(tostring(time))
+    net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+    net.WriteString(" seconds")
+    net.Broadcast()
+
     return true
 end
 
-local function Ragdoll(ply, time) -- Function modified from ULX, ULib and the Possum role
+local function Ragdoll(admin, ply, time) -- Function modified from ULX, ULib and the Possum role
     if not SERVER then return end
-    if not IsPlayer(ply) or not ply:IsActive() then return false end
+    if not IsPlayer(ply) then return end
+    if not ply:IsActive() then
+        admin:PrintMessage(HUD_PRINTTALK, ply:Nick() .. " is dead. Your admin power was not used.")
+        return false
+    end
 
     local sid64 = ply:SteamID64()
 
-    if timer.Exists("AdminRagdoll_" .. sid64) then return false end
+    if timer.Exists("AdminRagdoll_" .. sid64) then
+        admin:PrintMessage(HUD_PRINTTALK, ply:Nick() .. " is already ragdolled. Your admin power was not used.")
+        return false
+    end
 
     if ply:InVehicle() then
         ply:ExitVehicle()
@@ -509,23 +699,32 @@ local function Ragdoll(ply, time) -- Function modified from ULX, ULib and the Po
         hook.Remove("PlayerDisconnected", "Admin_PlayerDisconnected_Ragdoll_" .. sid64)
     end)
 
+    net.Start("TTT_AdminMessage")
+    net.WriteUInt(6, 4)
+    net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+    net.WriteString(admin:SteamID64())
+    net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+    net.WriteString(" ragdolled ")
+    net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+    net.WriteString(ply:SteamID64())
+    net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+    net.WriteString(" for ")
+    net.WriteUInt(ADMIN_MESSAGE_VARIABLE, 2)
+    net.WriteString(tostring(time))
+    net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+    net.WriteString(" seconds")
+    net.Broadcast()
+
     return true
 end
 
-local function Respawn(ply)
+local function Strip(admin, ply)
     if not SERVER then return end
-    if not IsPlayer(ply) or ply:Alive() then return false end
-
-    local body = ply.server_ragdoll or ply:GetRagdollEntity()
-    ply:SpawnForRound(true)
-    ply:SetDefaultCredits()
-    SafeRemoveEntity(body)
-    return true
-end
-
-local function Strip(ply)
-    if not SERVER then return end
-    if not IsPlayer(ply) or not ply:IsActive() then return false end
+    if not IsPlayer(ply) then return end
+    if not ply:IsActive() then
+        admin:PrintMessage(HUD_PRINTTALK, ply:Nick() .. " is dead. Your admin power was not used.")
+        return false
+    end
 
     for _, wep in ipairs(ply:GetWeapons()) do
         local class = wep:GetClass()
@@ -533,19 +732,89 @@ local function Strip(ply)
             ply:StripWeapon(class)
         end
     end
+
+    net.Start("TTT_AdminMessage")
+    net.WriteUInt(3, 4)
+    net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+    net.WriteString(admin:SteamID64())
+    net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+    net.WriteString(" stripped weapons from ")
+    net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+    net.WriteString(ply:SteamID64())
+    net.Broadcast()
+
     return true
 end
 
-local function Slay(ply)
+local function Respawn(admin, ply)
     if not SERVER then return end
-    if not IsPlayer(ply) or not ply:IsActive() then return false end
+    if not IsPlayer(ply) then return end
+    if ply:Alive() then
+        admin:PrintMessage(HUD_PRINTTALK, ply:Nick() .. " is already alive. Your admin power was not used.")
+        return false
+    end
+
+    local body = ply.server_ragdoll or ply:GetRagdollEntity()
+    ply:SpawnForRound(true)
+    ply:SetDefaultCredits()
+    SafeRemoveEntity(body)
+
+    net.Start("TTT_AdminMessage")
+    net.WriteUInt(3, 4)
+    net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+    net.WriteString(admin:SteamID64())
+    net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+    net.WriteString(" respawned ")
+    net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+    net.WriteString(ply:SteamID64())
+    net.Broadcast()
+
+    return true
+end
+
+local function Slay(admin, ply)
+    if not SERVER then return end
+    if not IsPlayer(ply) then return end
+    if not ply:IsActive() then
+        admin:PrintMessage(HUD_PRINTTALK, ply:Nick() .. " is dead. Your admin power was not used.")
+        return false
+    end
 
     ply:Kill()
+
+    net.Start("TTT_AdminMessage")
+    net.WriteUInt(3, 4)
+    net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+    net.WriteString(admin:SteamID64())
+    net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+    net.WriteString(" slayed ")
+    net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+    net.WriteString(ply:SteamID64())
+    net.Broadcast()
+
+    return true
 end
 
-local function Kick(ply, reason)
+local function Kick(admin, ply, reason)
     -- TODO: Create fake kicked screen
+
+    net.Start("TTT_AdminMessage")
+    net.WriteUInt(6, 4)
+    net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+    net.WriteString(admin:SteamID64())
+    net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+    net.WriteString(" kicked ")
+    net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+    net.WriteString(ply:SteamID64())
+    net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+    net.WriteString(" (")
+    net.WriteUInt(ADMIN_MESSAGE_VARIABLE, 2)
+    net.WriteString(reason)
+    net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+    net.WriteString(")")
+    net.Broadcast()
+
+    return true
 end
 
--- TODO: Create fake server messages for when admin commands are used
 -- TODO: Add warning/error messages for when admin commands fail

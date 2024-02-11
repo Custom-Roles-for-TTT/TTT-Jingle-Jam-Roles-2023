@@ -37,6 +37,11 @@ table.insert(ROLE.convars, {
     decimal = 0
 })
 table.insert(ROLE.convars, {
+    cvar = "ttt_admin_send_cost",
+    type = ROLE_CONVAR_TYPE_NUM,
+    decimal = 0
+})
+table.insert(ROLE.convars, {
     cvar = "ttt_admin_jail_cost",
     type = ROLE_CONVAR_TYPE_NUM,
     decimal = 0
@@ -90,8 +95,13 @@ ROLE.translations = {
 
 RegisterRole(ROLE)
 
+ADMIN_MESSAGE_TEXT = 0
+ADMIN_MESSAGE_PLAYER = 1
+ADMIN_MESSAGE_VARIABLE = 2
+
 if SERVER then
     util.AddNetworkString("TTT_AdminBlind")
+    util.AddNetworkString("TTT_AdminMessage")
 end
 
 if CLIENT then
@@ -102,6 +112,59 @@ if CLIENT then
             end)
         else
             hook.Remove("HUDPaint", "Admin_HUDPaint_Blind")
+        end
+    end)
+
+    -- Colors copied from ULX and ULib
+    local colorText = Color(151, 211, 255)
+    local colorPlayer = Color(0, 201, 0)
+    local colorSelf = Color(75, 0, 130)
+    local colorVariable = Color(0, 255, 0)
+
+    net.Receive("TTT_AdminMessage", function()
+        local sid64 = LocalPlayer():SteamID64()
+
+        local count = net.ReadUInt(4)
+        local isAdmin = false
+        local message = {}
+        for i = 1, count do
+            local type = net.ReadUInt(2)
+            local value = net.ReadString()
+            if i == 1 then
+                if value == sid64 then
+                    table.insert(message, colorSelf)
+                    table.insert(message, "You")
+                    isAdmin = true
+                else
+                    local ply = player.GetBySteamID64(value)
+                    if not IsPlayer(ply) then return end
+                    table.insert(message, colorPlayer)
+                    table.insert(message, ply:Nick())
+                end
+            elseif type == ADMIN_MESSAGE_TEXT then
+                table.insert(message, colorText)
+                table.insert(message, value)
+            elseif type == ADMIN_MESSAGE_PLAYER then
+                if value == sid64 then
+                    table.insert(message, colorSelf)
+                    if isAdmin then
+                        table.insert(message, "Yourself")
+                    else
+                        table.insert(message, "You")
+                    end
+                else
+                    local ply = player.GetBySteamID64(value)
+                    if not IsPlayer(ply) then return end
+                    table.insert(message, colorPlayer)
+                    table.insert(message, ply:Nick())
+                end
+            elseif type == ADMIN_MESSAGE_VARIABLE then
+                table.insert(message, colorVariable)
+                table.insert(message, value)
+            end
+        end
+        if #message > 0 then
+            chat.AddText(unpack(message))
         end
     end)
 end
