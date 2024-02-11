@@ -752,7 +752,6 @@ if SERVER then
             if ragdoll.playerHealth <= 0 then
                 Unragdoll()
 
-                local att = dmginfo:GetAttacker()
                 local inflictor = dmginfo:GetInflictor()
                 if not IsValid(inflictor) then
                     inflictor = att
