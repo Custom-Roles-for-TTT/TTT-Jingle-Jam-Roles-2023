@@ -116,9 +116,381 @@ end
 
 function SWEP:PrimaryAttack()
     if not IsFirstTimePredicted() then return end
-    self:SetNextSecondaryFire(CurTime() + self.Secondary.Delay)
+    self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
     if CLIENT then
-        -- TODO: Build admin menu UI
+
+        local m = 5
+        local listWidth = 120
+        local titleBarHeight = 25
+        local width = listWidth * 4 + m * 5
+        local height = 300
+        local labelHeight = 15
+        local listHeight = height - titleBarHeight - labelHeight - m * 2
+        local buttonHeight = 22
+
+        local dframe = vgui.Create("DFrame")
+        dframe:SetSize(width, height)
+        dframe:Center()
+        dframe:SetTitle("Admin Menu")
+        dframe:SetVisible(true)
+        dframe:ShowCloseButton(true)
+        dframe:SetMouseInputEnabled(true)
+        dframe:SetDeleteOnClose(true)
+
+        local dcommandsLabel = vgui.Create("DLabel", dframe)
+        dcommandsLabel:SetFont("TabLarge")
+        dcommandsLabel:SetText("Commands:")
+        dcommandsLabel:SetWidth(listWidth)
+        dcommandsLabel:SetPos(m, titleBarHeight)
+
+        local dcommands = vgui.Create("DListView", dframe)
+        dcommands:SetSize(listWidth, listHeight)
+        dcommands:SetPos(m, titleBarHeight + labelHeight + m)
+        dcommands:SetHideHeaders(true)
+        dcommands:SetMultiSelect(false)
+        dcommands:AddColumn("Commands")
+
+        local commands = {"slap", "bring", "goto", "send", "jail", "ignite", "blind", "freeze", "ragdoll", "strip", "respawn", "slay", "kick"}
+        for _, v in ipairs(commands) do
+            if GetConVar("ttt_admin_" .. v .. "_cost"):GetInt() > 0 then
+                dcommands:AddLine(v)
+            end
+        end
+
+        local dparams = vgui.Create("DPanel", dframe)
+        dparams:SetSize(listWidth * 3 + m * 2, listHeight + labelHeight)
+        dparams:SetPos(listWidth + m * 2, titleBarHeight + m)
+        dparams:SetPaintBackground(false)
+
+        local descriptions = {
+            ["slap"] = "Slaps the target around randomly.",
+            ["bring"] = "Teleports the target to you.",
+            ["goto"] = "Teleports you to the target.",
+            ["send"] = "Teleports the first target to the second.",
+            ["jail"] = "Puts the target in jail for the specified amount of seconds.",
+            ["ignite"] = "Lights the target on fire for the specified amount of seconds.",
+            ["blind"] = "Blinds the target for the specified amount of seconds.",
+            ["freeze"] = "Freezes the target for the specified amount of seconds.",
+            ["ragdoll"] = "Ragdolls the target for the specified amount of seconds.",
+            ["strip"] = "Strips all weapons from the target, except for the crowbar and magneto stick.",
+            ["respawn"] = "Respawns the target somewhere on the map.",
+            ["slay"] = "Kills the target.",
+            ["kick"] = "Kicks the target from the server."
+        }
+
+        dcommands.OnRowSelected = function(_, _, row)
+            dparams:Clear()
+            local command = row:GetValue(1)
+            local cost = GetConVar("ttt_admin_" .. command .. "_cost"):GetInt()
+            if command == "slap" or command == "bring" or command == "goto" or command == "strip" or command == "respawn" or command == "slay" then
+                local dtargetLabel = vgui.Create("DLabel", dparams)
+                dtargetLabel:SetFont("TabLarge")
+                dtargetLabel:SetText("Target:")
+                dtargetLabel:SetWidth(listWidth)
+                dtargetLabel:SetPos(0, -m)
+
+                local dtarget = vgui.Create("DListView", dparams)
+                dtarget:SetSize(listWidth, listHeight)
+                dtarget:SetPos(0, labelHeight)
+                dtarget:SetHideHeaders(true)
+                dtarget:SetMultiSelect(false)
+                dtarget:AddColumn("Players")
+
+                for _, p in ipairs(player.GetAll()) do
+                    local sid64 = p:SteamID64()
+                    if sid64 == self:GetOwner():SteamID64() and (command == "bring" or command == "goto" or command == "respawn") then continue end
+                    dtarget:AddLine(p:Nick(), sid64)
+                end
+
+                local drunLabel = vgui.Create("DLabel", dparams)
+                drunLabel:SetFont("TabLarge")
+                drunLabel:SetText("Execute:")
+                drunLabel:SetWidth(listWidth)
+                drunLabel:SetPos(listWidth + m, -m)
+
+                local drun = vgui.Create("DButton", dparams)
+                drun:SetWidth(listWidth)
+                drun:SetPos(listWidth + m, labelHeight)
+                drun:SetText(command)
+                drun:SetEnabled(false)
+                drun.DoClick = function()
+                    local power = self:GetOwner():GetNWInt("TTTAdminPower")
+                    if power < cost then
+                        self:GetOwner():PrintMessage(HUD_PRINTTALK, "You do not have enough admin power to use this command!")
+                    else
+                        net.Start("TTT_Admin" .. command:gsub("^%l", string.upper) .. "Command")
+                        local sid64 = dtarget:GetSelected()[1]:GetValue(2)
+                        net.WriteString(sid64)
+                        net.SendToServer()
+                        if command == "strip" and sid64 == self:GetOwner():SteamID64() then
+                            dframe:Close()
+                        end
+                    end
+                end
+
+                dtarget.OnRowSelected = function(_, _, _)
+                    drun:SetEnabled(true)
+                end
+
+                local dcost = vgui.Create("DLabel", dparams)
+                dcost:SetText("Costs " .. cost .. " admin power.")
+                dcost:SetWidth(listWidth)
+                dcost:SetPos(listWidth + m, buttonHeight + labelHeight)
+
+                local ddesc = vgui.Create("DLabel", dparams)
+                ddesc:SetText(descriptions[command])
+                ddesc:SetWrap(true)
+                ddesc:SetAutoStretchVertical(true)
+                ddesc:SetWidth(listWidth)
+                ddesc:SetPos(listWidth + m, buttonHeight + labelHeight * 2 + m)
+            elseif command == "send" then
+                local dtargetfromLabel = vgui.Create("DLabel", dparams)
+                dtargetfromLabel:SetFont("TabLarge")
+                dtargetfromLabel:SetText("From:")
+                dtargetfromLabel:SetWidth(listWidth)
+                dtargetfromLabel:SetPos(0, -m)
+
+                local dtargetfrom = vgui.Create("DListView", dparams)
+                dtargetfrom:SetSize(listWidth, listHeight)
+                dtargetfrom:SetPos(0, labelHeight)
+                dtargetfrom:SetHideHeaders(true)
+                dtargetfrom:SetMultiSelect(false)
+                dtargetfrom:AddColumn("Players")
+
+                local dtargettoLabel = vgui.Create("DLabel", dparams)
+                dtargettoLabel:SetFont("TabLarge")
+                dtargettoLabel:SetText("To:")
+                dtargettoLabel:SetWidth(listWidth)
+                dtargettoLabel:SetPos(listWidth + m, -m)
+
+                local dtargetto = vgui.Create("DListView", dparams)
+                dtargetto:SetSize(listWidth, listHeight)
+                dtargetto:SetPos(listWidth + m, labelHeight)
+                dtargetto:SetHideHeaders(true)
+                dtargetto:SetMultiSelect(false)
+                dtargetto:AddColumn("Players")
+
+                for _, p in ipairs(player.GetAll()) do
+                    local sid64 = p:SteamID64()
+                    if sid64 == self:GetOwner():SteamID64() then continue end
+                    dtargetfrom:AddLine(p:Nick(), sid64)
+                    dtargetto:AddLine(p:Nick(), sid64)
+                end
+
+                local drunLabel = vgui.Create("DLabel", dparams)
+                drunLabel:SetFont("TabLarge")
+                drunLabel:SetText("Execute:")
+                drunLabel:SetWidth(listWidth)
+                drunLabel:SetPos((listWidth + m) * 2, -m)
+
+                local drun = vgui.Create("DButton", dparams)
+                drun:SetWidth(listWidth)
+                drun:SetPos((listWidth + m) * 2, labelHeight)
+                drun:SetText(command)
+                drun:SetEnabled(false)
+                drun.DoClick = function()
+                    local power = self:GetOwner():GetNWInt("TTTAdminPower")
+                    if power < cost then
+                        self:GetOwner():PrintMessage(HUD_PRINTTALK, "You do not have enough admin power to use this command!")
+                    else
+                        net.Start("TTT_AdminSendCommand")
+                        local fromsid64 = dtargetfrom:GetSelected()[1]:GetValue(2)
+                        local tosid64 = dtargetto:GetSelected()[1]:GetValue(2)
+                        net.WriteString(fromsid64)
+                        net.WriteString(tosid64)
+                        net.SendToServer()
+                    end
+                end
+
+                dtargetfrom.OnRowSelected = function(_, _, _)
+                    local to = dtargetto:GetSelected()
+                    if to and #to > 0 then
+                        drun:SetEnabled(true)
+                    end
+                end
+
+                dtargetto.OnRowSelected = function(_, _, _)
+                    local from = dtargetfrom:GetSelected()
+                    if from and #from > 0 then
+                        drun:SetEnabled(true)
+                    end
+                end
+
+                local dcost = vgui.Create("DLabel", dparams)
+                dcost:SetText("Costs " .. cost .. " admin power.")
+                dcost:SetWidth(listWidth)
+                dcost:SetPos((listWidth + m) * 2, buttonHeight + labelHeight)
+
+                local ddesc = vgui.Create("DLabel", dparams)
+                ddesc:SetText(descriptions[command])
+                ddesc:SetWrap(true)
+                ddesc:SetAutoStretchVertical(true)
+                ddesc:SetWidth(listWidth)
+                ddesc:SetPos((listWidth + m) * 2, buttonHeight + labelHeight * 2 + m)
+            elseif command == "jail" or command == "ignite" or command == "blind" or command == "freeze" or command == "ragdoll" then
+                local dtargetLabel = vgui.Create("DLabel", dparams)
+                dtargetLabel:SetFont("TabLarge")
+                dtargetLabel:SetText("Target:")
+                dtargetLabel:SetWidth(listWidth)
+                dtargetLabel:SetPos(0, -m)
+
+                local dtarget = vgui.Create("DListView", dparams)
+                dtarget:SetSize(listWidth, listHeight)
+                dtarget:SetPos(0, labelHeight)
+                dtarget:SetHideHeaders(true)
+                dtarget:SetMultiSelect(false)
+                dtarget:AddColumn("Players")
+
+                for _, p in ipairs(player.GetAll()) do
+                    local sid64 = p:SteamID64()
+                    dtarget:AddLine(p:Nick(), sid64)
+                end
+
+                local drunLabel = vgui.Create("DLabel", dparams)
+                drunLabel:SetFont("TabLarge")
+                drunLabel:SetText("Execute:")
+                drunLabel:SetWidth(listWidth)
+                drunLabel:SetPos(listWidth + m, -m)
+
+                local range = math.floor(100 / cost)
+                local time = math.min(5, range)
+
+                local drun = vgui.Create("DButton", dparams)
+                drun:SetWidth(listWidth)
+                drun:SetPos(listWidth + m, labelHeight)
+                drun:SetText(command)
+                drun:SetEnabled(false)
+                drun.DoClick = function()
+                    local power = self:GetOwner():GetNWInt("TTTAdminPower")
+                    if power < cost then
+                        self:GetOwner():PrintMessage(HUD_PRINTTALK, "You do not have enough admin power to use this command!")
+                    else
+                        net.Start("TTT_Admin" .. command:gsub("^%l", string.upper) .. "Command")
+                        local sid64 = dtarget:GetSelected()[1]:GetValue(2)
+                        net.WriteString(sid64)
+                        net.WriteUInt(time, 8)
+                        net.SendToServer()
+                        if (command == "freeze" or command == "ragdoll") and sid64 == self:GetOwner():SteamID64() then
+                            dframe:Close()
+                        end
+                    end
+                end
+
+                dtarget.OnRowSelected = function(_, _, _)
+                    drun:SetEnabled(true)
+                end
+
+                local dtimelabel = vgui.Create("DLabel", dparams)
+                dtimelabel:SetWidth(20)
+                dtimelabel:SetPos(2 * listWidth + m - 20, buttonHeight + labelHeight)
+                dtimelabel:SetText(time .. "s")
+
+                local dtime = vgui.Create("DSlider", dparams)
+                dtime:SetLockY(0.5)
+                dtime:SetSlideX(time / range)
+                dtime:SetTrapInside(true)
+                dtime:SetWidth(listWidth - 20)
+                dtime:SetPos(listWidth + m, buttonHeight + labelHeight)
+                dtime:SetNotches(range)
+                Derma_Hook( dtime, "Paint", "Paint", "NumSlider" )
+
+                local dcost = vgui.Create("DLabel", dparams)
+                dcost:SetText("Costs " .. cost * time .. " admin power.")
+                dcost:SetWidth(listWidth)
+                dcost:SetPos(listWidth + m, buttonHeight + labelHeight * 2 + m)
+
+                dtime.OnValueChanged = function(_, x, _)
+                    time = math.max(math.ceil(x * range), 1)
+                    dtimelabel:SetText(time .. "s")
+                    dcost:SetText("Costs " .. cost * time .. " admin power.")
+                end
+
+                local ddesc = vgui.Create("DLabel", dparams)
+                ddesc:SetText(descriptions[command])
+                ddesc:SetWrap(true)
+                ddesc:SetAutoStretchVertical(true)
+                ddesc:SetWidth(listWidth)
+                ddesc:SetPos(listWidth + m, buttonHeight + labelHeight * 3 + m * 2)
+            elseif command == "kick" then
+                local dtargetLabel = vgui.Create("DLabel", dparams)
+                dtargetLabel:SetFont("TabLarge")
+                dtargetLabel:SetText("Target:")
+                dtargetLabel:SetWidth(listWidth)
+                dtargetLabel:SetPos(0, -m)
+
+                local dtarget = vgui.Create("DListView", dparams)
+                dtarget:SetSize(listWidth, listHeight)
+                dtarget:SetPos(0, labelHeight)
+                dtarget:SetHideHeaders(true)
+                dtarget:SetMultiSelect(false)
+                dtarget:AddColumn("Players")
+
+                for _, p in ipairs(player.GetAll()) do
+                    local sid64 = p:SteamID64()
+                    dtarget:AddLine(p:Nick(), sid64)
+                end
+
+                local drunLabel = vgui.Create("DLabel", dparams)
+                drunLabel:SetFont("TabLarge")
+                drunLabel:SetText("Execute:")
+                drunLabel:SetWidth(listWidth)
+                drunLabel:SetPos(listWidth + m, -m)
+
+                local reason = "No reason given"
+
+                local drun = vgui.Create("DButton", dparams)
+                drun:SetWidth(listWidth)
+                drun:SetPos(listWidth + m, labelHeight)
+                drun:SetText(command)
+                drun:SetEnabled(false)
+                drun.DoClick = function()
+                    local power = self:GetOwner():GetNWInt("TTTAdminPower")
+                    if power < cost then
+                        self:GetOwner():PrintMessage(HUD_PRINTTALK, "You do not have enough admin power to use this command!")
+                    else
+                        net.Start("TTT_Admin" .. command:gsub("^%l", string.upper) .. "Command")
+                        local sid64 = dtarget:GetSelected()[1]:GetValue(2)
+                        net.WriteString(sid64)
+                        net.WriteString(reason)
+                        net.SendToServer()
+                        if sid64 == self:GetOwner():SteamID64() then
+                            dframe:Close()
+                        end
+                    end
+                end
+
+                local dreason = vgui.Create("DTextEntry", dparams)
+                dreason:SetWidth(listWidth)
+                dreason:SetPos(listWidth + m, buttonHeight + labelHeight + m)
+                dreason:SetPlaceholderText("Reason")
+                dreason.OnChange = function()
+                    local text = dreason:GetValue()
+                    if not text or #text == 0 then
+                        reason = "No reason given"
+                    else
+                        reason = text
+                    end
+                end
+
+                dtarget.OnRowSelected = function(_, _, _)
+                    drun:SetEnabled(true)
+                end
+
+                local dcost = vgui.Create("DLabel", dparams)
+                dcost:SetText("Costs " .. cost .. " admin power.")
+                dcost:SetWidth(listWidth)
+                dcost:SetPos(listWidth + m, 2 * buttonHeight + labelHeight + m)
+
+                local ddesc = vgui.Create("DLabel", dparams)
+                ddesc:SetText(descriptions[command])
+                ddesc:SetWrap(true)
+                ddesc:SetAutoStretchVertical(true)
+                ddesc:SetWidth(listWidth)
+                ddesc:SetPos(listWidth + m, 2 * (buttonHeight + labelHeight + m))
+            end
+        end
+
+        dframe:MakePopup()
     end
 end
 
@@ -150,7 +522,7 @@ if SERVER then
         local sound_num = MathRandom(#slapSounds)
         ply:EmitSound(slapSounds[sound_num])
 
-        local direction = Vector(MathRand( -10, 10 ), MathRand( -10, 10 ), 15)
+        local direction = Vector(MathRand( -10, 10 ), MathRand( -10, 10 ), 10)
         direction:Normalize()
         ply:SetVelocity(direction * power)
 
@@ -435,7 +807,7 @@ if SERVER then
         local ply = player.GetBySteamID64(sid64)
         local time = net.ReadUInt(8)
 
-        local cost = admin_jail_cost:GetInt()
+        local cost = admin_jail_cost:GetInt() * time
         local power = admin:GetNWInt("TTTAdminPower")
         if power < cost then return end
 
@@ -482,7 +854,7 @@ if SERVER then
         local ply = player.GetBySteamID64(sid64)
         local time = net.ReadUInt(8)
 
-        local cost = admin_ignite_cost:GetInt()
+        local cost = admin_ignite_cost:GetInt() * time
         local power = admin:GetNWInt("TTTAdminPower")
         if power < cost then return end
 
@@ -567,7 +939,7 @@ if SERVER then
         local ply = player.GetBySteamID64(sid64)
         local time = net.ReadUInt(8)
 
-        local cost = admin_blind_cost:GetInt()
+        local cost = admin_blind_cost:GetInt() * time
         local power = admin:GetNWInt("TTTAdminPower")
         if power < cost then return end
 
@@ -639,7 +1011,7 @@ if SERVER then
         local ply = player.GetBySteamID64(sid64)
         local time = net.ReadUInt(8)
 
-        local cost = admin_freeze_cost:GetInt()
+        local cost = admin_freeze_cost:GetInt() * time
         local power = admin:GetNWInt("TTTAdminPower")
         if power < cost then return end
 
@@ -681,6 +1053,7 @@ if SERVER then
         end
         ragdoll:SetAngles(ply:GetAngles())
         ragdoll:SetColor(ply:GetColor())
+        ragdoll:Spawn()
         ragdoll:Activate()
 
         local velocity = ply:GetVelocity()
@@ -767,6 +1140,15 @@ if SERVER then
                 dmg:SetDamageForce(force)
 
                 ply:TakeDamageInfo(dmg)
+
+                local timerIdentifier = "AdminRagdoll_" .. sid64
+                if timer.Exists(timerIdentifier) then
+                    timer.Remove(timerIdentifier)
+                    hook.Remove("TTTEndRound", "Admin_TTTEndRound_Ragdoll_" .. sid64)
+                    hook.Remove("PlayerDeath", "Admin_PlayerDeath_Ragdoll_" .. sid64)
+                    hook.Remove("PlayerDisconnected", "Admin_PlayerDisconnected_Ragdoll_" .. sid64)
+                    hook.Remove("PostEntityTakeDamage", "Admin_PostEntityTakeDamage_Ragdoll_" .. sid64)
+                end
             else
                 ply:SetHealth(ragdoll.playerHealth)
             end
@@ -841,7 +1223,7 @@ if SERVER then
         local ply = player.GetBySteamID64(sid64)
         local time = net.ReadUInt(8)
 
-        local cost = admin_ragdoll_cost:GetInt()
+        local cost = admin_ragdoll_cost:GetInt() * time
         local power = admin:GetNWInt("TTTAdminPower")
         if power < cost then return end
 
@@ -967,7 +1349,7 @@ if SERVER then
         if not IsPlayer(admin) or not admin:IsActiveAdmin() then return end
         if not IsPlayer(ply) then return end
 
-        if not ply:IsActive() then
+        if ply:IsActive() then
             ply:Kill()
         end
 
@@ -997,12 +1379,13 @@ if SERVER then
     net.Receive("TTT_AdminKickCommand", function(_, admin)
         local sid64 = net.ReadString()
         local ply = player.GetBySteamID64(sid64)
+        local reason = net.ReadString()
 
         local cost = admin_kick_cost:GetInt()
         local power = admin:GetNWInt("TTTAdminPower")
         if power < cost then return end
 
-        if Kick(admin, ply) then
+        if Kick(admin, ply, reason) then
             admin:SetNWInt("TTTAdminPower", power - cost)
         end
     end)
