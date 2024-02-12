@@ -183,6 +183,18 @@ function SWEP:PrimaryAttack()
             local command = row:GetValue(1)
             local cost = GetConVar("ttt_admin_" .. command .. "_cost"):GetInt()
 
+            local function IsTimedCommand()
+                return command == "jail" or command == "ignite" or command == "blind" or command == "freeze" or command == "ragdoll"
+            end
+
+            local function CantTargetSelf()
+                return command == "bring" or command == "goto" or command == "send" or command == "respawn"
+            end
+
+            local function ShouldCloseAfterSelfUse()
+                return command == "freeze" or command == "ragdoll" or command == "strip" or command == "slay" or command == "kick"
+            end
+
             local dtargetLabel = vgui.Create("DLabel", dparams)
             dtargetLabel:SetFont("TabLarge")
             dtargetLabel:SetText("Target:")
@@ -216,7 +228,7 @@ function SWEP:PrimaryAttack()
 
             for _, p in ipairs(player.GetAll()) do
                 local sid64 = p:SteamID64()
-                if sid64 == self:GetOwner():SteamID64() and (command == "bring" or command == "goto" or command == "send" or command == "respawn") then continue end
+                if sid64 == self:GetOwner():SteamID64() and CantTargetSelf() then continue end
                 dtarget:AddLine(p:Nick(), sid64)
                 if command == "send" then
                     dtargetto:AddLine(p:Nick(), sid64)
@@ -236,7 +248,7 @@ function SWEP:PrimaryAttack()
 
             local range = math.floor(100 / cost)
             local time = 1
-            if command == "jail" or command == "ignite" or command == "blind" or command == "freeze" or command == "ragdoll" then
+            if IsTimedCommand() then
                 time = math.min(5, range)
             end
             local reason = "No reason given"
@@ -256,13 +268,13 @@ function SWEP:PrimaryAttack()
                     net.WriteString(sid64)
                     if command == "send" then
                         net.WriteString(dtargetto:GetSelected()[1]:GetValue(2))
-                    elseif command == "jail" or command == "ignite" or command == "blind" or command == "freeze" or command == "ragdoll" then
+                    elseif IsTimedCommand() then
                         net.WriteUInt(time, 8)
                     elseif command == "kick" then
                         net.WriteString(reason)
                     end
                     net.SendToServer()
-                    if (command == "freeze" or command == "ragdoll" or command == "strip" or command == "slay" or command == "kick") and sid64 == self:GetOwner():SteamID64() then
+                    if ShouldCloseAfterSelfUse() and sid64 == self:GetOwner():SteamID64() then
                         dframe:Close()
                     end
                 end
@@ -302,7 +314,7 @@ function SWEP:PrimaryAttack()
             ddesc:SetWidth(listWidth)
             ddesc:SetPos(runX, costY + labelHeight + m)
 
-            if command == "jail" or command == "ignite" or command == "blind" or command == "freeze" or command == "ragdoll" then
+            if IsTimedCommand() then
                 local dtimelabel = vgui.Create("DLabel", dparams)
                 dtimelabel:SetWidth(20)
                 dtimelabel:SetPos(runX + listWidth - 20, costY)
