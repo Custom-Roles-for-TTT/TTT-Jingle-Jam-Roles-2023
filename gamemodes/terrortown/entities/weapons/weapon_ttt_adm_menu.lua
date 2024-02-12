@@ -72,7 +72,7 @@ local admin_blind_cost = CreateConVar("ttt_admin_blind_cost", 10, FCVAR_REPLICAT
 local admin_freeze_cost = CreateConVar("ttt_admin_freeze_cost", 10, FCVAR_REPLICATED, "The amount of admin power it costs to use the freeze command per second. Set to 0 to disable", 0, 100)
 local admin_ragdoll_cost = CreateConVar("ttt_admin_ragdoll_cost", 10, FCVAR_REPLICATED, "The amount of admin power it costs to use the ragdoll command per second. Set to 0 to disable", 0, 100)
 local admin_strip_cost = CreateConVar("ttt_admin_strip_cost", 60, FCVAR_REPLICATED, "The amount of admin power it costs to use the strip command. Set to 0 to disable", 0, 100)
-local admin_respawn_cost = CreateConVar("ttt_admin_respawn_cost", 60, FCVAR_REPLICATED, "The amount of admin power it costs to use the respawn command. Set to 0 to disable", 0, 100)
+local admin_respawn_cost = CreateConVar("ttt_admin_respawn_cost", 70, FCVAR_REPLICATED, "The amount of admin power it costs to use the respawn command. Set to 0 to disable", 0, 100)
 local admin_slay_cost = CreateConVar("ttt_admin_slay_cost", 80, FCVAR_REPLICATED, "The amount of admin power it costs to use the slay command. Set to 0 to disable", 0, 100)
 local admin_kick_cost = CreateConVar("ttt_admin_kick_cost", 100, FCVAR_REPLICATED, "The amount of admin power it costs to use the kick command. Set to 0 to disable", 0, 100)
 
