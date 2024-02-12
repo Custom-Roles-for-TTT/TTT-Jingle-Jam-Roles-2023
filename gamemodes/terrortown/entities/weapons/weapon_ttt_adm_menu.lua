@@ -492,7 +492,18 @@ function SWEP:PrimaryAttack()
             end
         end
 
+        dframe.OnClose = function()
+            hook.Remove("Think", "Admin_Think")
+        end
+
         dframe:MakePopup()
+
+        local client = LocalPlayer()
+        hook.Add("Think", "Admin_Think", function()
+            if not client:Alive() then
+                dframe:Close()
+            end
+        end)
     end
 end
 
