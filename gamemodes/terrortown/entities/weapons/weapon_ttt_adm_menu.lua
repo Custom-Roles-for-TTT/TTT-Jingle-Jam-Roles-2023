@@ -290,12 +290,14 @@ function SWEP:PrimaryAttack()
                 drun:SetEnabled(false)
                 drun.DoClick = function()
                     local power = self:GetOwner():GetNWInt("TTTAdminPower")
-                    if power < cost then
+                    local fromsid64 = dtargetfrom:GetSelected()[1]:GetValue(2)
+                    local tosid64 = dtargetto:GetSelected()[1]:GetValue(2)
+                    if fromsid64 == tosid64 then
+                        self:GetOwner():PrintMessage(HUD_PRINTTALK, "You cannot teleport a player to themselves")
+                    elseif power < cost then
                         self:GetOwner():PrintMessage(HUD_PRINTTALK, "You do not have enough admin power to use this command!")
                     else
                         net.Start("TTT_AdminSendCommand")
-                        local fromsid64 = dtargetfrom:GetSelected()[1]:GetValue(2)
-                        local tosid64 = dtargetto:GetSelected()[1]:GetValue(2)
                         net.WriteString(fromsid64)
                         net.WriteString(tosid64)
                         net.SendToServer()
@@ -677,7 +679,7 @@ if SERVER then
             net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
             net.WriteString(admin:SteamID64())
             net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
-            net.WriteString(" transported ")
+            net.WriteString(" teleported ")
             net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
             net.WriteString(from:SteamID64())
             net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
