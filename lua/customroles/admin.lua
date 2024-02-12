@@ -211,6 +211,8 @@ if CLIENT then
     -- FAKE KICK SCREEN --
     ----------------------
 
+    local kickScreenMat = Material("ui/roles/adm/kickScreen.png")
+
     surface.CreateFont("KickText", {
         font = "Tahoma",
         size = 18,
@@ -245,13 +247,12 @@ if CLIENT then
         dframe:SetDeleteOnClose(true)
         dframe.Paint = function() end
 
-        local mat = Material("ui/roles/adm/kickScreen.png")
         local overlayPanel = vgui.Create("DPanel", dframe)
         overlayPanel:SetSize(dframe:GetWide(), dframe:GetTall())
         overlayPanel:SetPos(0, 0)
         overlayPanel.Paint = function(_, w, h)
             surface.SetDrawColor(COLOR_WHITE)
-            surface.SetMaterial(mat)
+            surface.SetMaterial(kickScreenMat)
             surface.DrawTexturedRect(0, 0, w, h)
         end
 
