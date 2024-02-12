@@ -157,7 +157,24 @@ if CLIENT then
     -- HUD --
     ---------
 
-    -- TODO: Draw power bar
+    hook.Add("HUDDrawScoreBoard", "Admin_HUDDrawScoreBoard", function() -- Use HUDDrawScoreBoard instead of HUDPaint so it draws above the TTT HUD
+        local client = LocalPlayer()
+        local wep = client:GetActiveWeapon()
+        if not IsValid(wep) or wep:GetClass() ~= "weapon_ttt_adm_menu" then return end
+
+        local power_colors = {
+            border = COLOR_WHITE,
+            background = Color(17, 115, 135, 222),
+            fill = Color(82, 226, 255, 255)
+        }
+        local current_power = client:GetNWInt("TTTAdminPower")
+
+        local power_percentage = current_power / 100
+
+        CRHUD:PaintBar(8, 20, ScrH() - 59, 230, 25, power_colors, power_percentage)
+        draw.SimpleText(LANG.GetTranslation("admin_power_title"), "HealthAmmo", 30, ScrH() - 59, Color(0, 0, 10, 200), TEXT_ALIGN_LEFT)
+        CRHUD:ShadowedText(tostring(current_power), "HealthAmmo", 230, ScrH() - 59, COLOR_WHITE, TEXT_ALIGN_RIGHT)
+    end)
 
     --------------
     -- TUTORIAL --
