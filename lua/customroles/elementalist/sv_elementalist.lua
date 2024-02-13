@@ -74,7 +74,7 @@ hook.Add("EntityTakeDamage", "Elementalist_EntityTakeDamage", function(ent, dmgi
                 ent:Freeze(false)
 
                 net.Start("EndIceScreen")
-                net.Start(ent)
+                net.Send(ent)
             end
         end
 
