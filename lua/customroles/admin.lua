@@ -293,16 +293,16 @@ if CLIENT then
         local sid64 = LocalPlayer():SteamID64()
 
         local count = net.ReadUInt(4)
-        local isAdmin = false
+        local admin
         local message = {}
         for i = 1, count do
             local type = net.ReadUInt(2)
             local value = net.ReadString()
             if i == 1 then
+                admin = value
                 if value == sid64 then
                     table.insert(message, colorSelf)
                     table.insert(message, "You")
-                    isAdmin = true
                 else
                     local ply = player.GetBySteamID64(value)
                     if not IsPlayer(ply) then return end
@@ -315,11 +315,14 @@ if CLIENT then
             elseif type == ADMIN_MESSAGE_PLAYER then
                 if value == sid64 then
                     table.insert(message, colorSelf)
-                    if isAdmin then
+                    if value == admin then
                         table.insert(message, "Yourself")
                     else
                         table.insert(message, "You")
                     end
+                elseif value == admin then
+                    table.insert(message, colorPlayer)
+                    table.insert(message, "Themselves")
                 else
                     local ply = player.GetBySteamID64(value)
                     if not IsPlayer(ply) then return end
