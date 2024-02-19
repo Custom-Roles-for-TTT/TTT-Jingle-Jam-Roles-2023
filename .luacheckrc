@@ -552,6 +552,7 @@ globals = {
     "DefaultEquipment",
     "DermaMenu",
     "Derma_Anim",
+    "Derma_Hook",
     "DetectiveMode",
     "Dev",
     "DrawColorModify",
