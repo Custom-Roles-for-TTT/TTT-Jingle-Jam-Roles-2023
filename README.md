@@ -28,6 +28,7 @@ ttt_admin_strip_cost        60  // How much power the strip command costs. Set t
 ttt_admin_respawn_cost      70  // How much power the respawn command costs. Set to 0 to disable
 ttt_admin_slay_cost         80  // How much power the slay command costs. Set to 0 to disable
 ttt_admin_kick_cost         100 // How much power the kick command costs. Set to 0 to disable
+ttt_admin_punish_cost       50  // How much power the punish command costs. Set to 0 to disable. Requires Karma Punishments mod
 ```
 
 ## Elementalist

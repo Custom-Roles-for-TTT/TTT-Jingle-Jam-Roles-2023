@@ -75,6 +75,7 @@ local admin_strip_cost = CreateConVar("ttt_admin_strip_cost", 60, FCVAR_REPLICAT
 local admin_respawn_cost = CreateConVar("ttt_admin_respawn_cost", 70, FCVAR_REPLICATED, "The amount of admin power it costs to use the respawn command. Set to 0 to disable", 0, 100)
 local admin_slay_cost = CreateConVar("ttt_admin_slay_cost", 80, FCVAR_REPLICATED, "The amount of admin power it costs to use the slay command. Set to 0 to disable", 0, 100)
 local admin_kick_cost = CreateConVar("ttt_admin_kick_cost", 100, FCVAR_REPLICATED, "The amount of admin power it costs to use the kick command. Set to 0 to disable", 0, 100)
+local admin_punish_cost = CreateConVar("ttt_admin_punish_cost", 50, FCVAR_REPLICATED, "The amount of admin power it costs to use the punish command. Set to 0 to disable", 0, 100)
 
 if SERVER then
     util.AddNetworkString("TTT_AdminSlapCommand")
@@ -90,6 +91,7 @@ if SERVER then
     util.AddNetworkString("TTT_AdminRespawnCommand")
     util.AddNetworkString("TTT_AdminSlayCommand")
     util.AddNetworkString("TTT_AdminKickCommand")
+    util.AddNetworkString("TTT_AdminPunishCommand")
 end
 
 function SWEP:Initialize()
@@ -112,6 +114,18 @@ function SWEP:Deploy()
     self:DrawShadow(false)
     self:SendWeaponAnim(ACT_SLAM_DETONATOR_DRAW)
     return true
+end
+
+local function IsTimedCommand(command)
+    return command == "jail" or command == "ignite" or command == "blind" or command == "freeze" or command == "ragdoll"
+end
+
+local function CantTargetSelf(command)
+    return command == "bring" or command == "goto" or command == "send" or command == "respawn"
+end
+
+local function ShouldCloseAfterSelfUse(command)
+    return command == "freeze" or command == "ragdoll" or command == "strip" or command == "slay" or command == "kick"
 end
 
 function SWEP:PrimaryAttack()
@@ -151,10 +165,32 @@ function SWEP:PrimaryAttack()
         dcommands:AddColumn("Commands")
 
         local commands = {"slap", "bring", "goto", "send", "jail", "ignite", "blind", "freeze", "ragdoll", "strip", "respawn", "slay", "kick"}
+        local validCommands = {}
+
+        if TTTKP then -- Only add 'punish' to the list if karma punishments are installed
+            TableInsert(commands, "punish")
+        end
+
         for _, v in ipairs(commands) do
-            if GetConVar("ttt_admin_" .. v .. "_cost"):GetInt() > 0 then
-                dcommands:AddLine(v)
+            local cost = GetConVar("ttt_admin_" .. v .. "_cost"):GetInt()
+            if IsTimedCommand(v) then
+                cost = math.min(5 * cost, 100)
             end
+            if cost > 0 then
+                TableInsert(validCommands, {command = v, cost = cost})
+            end
+        end
+
+        table.sort(validCommands, function(a, b)
+            if a.cost == b.cost then
+                return a.command < b.command
+            else
+                return a.cost < b.cost
+            end
+        end)
+
+        for _, v in ipairs(validCommands) do
+            dcommands:AddLine(v.command)
         end
 
         local dparams = vgui.Create("DPanel", dframe)
@@ -175,25 +211,14 @@ function SWEP:PrimaryAttack()
             ["strip"] = "Strips all weapons from the target, except for the crowbar and magneto stick.",
             ["respawn"] = "Respawns the target somewhere on the map.",
             ["slay"] = "Kills the target.",
-            ["kick"] = "Kicks the target from the server."
+            ["kick"] = "Kicks the target from the server.",
+            ["punish"] = "Applies a random karma punishment to the target."
         }
 
         dcommands.OnRowSelected = function(_, _, row)
             dparams:Clear()
             local command = row:GetValue(1)
             local cost = GetConVar("ttt_admin_" .. command .. "_cost"):GetInt()
-
-            local function IsTimedCommand()
-                return command == "jail" or command == "ignite" or command == "blind" or command == "freeze" or command == "ragdoll"
-            end
-
-            local function CantTargetSelf()
-                return command == "bring" or command == "goto" or command == "send" or command == "respawn"
-            end
-
-            local function ShouldCloseAfterSelfUse()
-                return command == "freeze" or command == "ragdoll" or command == "strip" or command == "slay" or command == "kick"
-            end
 
             local dtargetLabel = vgui.Create("DLabel", dparams)
             dtargetLabel:SetFont("TabLarge")
@@ -228,7 +253,7 @@ function SWEP:PrimaryAttack()
 
             for _, p in ipairs(player.GetAll()) do
                 local sid64 = p:SteamID64()
-                if sid64 == self:GetOwner():SteamID64() and CantTargetSelf() then continue end
+                if sid64 == self:GetOwner():SteamID64() and CantTargetSelf(command) then continue end
                 dtarget:AddLine(p:Nick(), sid64)
                 if command == "send" then
                     dtargetto:AddLine(p:Nick(), sid64)
@@ -248,7 +273,7 @@ function SWEP:PrimaryAttack()
 
             local range = math.floor(100 / cost)
             local time = 1
-            if IsTimedCommand() then
+            if IsTimedCommand(command) then
                 time = math.min(5, range)
             end
             local reason = "No reason given"
@@ -268,13 +293,13 @@ function SWEP:PrimaryAttack()
                     net.WriteString(sid64)
                     if command == "send" then
                         net.WriteString(dtargetto:GetSelected()[1]:GetValue(2))
-                    elseif IsTimedCommand() then
+                    elseif IsTimedCommand(command) then
                         net.WriteUInt(time, 8)
                     elseif command == "kick" then
                         net.WriteString(reason)
                     end
                     net.SendToServer()
-                    if ShouldCloseAfterSelfUse() and sid64 == self:GetOwner():SteamID64() then
+                    if ShouldCloseAfterSelfUse(command) and sid64 == self:GetOwner():SteamID64() then
                         dframe:Close()
                     end
                 end
@@ -314,7 +339,7 @@ function SWEP:PrimaryAttack()
             ddesc:SetWidth(listWidth)
             ddesc:SetPos(runX, costY + labelHeight + m)
 
-            if IsTimedCommand() then
+            if IsTimedCommand(command) then
                 local dtimelabel = vgui.Create("DLabel", dparams)
                 dtimelabel:SetWidth(20)
                 dtimelabel:SetPos(runX + listWidth - 20, costY)
@@ -674,7 +699,11 @@ if SERVER then
         net.WriteUInt(ADMIN_MESSAGE_VARIABLE, 2)
         net.WriteString(tostring(time))
         net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
-        net.WriteString(" seconds")
+        if time == 1 then
+            net.WriteString(" second")
+        else
+            net.WriteString(" seconds")
+        end
         net.Broadcast()
 
         return true
@@ -721,7 +750,11 @@ if SERVER then
         net.WriteUInt(ADMIN_MESSAGE_VARIABLE, 2)
         net.WriteString(tostring(time))
         net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
-        net.WriteString(" seconds")
+        if time == 1 then
+            net.WriteString(" second")
+        else
+            net.WriteString(" seconds")
+        end
         net.Broadcast()
 
         return true
@@ -806,7 +839,11 @@ if SERVER then
         net.WriteUInt(ADMIN_MESSAGE_VARIABLE, 2)
         net.WriteString(tostring(time))
         net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
-        net.WriteString(" seconds")
+        if time == 1 then
+            net.WriteString(" second")
+        else
+            net.WriteString(" seconds")
+        end
         net.Broadcast()
 
         return true
@@ -878,7 +915,11 @@ if SERVER then
         net.WriteUInt(ADMIN_MESSAGE_VARIABLE, 2)
         net.WriteString(tostring(time))
         net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
-        net.WriteString(" seconds")
+        if time == 1 then
+            net.WriteString(" second")
+        else
+            net.WriteString(" seconds")
+        end
         net.Broadcast()
 
         return true
@@ -1090,7 +1131,11 @@ if SERVER then
         net.WriteUInt(ADMIN_MESSAGE_VARIABLE, 2)
         net.WriteString(tostring(time))
         net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
-        net.WriteString(" seconds")
+        if time == 1 then
+            net.WriteString(" second")
+        else
+            net.WriteString(" seconds")
+        end
         net.Broadcast()
 
         return true
@@ -1263,6 +1308,53 @@ if SERVER then
         if power < cost then return end
 
         if Kick(admin, ply, reason) then
+            admin:SetNWInt("TTTAdminPower", power - cost)
+        end
+    end)
+
+    local function Punish(admin, ply)
+        if not TTTKP then return end
+        if not IsPlayer(admin) or not admin:IsActiveAdmin() then return end
+        if not IsPlayer(ply) then return end
+        if not ply:IsActive() then
+            admin:PrintMessage(HUD_PRINTTALK, ply:Nick() .. " is dead. Your admin power was not used.")
+            return false
+        end
+
+        if ply.KPPunishment then
+            admin:PrintMessage(HUD_PRINTTALK, ply:Nick() .. " has already been punished. Your admin power was not used.")
+            return false
+        end
+
+        local punishment = TTTKP:GetValidPunishment(ply)
+        if not punishment then
+            admin:PrintMessage(HUD_PRINTTALK, "No valid punishments were found for " .. ply:Nick() .. ". Your admin power was not used.")
+            return false
+        end
+
+        if TTTKP:ApplyPunishment(ply, punishment) then return end
+
+        net.Start("TTT_AdminMessage")
+        net.WriteUInt(3, 4)
+        net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+        net.WriteString(admin:SteamID64())
+        net.WriteUInt(ADMIN_MESSAGE_TEXT, 2)
+        net.WriteString(" punished ")
+        net.WriteUInt(ADMIN_MESSAGE_PLAYER, 2)
+        net.WriteString(ply:SteamID64())
+        net.Broadcast()
+
+        return true
+    end
+    net.Receive("TTT_AdminPunishCommand", function(_, admin)
+        local sid64 = net.ReadString()
+        local ply = player.GetBySteamID64(sid64)
+
+        local cost = admin_punish_cost:GetInt()
+        local power = admin:GetNWInt("TTTAdminPower")
+        if power < cost then return end
+
+        if Punish(admin, ply) then
             admin:SetNWInt("TTTAdminPower", power - cost)
         end
     end)
