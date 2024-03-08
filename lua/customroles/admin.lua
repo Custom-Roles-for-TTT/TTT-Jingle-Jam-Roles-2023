@@ -103,7 +103,7 @@ table.insert(ROLE.convars, {
 ROLE.translations = {
     ["english"] = {
         ["adminmenu_help_pri"] = "Use {primaryfire} to open the admin menu",
-        ['admin_power_title'] = "ADMIN POWER"
+        ["admin_power_title"] = "ADMIN POWER"
     }
 }
 
