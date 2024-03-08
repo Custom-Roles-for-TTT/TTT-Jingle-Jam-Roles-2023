@@ -552,6 +552,7 @@ globals = {
     "DefaultEquipment",
     "DermaMenu",
     "Derma_Anim",
+    "Derma_Hook",
     "DetectiveMode",
     "Dev",
     "DrawColorModify",
@@ -1031,6 +1032,9 @@ globals = {
     "EQUIP_ELEMENTALIST_WINDBURN",
     "EQUIP_ELEMENTALIST_WINDBURN_UP",
     "EQUIP_PHS_TRACKER",
+    "ADMIN_MESSAGE_TEXT",
+    "ADMIN_MESSAGE_PLAYER",
+    "ADMIN_MESSAGE_VARIABLE",
     "PHYSICIAN",
     "PHYSICIAN_TRACKER_ACTIVE",
     "PHYSICIAN_TRACKER_DEAD",
@@ -1038,7 +1042,11 @@ globals = {
     "ROLE_ELEMENTALIST",
     "ROLE_PHYSICIAN",
     "ROLE_RENEGADE",
-    "WIN_RENEGADE"
+    "ROLE_ADMIN",
+    "WIN_RENEGADE",
+
+    -- Optional external mods
+    "TTTKP"
 }
 std = {
     globals = {

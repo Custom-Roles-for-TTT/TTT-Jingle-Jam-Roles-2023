@@ -3,6 +3,34 @@ A pack of [Custom Roles for TTT](https://github.com/Custom-Roles-for-TTT/TTT-Cus
 
 # Roles
 
+## Admin
+_Suggested By_: Noxx\
+The Admin is a detective role who slowly gains power over time which can be spent to run admin commands.
+\
+\
+**ConVars**
+```cpp
+ttt_admin_enabled           0   // Whether or not the admin should spawn
+ttt_admin_spawn_weight      1   // The weight assigned to spawning the admin
+ttt_admin_min_players       0   // The minimum number of players required to spawn the admin
+ttt_admin_power_rate        1.5 // How often (in seconds) the Admin gains power
+ttt_admin_starting_power    20  // How much power the Admin should spawn with
+ttt_admin_slap_cost         10  // How much power the slap command costs. Set to 0 to disable
+ttt_admin_bring_cost        15  // How much power the bring command costs. Set to 0 to disable
+ttt_admin_goto_cost         15  // How much power the goto command costs. Set to 0 to disable
+ttt_admin_send_cost         20  // How much power the send command costs. Set to 0 to disable
+ttt_admin_jail_cost         5   // How much power the jail command costs per second. Set to 0 to disable
+ttt_admin_ignite_cost       10  // How much power the ignite command costs per second. Set to 0 to disable
+ttt_admin_blind_cost        10  // How much power the blind command costs per second. Set to 0 to disable
+ttt_admin_freeze_cost       10  // How much power the freeze command costs per second. Set to 0 to disable
+ttt_admin_ragdoll_cost      10  // How much power the ragdoll command costs per second. Set to 0 to disable
+ttt_admin_strip_cost        60  // How much power the strip command costs. Set to 0 to disable
+ttt_admin_respawn_cost      70  // How much power the respawn command costs. Set to 0 to disable
+ttt_admin_slay_cost         80  // How much power the slay command costs. Set to 0 to disable
+ttt_admin_kick_cost         100 // How much power the kick command costs. Set to 0 to disable
+ttt_admin_punish_cost       50  // How much power the punish command costs. Set to 0 to disable. Requires Karma Punishments mod
+```
+
 ## Elementalist
 _Suggested By_: Logan\
 The Elementalist is a traitor role who, instead of regular traitor weapons, gains access to special elemental power-ups in their shop.
