@@ -131,5 +131,24 @@ ttt_renegade_can_see_jesters   1   // Whether jesters are revealed (via head ico
 ttt_renegade_update_scoreboard 1   // Whether the renegade shows dead players as missing in action
 ```
 
+## Soulmage
+_Suggested By_: Spaaz\
+The Soulmage is a traitor role who spawns with a soulbinding device that can be used to convert a dead player into a Soulbound.
+\
+\
+**ConVars**
+```cpp
+ttt_soulmage_enabled                0   // Whether or not the Soulmage should spawn
+ttt_soulmage_spawn_weight           1   // The weight assigned to spawning the Soulmage
+ttt_soulmage_min_players            0   // The minimum number of players required to spawn the Soulmage
+ttt_soulmage_starting_health        100 // The amount of health a Soulmage starts with
+ttt_soulmage_max_health             100 // The maximum amount of health a Soulmage can have
+ttt_soulmage_ghosting_time          8   // The amount of time (in seconds) the Soulmage's soulbinding device takes to use
+ttt_soulmage_credits_starting       0   // The number of credits a Soulmage should start with
+ttt_soulmage_shop_sync              0   // Whether Soulmages should have all weapons that vanilla traitors have in their weapon shop
+ttt_soulmage_shop_random_percent    0   // The percent chance that a weapon in the shop will be not be shown for Soulmages
+ttt_soulmage_shop_random_enabled    0   // Whether role shop randomization is enabled for Soulmages
+```
+
 # Special Thanks
 - [Game icons](https://game-icons.net/) for the role icons

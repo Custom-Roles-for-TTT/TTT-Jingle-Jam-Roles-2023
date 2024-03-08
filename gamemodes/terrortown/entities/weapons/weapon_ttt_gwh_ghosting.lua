@@ -28,7 +28,7 @@ if SERVER then
     function SWEP:OnSuccess(ply, body)
         local message = ROLE_STRINGS_EXT[ROLE_GHOSTWHISPERER]
         message = message:gsub("^%l", string.upper)
-        message = message + " has granted you the ability to talk in chat!"
+        message = message .. " has granted you the ability to talk in chat!"
         ply:QueueMessage(MSG_PRINTBOTH, message)
         ply:SetNWBool("TTTIsGhosting", true)
     end
