@@ -74,7 +74,7 @@ hook.Add("EntityTakeDamage", "Elementalist_EntityTakeDamage", function(ent, dmgi
                 ent:Freeze(false)
 
                 net.Start("EndIceScreen")
-                net.Start(ent)
+                net.Send(ent)
             end
         end
 
@@ -114,7 +114,7 @@ hook.Add("EntityTakeDamage", "Elementalist_EntityTakeDamage", function(ent, dmgi
             ignitedPlayers[vicId] = true
             local timerId = vicId .. "_IsBurning"
 
-            local timeToBurn = 1 + (ROLE.ConvarPyroBurnDur * scale)
+            local timeToBurn = 1 + (ROLE.ConvarPyroBurnDur:GetInt() * scale)
 
             -- This isn't a very dynamic way of doing this, it always uses the newest time, even if smaller
             ent:Ignite(timeToBurn, 400 * scale)
