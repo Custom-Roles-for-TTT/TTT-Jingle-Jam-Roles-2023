@@ -1,10 +1,6 @@
 AddCSLuaFile()
 
-local hook = hook
-local net = net
-local surface = surface
 local string = string
-local util = util
 
 if CLIENT then
     SWEP.PrintName = "Ghosting Device"
@@ -31,7 +27,7 @@ end
 if SERVER then
     function SWEP:OnSuccess(ply, body)
         local message = ROLE_STRINGS_EXT[ROLE_GHOSTWHISPERER]
-        message:gsub("^%l", string.upper)
+        message = message:gsub("^%l", string.upper)
         message = message + " has granted you the ability to talk in chat!"
         ply:QueueMessage(MSG_PRINTBOTH, message)
         ply:SetNWBool("TTTIsGhosting", true)
