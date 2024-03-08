@@ -35,8 +35,15 @@ if SERVER then
 
     hook.Add("PlayerCanSeePlayersChat", "GhostWhisperer_PlayerCanSeePlayersChat", function(text, teamOnly, listener, speaker)
         if not IsPlayer(listener) or not IsPlayer(speaker) then return end
-        if speaker:Team() == TEAM_SPEC and speaker:SetNWBool("TTTIsGhosting", false) then
+        if speaker:Team() == TEAM_SPEC and speaker:GetNWBool("TTTIsGhosting", false) then
             return true
+        end
+    end)
+
+    hook.Add("TTTPlayerAliveThink", "GhostWhisperer_TTTPlayerAliveThink", function(ply)
+        if not IsPlayer(ply) then return end
+        if ply:IsActive() and ply:GetNWBool("TTTIsGhosting", false) then
+            ply:SetNWBool("TTTIsGhosting", false)
         end
     end)
 end
