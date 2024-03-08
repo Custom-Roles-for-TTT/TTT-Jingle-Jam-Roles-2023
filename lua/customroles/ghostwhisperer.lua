@@ -40,9 +40,9 @@ if SERVER then
         end
     end)
 
-    hook.Add("TTTPlayerAliveThink", "GhostWhisperer_TTTPlayerAliveThink", function(ply)
+    hook.Add("TTTPlayerSpawnForRound", "GhostWhisperer_TTTPlayerSpawnForRound", function(ply, dead_only)
         if not IsPlayer(ply) then return end
-        if ply:IsActive() and ply:GetNWBool("TTTIsGhosting", false) then
+        if ply:GetNWBool("TTTIsGhosting", false) then
             ply:SetNWBool("TTTIsGhosting", false)
         end
     end)

@@ -28,9 +28,9 @@ hook.Add("TTTRoleSpawnsArtificially", "Soulbound_TTTRoleSpawnsArtificially", fun
 end)
 
 if SERVER then
-    hook.Add("TTTPlayerAliveThink", "Soulbound_TTTPlayerAliveThink", function(ply)
+    hook.Add("TTTPlayerSpawnForRound", "Soulbound_TTTPlayerSpawnForRound", function(ply, dead_only)
         if not IsPlayer(ply) then return end
-        if ply:IsActiveSoulbound() then
+        if ply:IsSoulbound() then
             ply:SetRole(ROLE_TRAITOR)
             SendFullStateUpdate()
         end
