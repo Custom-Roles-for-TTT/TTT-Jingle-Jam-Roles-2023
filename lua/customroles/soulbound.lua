@@ -44,7 +44,7 @@ if CLIENT then
 
     hook.Add("HUDDrawScoreBoard", "Soulbound_HUDDrawScoreBoard", function() -- Use HUDDrawScoreBoard instead of HUDPaint so it draws above the TTT HUD
         local client = LocalPlayer()
-        if not GAMEMODE.round_state == ROUND_ACTIVE then return end
+        if GAMEMODE.round_state ~= ROUND_ACTIVE then return end
         if not client:IsSoulbound() then return end
 
         local margin = 10
