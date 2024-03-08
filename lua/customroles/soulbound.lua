@@ -38,6 +38,25 @@ if SERVER then
 end
 
 if CLIENT then
+    ---------
+    -- HUD --
+    ---------
+
+    hook.Add("HUDDrawScoreBoard", "Soulbound_HUDDrawScoreBoard", function() -- Use HUDDrawScoreBoard instead of HUDPaint so it draws above the TTT HUD
+        local client = LocalPlayer()
+        if not GAMEMODE.round_state == ROUND_ACTIVE then return end
+        if not client:IsSoulbound() then return end
+
+        local margin = 10
+        local height = 32
+        draw.RoundedBox(8, margin, ScrH() - height - margin, 170, height, ROLE_COLORS[ROLE_SOULBOUND])
+        if #ROLE_STRINGS[ROLE_SOULBOUND] > 10 then
+            CRHUD:ShadowedText(ROLE_STRINGS[ROLE_SOULBOUND], "TraitorStateSmall", margin + 85, ScrH() - height - margin + 2, COLOR_WHITE, TEXT_ALIGN_CENTER)
+        else
+            CRHUD:ShadowedText(ROLE_STRINGS[ROLE_SOULBOUND], "TraitorState", margin + 85, ScrH() - height - margin, COLOR_WHITE, TEXT_ALIGN_CENTER)
+        end
+    end)
+
     --------------
     -- TUTORIAL --
     --------------
