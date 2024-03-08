@@ -74,9 +74,24 @@ ttt_elementalist_shop_random_percent        0   // The percent chance that a wea
 ttt_elementalist_shop_random_enabled        0   // Whether role shop randomization is enabled for elementalists
 ```
 
+## Ghost Whisperer
+_Suggested By_: Spaaz\
+The Ghost Whisperer is an innocent role who spawns with a ghosting device that can be used to grant a dead player the ability to talk using in game chat.
+\
+\
+**ConVars**
+```cpp
+ttt_ghostwhisperer_enabled          0   // Whether or not the Ghost Whisperer should spawn
+ttt_ghostwhisperer_spawn_weight     1   // The weight assigned to spawning the Ghost Whisperer
+ttt_ghostwhisperer_min_players      0   // The minimum number of players required to spawn the Ghost Whisperer
+ttt_ghostwhisperer_starting_health  100 // The amount of health a Ghost Whisperer starts with
+ttt_ghostwhisperer_max_health       100 // The maximum amount of health a Ghost Whisperer can have
+ttt_ghostwhisperer_ghosting_time    8   // The amount of time (in seconds) the Ghost Whisperer's ghosting device takes to use
+```
+
 ## Physician
 _Suggested By_: Logan\
-The Physician is a Detective role who spawns with a Health Tracker. The Physician can use their custom weapon to place trackers on terrorists to monitor their health from the scoreboard.
+The Physician is a detective role who spawns with a Health Tracker. The Physician can use their custom weapon to place trackers on terrorists to monitor their health from the scoreboard.
 An upgrade exclusive to them is available in their shop which upgrades the range and quality of tracking.
 \
 \
