@@ -1043,7 +1043,10 @@ globals = {
     "ROLE_PHYSICIAN",
     "ROLE_RENEGADE",
     "ROLE_ADMIN",
-    "WIN_RENEGADE"
+    "WIN_RENEGADE",
+
+    -- Optional external mods
+    "TTTKP"
 }
 std = {
     globals = {
