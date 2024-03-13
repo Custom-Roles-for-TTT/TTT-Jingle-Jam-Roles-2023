@@ -23,6 +23,8 @@ ROLE.translations = {}
 ROLE.blockspawnconvars = true
 -- This role is only for dead players so we don't need health ConVars
 ROLE.blockhealthconvars = true
+-- This role is only for dead players so we don't need shop ConVars
+ROLE.blockshopconvars = true
 
 RegisterRole(ROLE)
 
