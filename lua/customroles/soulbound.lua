@@ -19,6 +19,11 @@ ROLE.convars = {}
 
 ROLE.translations = {}
 
+-- This role shouldn't be able to spawn
+ROLE.blockspawnconvars = true
+-- This role is only for dead players so we don't need health ConVars
+ROLE.blockhealthconvars = true
+
 RegisterRole(ROLE)
 
 hook.Add("TTTRoleSpawnsArtificially", "Soulbound_TTTRoleSpawnsArtificially", function(role)
