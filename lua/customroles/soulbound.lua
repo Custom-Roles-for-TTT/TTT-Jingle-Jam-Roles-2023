@@ -46,7 +46,7 @@ end
 
 if CLIENT then
     local client
-    
+
     ----------
     -- SHOP --
     ----------
@@ -89,14 +89,14 @@ if CLIENT then
             UseAbility(id)
         end
     end)
-    
+
     ---------
     -- HUD --
     ---------
 
     hook.Add("HUDDrawScoreBoard", "Soulbound_HUDDrawScoreBoard", function() -- Use HUDDrawScoreBoard instead of HUDPaint so it draws above the TTT HUD
         if GetRoundState() ~= ROUND_ACTIVE then return end
-        
+
         if not client then
             client = LocalPlayer()
         end
