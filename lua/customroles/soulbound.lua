@@ -45,22 +45,70 @@ if SERVER then
 end
 
 if CLIENT then
+    local client
+    
+    ----------
+    -- SHOP --
+    ----------
+
+    local dshop
+    local function OpenSoulboundShop()
+        chat.AddText("Shop opened!")
+    end
+
+    hook.Add("OnContextMenuOpen", "Soulbound_OnContextMenuOpen", function()
+        if GetRoundState() ~= ROUND_ACTIVE then return end
+
+        if not client then
+            client = LocalPlayer()
+        end
+        if not client:IsSoulbound() then return end
+
+        if IsValid(dshop) then
+            dshop:Close()
+        else
+            OpenSoulboundShop()
+        end
+    end)
+
+    ---------------
+    -- ABILITIES --
+    ---------------
+
+    local function UseAbility(id)
+        chat.AddText("Ability " .. tostring(id) .. " used!")
+    end
+
+    hook.Add("PlayerBindPress", "Soulbound_PlayerBindPress", function(ply, bind, pressed)
+        if not IsPlayer(ply) then return end
+        if not ply:IsSoulbound() then return end
+        if not pressed then return end
+
+        if string.sub(bind, 1, 4) == "slot" then
+            local id = tonumber(string.sub(bind, 5, -1)) or 1
+            UseAbility(id)
+        end
+    end)
+    
     ---------
     -- HUD --
     ---------
 
     hook.Add("HUDDrawScoreBoard", "Soulbound_HUDDrawScoreBoard", function() -- Use HUDDrawScoreBoard instead of HUDPaint so it draws above the TTT HUD
-        local client = LocalPlayer()
-        if GAMEMODE.round_state ~= ROUND_ACTIVE then return end
+        if GetRoundState() ~= ROUND_ACTIVE then return end
+        
+        if not client then
+            client = LocalPlayer()
+        end
         if not client:IsSoulbound() then return end
 
         local margin = 10
         local height = 32
         draw.RoundedBox(8, margin, ScrH() - height - margin, 170, height, ROLE_COLORS[ROLE_SOULBOUND])
         if #ROLE_STRINGS[ROLE_SOULBOUND] > 10 then
-            CRHUD:ShadowedText(ROLE_STRINGS[ROLE_SOULBOUND], "TraitorStateSmall", margin + 85, ScrH() - height - margin + 2, COLOR_WHITE, TEXT_ALIGN_CENTER)
+            CRHUD:ShadowedText(ROLE_STRINGS[ROLE_SOULBOUND], "TraitorStateSmall", margin + 84, ScrH() - height - margin + 2, COLOR_WHITE, TEXT_ALIGN_CENTER)
         else
-            CRHUD:ShadowedText(ROLE_STRINGS[ROLE_SOULBOUND], "TraitorState", margin + 85, ScrH() - height - margin, COLOR_WHITE, TEXT_ALIGN_CENTER)
+            CRHUD:ShadowedText(ROLE_STRINGS[ROLE_SOULBOUND], "TraitorState", margin + 84, ScrH() - height - margin, COLOR_WHITE, TEXT_ALIGN_CENTER)
         end
     end)
 
