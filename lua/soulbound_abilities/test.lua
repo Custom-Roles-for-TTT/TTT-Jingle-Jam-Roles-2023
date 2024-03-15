@@ -5,7 +5,7 @@ ABILITY.Id = "test"
 ABILITY.Description = "Test ability"
 ABILITY.Icon = "vgui/ttt/icon_cbar"
 
-function ABILITY:Condition()
+function ABILITY:Condition(soulbound, target)
     return true
 end
 

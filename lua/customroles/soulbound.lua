@@ -93,9 +93,10 @@ if SERVER then
 
         local ability = SOULBOUND.Abilities[id]
         if not ability:Enabled() then return end
-        if not ability:Condition() then return end
 
         local target = ply:GetObserverMode() ~= OBS_MODE_ROAMING and ply:GetObserverTarget() or nil
+        if not ability:Condition(ply, target) then return end
+
         ability:Use(ply, target)
     end)
 
