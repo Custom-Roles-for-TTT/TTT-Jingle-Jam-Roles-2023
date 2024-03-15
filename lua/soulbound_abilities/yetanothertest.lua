@@ -13,7 +13,7 @@ function ABILITY:Use(soulbound, target)
     soulbound:PrintMessage(HUD_PRINTTALK, "There are so many abilities")
 end
 
-function ABILITY:DrawHUD(x, y, width, height)
+function ABILITY:DrawHUD(x, y, width, height, key)
 
 end
 

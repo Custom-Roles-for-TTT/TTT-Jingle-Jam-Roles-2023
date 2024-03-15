@@ -544,7 +544,8 @@ if CLIENT then
         local y = ScrH() - 20 + margin
 
         for i = max_abilities, 1, -1 do
-            local id = client:GetNWString("TTTSoulboundAbility" .. tostring(i), "")
+            local slot = tostring(i)
+            local id = client:GetNWString("TTTSoulboundAbility" .. slot, "")
             local ability = SOULBOUND.Abilities[id]
             if #id == 0 or not ability then
                 y = y - titleHeight - margin
@@ -556,9 +557,9 @@ if CLIENT then
                 draw.RoundedBox(8, x, y, width, titleHeight + bodyHeight + margin, Color(20, 20, 20, 200))
                 draw.RoundedBoxEx(8, x, y, titleHeight, titleHeight, ROLE_COLORS[ROLE_SOULBOUND], true, false, false, true)
                 draw.SimpleText(ability.Name, "TimeLeft", x + titleHeight + (margin * 2), y + (titleHeight / 2), COLOR_WHITE, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-                ability:DrawHUD(x, y + titleHeight + margin, width, bodyHeight)
+                ability:DrawHUD(x, y + titleHeight + margin, width, bodyHeight, Key("slot" .. slot, slot))
             end
-            CRHUD:ShadowedText(tostring(i), "Trebuchet22", x + (titleHeight / 2), y + (titleHeight / 2), COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            CRHUD:ShadowedText(slot, "Trebuchet22", x + (titleHeight / 2), y + (titleHeight / 2), COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
     end)
 

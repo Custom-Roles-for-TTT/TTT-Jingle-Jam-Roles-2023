@@ -13,7 +13,7 @@ function ABILITY:Use(soulbound, target)
     soulbound:PrintMessage(HUD_PRINTTALK, "So many abilities")
 end
 
-function ABILITY:DrawHUD(x, y, width, height)
+function ABILITY:DrawHUD(x, y, width, height, key)
     draw.RoundedBox(8, x, y, width, height, COLOR_PINK)
 end
 
