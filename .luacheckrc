@@ -1046,6 +1046,7 @@ globals = {
     "ROLE_RENEGADE",
     "ROLE_SOULBOUND",
     "ROLE_SOULMAGE",
+    "SOULBOUND",
     "WIN_RENEGADE",
 
     -- Optional external mods
