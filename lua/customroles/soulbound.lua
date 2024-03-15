@@ -149,6 +149,39 @@ if CLIENT then
     -- SHOP --
     ----------
 
+    local function CreateFavTable()
+        if not sql.TableExists("ttt_soulbound_fav") then
+            local query = "CREATE TABLE ttt_soulbound_fav (sid64 TEXT, ability_id TEXT)"
+            sql.Query(query)
+        end
+    end
+
+    local function AddFavorite(sid64, ability_id)
+        local query = "INSERT INTO ttt_soulbound_fav VALUES('" .. sid64 .. "','" .. ability_id .. "')"
+        sql.Query(query)
+    end
+
+    local function RemoveFavorite(sid64, ability_id)
+        local query = "DELETE FROM ttt_soulbound_fav WHERE sid64 = '" .. sid64 .. "' AND `ability_id` = '" .. ability_id .. "'"
+        sql.Query(query)
+    end
+
+    local function GetFavorites(sid64)
+        local query = "SELECT ability_id FROM ttt_soulbound_fav WHERE sid64 = '" .. sid64 .. "'"
+        local result = sql.Query(query)
+        return result
+    end
+
+    local function IsFavorite(favorites, ability_id)
+        for _, value in pairs(favorites) do
+            local dbid = value["ability_id"]
+            if (dbid == ability_id) then
+                return true
+            end
+        end
+        return false
+    end
+
     local dshop
     local function OpenSoulboundShop()
         local maxAbilities = soulbound_max_abilities:GetInt()
@@ -262,7 +295,24 @@ if CLIENT then
                     ic = vgui.Create("LayeredIcon", dlist)
 
                     ic.favorite = false
-                    -- TODO: Add favorites support
+                    local favorites = GetFavorites(client:SteamID64())
+                    if favorites then
+                        if IsFavorite(favorites, ability.Id) then
+                            ic.favorite = true
+                            if GetConVar("ttt_bem_marker_fav"):GetBool() then
+                                local star = vgui.Create("DImage")
+                                star:SetImage("icon16/star.png")
+                                star.PerformLayout = function(s)
+                                    s:AlignTop(2)
+                                    s:AlignRight(2)
+                                    s:SetSize(12, 12)
+                                end
+                                star:SetTooltip("Favorite")
+                                ic:AddLayer(star)
+                                ic:EnableMousePassthrough(star)
+                            end
+                        end
+                    end
 
                     ic:SetIconSize(itemSize)
                     ic:SetIcon(ability.Icon)
@@ -373,7 +423,19 @@ if CLIENT then
         dfav:SetImage("icon16/star.png")
         dfav:SetTooltip(LANG.GetTranslation("buy_favorite_toggle"))
         dfav.DoClick = function()
-            -- TODO: Add favorites support
+            local sid64 = client:SteamID64()
+            local pnl = dlist.SelectedPanel
+            if not pnl or not pnl.ability then return end
+            local choice = pnl.ability
+            local id = choice.Id
+            CreateFavTable()
+            if pnl.favorite then
+                RemoveFavorite(sid64, id)
+            else
+                AddFavorite(sid64, id)
+            end
+
+            dsearch:OnTextChanged()
         end
 
         local drdm = vgui.Create("DButton", dinfobg)
