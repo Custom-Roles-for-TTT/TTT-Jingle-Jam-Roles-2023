@@ -66,6 +66,10 @@ function SOULBOUND:RegisterAbility(ability)
     ability.Enabled = function()
         return enabled:GetBool()
     end
+    table.insert(ROLE_CONVARS[ROLE_SOULBOUND], {
+        cvar = "ttt_soulbound_" .. ability.Id .. "_enabled",
+        type = ROLE_CONVAR_TYPE_BOOL
+    })
 
     SOULBOUND.Abilities[ability.Id] = ability
 end
@@ -114,6 +118,9 @@ if SERVER then
             if #slotId > 0 then continue end
 
             ply:SetNWString("TTTSoulboundAbility" .. tostring(i), id)
+
+            local ability = SOULBOUND.Abilities[id]
+            ability:Bought(ply)
             return
         end
         ply:PrintMessage(HUD_PRINTTALK, "You can't buy another ability!")
@@ -551,14 +558,18 @@ if CLIENT then
             if #id == 0 or not ability then
                 y = y - titleHeight - margin
                 draw.RoundedBox(8, x, y, width, titleHeight, Color(20, 20, 20, 200))
-                draw.RoundedBoxEx(8, x, y, titleHeight, titleHeight, ROLE_COLORS[ROLE_SOULBOUND], true, false, true, false)
-                draw.SimpleText("Unbound", "TimeLeft", x + titleHeight + (margin * 2), y + (titleHeight / 2), COLOR_WHITE, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.RoundedBoxEx(8, x, y, titleHeight, titleHeight, Color(90, 90, 90, 255), true, false, true, false)
+                draw.SimpleText("Unassigned", "TimeLeft", x + titleHeight + (margin * 2), y + (titleHeight / 2), COLOR_WHITE, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
             else
                 y = y - titleHeight - bodyHeight - (margin * 2)
                 draw.RoundedBox(8, x, y, width, titleHeight + bodyHeight + margin, Color(20, 20, 20, 200))
-                draw.RoundedBoxEx(8, x, y, titleHeight, titleHeight, ROLE_COLORS[ROLE_SOULBOUND], true, false, false, true)
                 draw.SimpleText(ability.Name, "TimeLeft", x + titleHeight + (margin * 2), y + (titleHeight / 2), COLOR_WHITE, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-                ability:DrawHUD(x, y + titleHeight + margin, width, bodyHeight, Key("slot" .. slot, slot))
+                local ready = ability:DrawHUD(client, x, y + titleHeight + margin, width, bodyHeight, Key("slot" .. slot, slot))
+                local slotColor = Color(90, 90, 90, 255)
+                if ready then
+                    slotColor = ROLE_COLORS[ROLE_SOULBOUND]
+                end
+                draw.RoundedBoxEx(8, x, y, titleHeight, titleHeight, slotColor, true, false, false, true)
             end
             CRHUD:ShadowedText(slot, "Trebuchet22", x + (titleHeight / 2), y + (titleHeight / 2), COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
