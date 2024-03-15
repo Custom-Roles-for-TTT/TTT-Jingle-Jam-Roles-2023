@@ -9,10 +9,12 @@ function ABILITY:Condition()
     return true
 end
 
-function ABILITY:Use()
-    for _, v in ipairs(player.GetAll()) do
-        v:PrintMessage(HUD_PRINTTALK, "We need more abilities")
-    end
+function ABILITY:Use(soulbound, target)
+    soulbound:PrintMessage(HUD_PRINTTALK, "We need more abilities")
+end
+
+function ABILITY:DrawHUD(x, y, width, height)
+
 end
 
 SOULBOUND:RegisterAbility(ABILITY)

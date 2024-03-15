@@ -95,7 +95,8 @@ if SERVER then
         if not ability:Enabled() then return end
         if not ability:Condition() then return end
 
-        ability:Use()
+        local target = ply:GetObserverMode() ~= OBS_MODE_ROAMING and ply:GetObserverTarget() or nil
+        ability:Use(ply, target)
     end)
 
     ----------------------
@@ -136,6 +137,9 @@ if SERVER then
     hook.Add("TTTPlayerSpawnForRound", "Soulbound_TTTPlayerSpawnForRound", function(ply, dead_only)
         if not IsPlayer(ply) then return end
         if ply:IsSoulbound() then
+            for i = 1, 9 do
+                ply:SetNWString("TTTSoulboundAbility" .. tostring(i), "")
+            end
             ply:SetRole(ROLE_TRAITOR)
             SendFullStateUpdate()
         end
@@ -520,6 +524,43 @@ if CLIENT then
     ---------
     -- HUD --
     ---------
+
+    hook.Add("HUDPaint", "Soulbound_HUDPaint", function()
+        if GetRoundState() ~= ROUND_ACTIVE then return end
+
+        if not client then
+            client = LocalPlayer()
+        end
+        if not client:IsSoulbound() then return end
+
+        local max_abilities = soulbound_max_abilities:GetInt()
+        if max_abilities == 0 then return end
+
+        local margin = 2
+        local width = 300
+        local titleHeight = 28
+        local bodyHeight = titleHeight * 2 + margin
+        local x = ScrW() - width - 20
+        local y = ScrH() - 20 + margin
+
+        for i = max_abilities, 1, -1 do
+            local id = client:GetNWString("TTTSoulboundAbility" .. tostring(i), "")
+            local ability = SOULBOUND.Abilities[id]
+            if #id == 0 or not ability then
+                y = y - titleHeight - margin
+                draw.RoundedBox(8, x, y, width, titleHeight, Color(20, 20, 20, 200))
+                draw.RoundedBoxEx(8, x, y, titleHeight, titleHeight, ROLE_COLORS[ROLE_SOULBOUND], true, false, true, false)
+                draw.SimpleText("Unbound", "TimeLeft", x + titleHeight + (margin * 2), y + (titleHeight / 2), COLOR_WHITE, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            else
+                y = y - titleHeight - bodyHeight - (margin * 2)
+                draw.RoundedBox(8, x, y, width, titleHeight + bodyHeight + margin, Color(20, 20, 20, 200))
+                draw.RoundedBoxEx(8, x, y, titleHeight, titleHeight, ROLE_COLORS[ROLE_SOULBOUND], true, false, false, true)
+                draw.SimpleText(ability.Name, "TimeLeft", x + titleHeight + (margin * 2), y + (titleHeight / 2), COLOR_WHITE, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                ability:DrawHUD(x, y + titleHeight + margin, width, bodyHeight)
+            end
+            CRHUD:ShadowedText(tostring(i), "Trebuchet22", x + (titleHeight / 2), y + (titleHeight / 2), COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        end
+    end)
 
     hook.Add("HUDDrawScoreBoard", "Soulbound_HUDDrawScoreBoard", function() -- Use HUDDrawScoreBoard instead of HUDPaint so it draws above the TTT HUD
         if GetRoundState() ~= ROUND_ACTIVE then return end
