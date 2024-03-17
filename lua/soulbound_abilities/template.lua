@@ -26,3 +26,6 @@ if CLIENT then
 end
 
 --SOULBOUND:RegisterAbility(ABILITY)
+
+-- Putting this here to luacheck will stop being mad at me
+if false then print(ABILITY) end

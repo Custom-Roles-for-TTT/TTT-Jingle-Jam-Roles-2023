@@ -558,6 +558,7 @@ globals = {
     "DrawColorModify",
     "DynamicLight",
     "EffectData",
+    "EmitSound",
     "EndRound",
     "Entity",
     "EnumToSWEP",
