@@ -42,7 +42,7 @@ function ABILITY:Use(soulbound, target)
     local src = soulbound:GetPos() + (soulbound:Crouching() and soulbound:GetViewOffsetDucked() or soulbound:GetViewOffset()) + (ang:Forward() * 8) + (ang:Right() * 10)
     local pos = soulbound:GetEyeTraceNoCursor().HitPos
     local tang = (pos-src):Angle() -- A target angle to actually throw the grenade to the crosshair instead of fowards
-    -- Makes the grenade go upgwards
+    -- Makes the grenade go upwards
     if tang.p < 90 then
         tang.p = -10 + tang.p * ((90 + 10) / 90)
     else

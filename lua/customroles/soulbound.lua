@@ -26,9 +26,9 @@ table.insert(ROLE.convars, {
 
 ROLE.translations = {
     ["english"] = {
-        ["abilities_title"] = "Ability Selection",
-        ["abilities_confirm"] = "Select ability",
-        ["abilities_random"] = "Select random ability",
+        ["sbd_abilities_title"] = "Ability Selection",
+        ["sbd_abilities_confirm"] = "Select ability",
+        ["sbd_abilities_random"] = "Select random ability",
     }}
 
 -- This role shouldn't be able to spawn
@@ -132,7 +132,7 @@ if SERVER then
 
     hook.Add("TTTPrepareRound", "Soulbound_TTTPrepareRound", function()
         for _, p in ipairs(player.GetAll()) do
-            for i = 1, 9 do
+            for i = 1, soulbound_max_abilities:GetInt() do
                 p:SetNWString("TTTSoulboundAbility" .. tostring(i), "")
             end
         end
@@ -145,7 +145,7 @@ if SERVER then
     hook.Add("TTTPlayerSpawnForRound", "Soulbound_TTTPlayerSpawnForRound", function(ply, dead_only)
         if not IsPlayer(ply) then return end
         if ply:IsSoulbound() then
-            for i = 1, 9 do
+            for i = 1, soulbound_max_abilities:GetInt() do
                 ply:SetNWString("TTTSoulboundAbility" .. tostring(i), "")
             end
             ply:SetRole(ROLE_TRAITOR)
@@ -180,14 +180,13 @@ if CLIENT then
 
     local function GetFavorites(sid64)
         local query = "SELECT ability_id FROM ttt_soulbound_fav WHERE sid64 = '" .. sid64 .. "'"
-        local result = sql.Query(query)
-        return result
+        return sql.Query(query)
     end
 
     local function IsFavorite(favorites, ability_id)
         for _, value in pairs(favorites) do
             local dbid = value["ability_id"]
-            if (dbid == ability_id) then
+            if dbid == ability_id then
                 return true
             end
         end
@@ -198,6 +197,7 @@ if CLIENT then
     local function OpenSoulboundShop()
         local maxAbilities = soulbound_max_abilities:GetInt()
         if maxAbilities == 0 then return end
+
         local ownedAbilities = {}
         for i = 1, maxAbilities do
             local slotId = client:GetNWString("TTTSoulboundAbility" .. tostring(i), "")
@@ -226,13 +226,13 @@ if CLIENT then
         local w = dlistw + diw + (m * 2)
         local h = dlisth + 75
 
-        -- Close any existing traitor menu
+        -- Close any existing shop menu
         if IsValid(dshop) then dshop:Close() end
 
         local dframe = vgui.Create("DFrame")
         dframe:SetSize(w, h)
         dframe:Center()
-        dframe:SetTitle(LANG.GetTranslation("abilities_title"))
+        dframe:SetTitle(LANG.GetTranslation("sbd_abilities_title"))
         dframe:SetVisible(true)
         dframe:ShowCloseButton(true)
         dframe:SetMouseInputEnabled(true)
@@ -392,7 +392,7 @@ if CLIENT then
         dconfirm:SetPos(0, dih - bh - m)
         dconfirm:SetSize(bw, bh)
         dconfirm:SetDisabled(true)
-        dconfirm:SetText(LANG.GetTranslation("abilities_confirm"))
+        dconfirm:SetText(LANG.GetTranslation("sbd_abilities_confirm"))
 
         dlist.OnActivePanelChanged = function(self, _, new)
             if new and new.ability then
@@ -458,7 +458,7 @@ if CLIENT then
         drdm:SetDisabled(false)
         drdm:SetText("")
         drdm:SetImage("icon16/basket_go.png")
-        drdm:SetTooltip(LANG.GetTranslation("abilities_random"))
+        drdm:SetTooltip(LANG.GetTranslation("sbd_abilities_random"))
         drdm.DoClick = function()
             local ability_panels = dlist:GetItems()
             local buyable_abilities = {}
@@ -523,8 +523,8 @@ if CLIENT then
         if not ply:IsSoulbound() then return end
         if not pressed then return end
 
-        if string.sub(bind, 1, 4) == "slot" then
-            local num = tonumber(string.sub(bind, 5, -1)) or 1
+        if string.StartsWith(bind, "slot") then
+            local num = tonumber(string.Replace(bind, "slot", "")) or 1
             UseAbility(num)
         end
     end)
@@ -601,7 +601,7 @@ if CLIENT then
         if role == ROLE_SOULBOUND then
             local roleColor = ROLE_COLORS[ROLE_TRAITOR]
 
-            local html = "The " .. ROLE_STRINGS[ROLE_SOULBOUND] .. " is a member of the <span style='color: rgb(" .. roleColor.r .. ", " .. roleColor.g .. ", " .. roleColor.b .. ")'>traitor team</span> who can use special powers while dead to help the traitor team."
+            local html = "The " .. ROLE_STRINGS[ROLE_SOULBOUND] .. " is a member of the <span style='color: rgb(" .. roleColor.r .. ", " .. roleColor.g .. ", " .. roleColor.b .. ")'>traitor team</span> who can use special powers while dead to help their fellow traitors."
 
             html = html .. "<span style='display: block; margin-top: 10px;'>The " .. ROLE_STRINGS[ROLE_SOULBOUND] .. " can only ever exist as a dead player. If a living player somehow becomes " .. ROLE_STRINGS_EXT[ROLE_SOULBOUND] .. ", they will instantly be changed into <span style='color: rgb(" .. roleColor.r .. ", " .. roleColor.g .. ", " .. roleColor.b .. ")'>" .. ROLE_STRINGS_EXT[ROLE_TRAITOR] .. ".</span>"
 
