@@ -5,20 +5,24 @@ ABILITY.Id = ""
 ABILITY.Description = ""
 ABILITY.Icon = ""
 
-function ABILITY:Bought(soulbound)
+if SERVER then
+    function ABILITY:Bought(soulbound)
 
+    end
+
+    function ABILITY:Condition(soulbound, target)
+        return true
+    end
+
+    function ABILITY:Use(soulbound, target)
+
+    end
 end
 
-function ABILITY:Condition(soulbound, target)
-    return true
-end
+if CLIENT then
+    function ABILITY:DrawHUD(soulbound, x, y, width, height, key)
 
-function ABILITY:Use(soulbound, target)
-
-end
-
-function ABILITY:DrawHUD(soulbound, x, y, width, height, key)
-
+    end
 end
 
 --SOULBOUND:RegisterAbility(ABILITY)
