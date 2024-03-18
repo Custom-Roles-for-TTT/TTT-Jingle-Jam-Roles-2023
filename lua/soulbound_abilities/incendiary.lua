@@ -3,7 +3,7 @@ local ABILITY = {}
 ABILITY.Name = "Incendiary Grenade"
 ABILITY.Id = "incendiary"
 ABILITY.Description = "Throw an incendiary grenade"
-ABILITY.Icon = "vgui/ttt/icon_nades"
+ABILITY.Icon = "vgui/ttt/icon_incendiary.png"
 
 local incendiary_fuse_time = CreateConVar("ttt_soulbound_incendiary_fuse_time", "5", FCVAR_NONE, "How long the fuse for the Soulbound's incendiary grenade should be", 0, 10)
 local incendiary_uses = CreateConVar("ttt_soulbound_incendiary_uses", "2", FCVAR_REPLICATED, "How many uses should of the incendiary grenade ability should the Soulbound get. (Set to 0 for unlimited uses)", 0, 10)

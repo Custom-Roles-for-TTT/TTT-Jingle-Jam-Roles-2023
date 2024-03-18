@@ -3,7 +3,7 @@ local ABILITY = {}
 ABILITY.Name = "Pack-a-Punch"
 ABILITY.Id = "packapunch"
 ABILITY.Description = "Give the player you are spectating a Pack-a-Punch"
-ABILITY.Icon = "vgui/ttt/icon_nades"
+ABILITY.Icon = "vgui/ttt/ttt_pack_a_punch.png"
 
 local packapunch_uses = CreateConVar("ttt_soulbound_packapunch_uses", "1", FCVAR_REPLICATED, "How many uses should of the packapunch ability should the Soulbound get. (Set to 0 for unlimited uses)", 0, 50)
 local packapunch_cooldown = CreateConVar("ttt_soulbound_packapunch_cooldown", "5", FCVAR_NONE, "How long should the Soulbound have to wait between uses of the packapunch ability", 0, 10)

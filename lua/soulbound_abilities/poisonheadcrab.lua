@@ -3,7 +3,7 @@ local ABILITY = {}
 ABILITY.Name = "Summon Poison Headcrab"
 ABILITY.Id = "poisonheadcrab"
 ABILITY.Description = "Summon a poison headcrab"
-ABILITY.Icon = "vgui/ttt/icon_nades"
+ABILITY.Icon = "vgui/ttt/icon_poisonheadcrab.png"
 
 local poisonheadcrab_health = CreateConVar("ttt_soulbound_poisonheadcrab_health", "35", FCVAR_NONE, "How much health poison headcrabs spawned by the Soulbound should have", 0, 200)
 local poisonheadcrab_uses = CreateConVar("ttt_soulbound_poisonheadcrab_uses", "2", FCVAR_REPLICATED, "How many uses should of the summon poison headcrab ability should the Soulbound get. (Set to 0 for unlimited uses)", 0, 10)

@@ -3,7 +3,7 @@ local ABILITY = {}
 ABILITY.Name = "Discombobulator"
 ABILITY.Id = "discombob"
 ABILITY.Description = "Throw a discombobulator"
-ABILITY.Icon = "vgui/ttt/icon_nades"
+ABILITY.Icon = "vgui/ttt/icon_discombob.png"
 
 local discombob_fuse_time = CreateConVar("ttt_soulbound_discombob_fuse_time", "5", FCVAR_NONE, "How long the fuse for the Soulbound's discombobulator should be", 0, 10)
 local discombob_uses = CreateConVar("ttt_soulbound_discombob_uses", "2", FCVAR_REPLICATED, "How many uses should of the discombobulator ability should the Soulbound get. (Set to 0 for unlimited uses)", 0, 10)

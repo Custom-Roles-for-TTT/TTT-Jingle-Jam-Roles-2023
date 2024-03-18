@@ -3,7 +3,7 @@ local ABILITY = {}
 ABILITY.Name = "Place Decoy"
 ABILITY.Id = "decoy"
 ABILITY.Description = "Place a radar decoy"
-ABILITY.Icon = "vgui/ttt/icon_nades"
+ABILITY.Icon = "vgui/ttt/icon_beacon"
 
 local decoy_uses = CreateConVar("ttt_soulbound_decoy_uses", "5", FCVAR_REPLICATED, "How many uses should of the place decoy ability should the Soulbound get. (Set to 0 for unlimited uses)", 0, 20)
 local decoy_cooldown = CreateConVar("ttt_soulbound_decoy_cooldown", "0", FCVAR_NONE, "How long should the Soulbound have to wait between uses of the place decoy ability", 0, 10)
