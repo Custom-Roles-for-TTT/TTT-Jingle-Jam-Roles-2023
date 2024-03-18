@@ -79,7 +79,7 @@ if CLIENT then
         end
 
         local ready = true
-        local text = "Press '" .. key .. "' to create confetti"
+        local text = "Press '" .. key .. "' to throw confetti"
         local next_use = soulbound:GetNWFloat("TTTSoulboundConfettiNextUse")
         local cur_time = CurTime()
         if max_uses > 0 and uses <= 0 then
