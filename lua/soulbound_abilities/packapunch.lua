@@ -76,7 +76,7 @@ if CLIENT then
         end
 
         local ready = true
-        local text = ""
+        local text
         local next_use = soulbound:GetNWFloat("TTTSoulboundPackAPunchNextUse")
         local cur_time = CurTime()
         if max_uses > 0 and uses <= 0 then
