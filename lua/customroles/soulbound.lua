@@ -583,8 +583,8 @@ if CLIENT then
 
         if disable_crosshair:GetBool() then return end
 
-        local x = math.floor(ScrW() / 2.0)
-        local y = math.floor(ScrH() / 2.0)
+        x = math.floor(ScrW() / 2.0)
+        y = math.floor(ScrH() / 2.0)
         local scale = 0.2
 
         local alpha = sights_opacity:GetFloat() or 1
