@@ -1,34 +1,34 @@
 local ABILITY = {}
 
-ABILITY.Name = "Place Explosive Barrel"
-ABILITY.Id = "explosivebarrel"
-ABILITY.Description = "Place an explosive barrel"
+ABILITY.Name = "Place Decoy"
+ABILITY.Id = "decoy"
+ABILITY.Description = "Place a radar decoy"
 ABILITY.Icon = "vgui/ttt/icon_nades"
 
-local explosivebarrel_uses = CreateConVar("ttt_soulbound_explosivebarrel_uses", "2", FCVAR_REPLICATED, "How many uses should of the place explosive barrel ability should the Soulbound get. (Set to 0 for unlimited uses)", 0, 10)
-local explosivebarrel_cooldown = CreateConVar("ttt_soulbound_explosivebarrel_cooldown", "0", FCVAR_NONE, "How long should the Soulbound have to wait between uses of the place explosive barrel ability", 0, 10)
+local decoy_uses = CreateConVar("ttt_soulbound_decoy_uses", "5", FCVAR_REPLICATED, "How many uses should of the place decoy ability should the Soulbound get. (Set to 0 for unlimited uses)", 0, 20)
+local decoy_cooldown = CreateConVar("ttt_soulbound_decoy_cooldown", "0", FCVAR_NONE, "How long should the Soulbound have to wait between uses of the place decoy ability", 0, 10)
 
 table.insert(ROLE_CONVARS[ROLE_SOULBOUND], {
-    cvar = "ttt_soulbound_explosivebarrel_uses",
+    cvar = "ttt_soulbound_decoy_uses",
     type = ROLE_CONVAR_TYPE_NUM,
     decimal = 0
 })
 table.insert(ROLE_CONVARS[ROLE_SOULBOUND], {
-    cvar = "ttt_soulbound_explosivebarrel_cooldown",
+    cvar = "ttt_soulbound_decoy_cooldown",
     type = ROLE_CONVAR_TYPE_NUM,
     decimal = 1
 })
 
 if SERVER then
     function ABILITY:Bought(soulbound)
-        soulbound:SetNWInt("TTTSoulboundExplosiveBarrelUses", explosivebarrel_uses:GetInt())
-        soulbound:SetNWFloat("TTTSoulboundExplosiveBarrelNextUse", CurTime())
+        soulbound:SetNWInt("TTTSoulboundDecoyUses", decoy_uses:GetInt())
+        soulbound:SetNWFloat("TTTSoulboundDecoyNextUse", CurTime())
     end
 
     function ABILITY:Condition(soulbound, target)
         if not soulbound:IsInWorld() then return false end
-        if explosivebarrel_uses:GetInt() > 0 and soulbound:GetNWInt("TTTSoulboundExplosiveBarrelUses", 0) <= 0 then return false end
-        if CurTime() < soulbound:GetNWFloat("TTTSoulboundExplosiveBarrelNextUse") then return false end
+        if decoy_uses:GetInt() > 0 and soulbound:GetNWInt("TTTSoulboundDecoyUses", 0) <= 0 then return false end
+        if CurTime() < soulbound:GetNWFloat("TTTSoulboundDecoyNextUse") then return false end
         return true
     end
 
@@ -38,21 +38,21 @@ if SERVER then
         local vec = hitPos - plyPos
         local spawnPos = hitPos - (vec:GetNormalized() * 15)
 
-        local ent = ents.Create("prop_physics")
-        ent:SetModel("models/props_c17/oildrum001_explosive.mdl")
+        local ent = ents.Create("ttt_decoy")
         ent:SetPos(spawnPos)
         ent:Spawn()
+        ent:PhysWake()
 
-        local uses = soulbound:GetNWInt("TTTSoulboundExplosiveBarrelUses", 0)
+        local uses = soulbound:GetNWInt("TTTSoulboundDecoyUses", 0)
         uses = math.max(uses - 1, 0)
-        soulbound:SetNWInt("TTTSoulboundExplosiveBarrelUses", uses)
-        soulbound:SetNWFloat("TTTSoulboundExplosiveBarrelNextUse", CurTime() + explosivebarrel_cooldown:GetFloat())
+        soulbound:SetNWInt("TTTSoulboundDecoyUses", uses)
+        soulbound:SetNWFloat("TTTSoulboundDecoyNextUse", CurTime() + decoy_cooldown:GetFloat())
     end
 
-    hook.Add("TTTPrepareRound", "Soulbound_ExplosiveBarrel_TTTPrepareRound", function()
+    hook.Add("TTTPrepareRound", "Soulbound_Decoy_TTTPrepareRound", function()
         for _, p in ipairs(player.GetAll()) do
-            p:SetNWInt("TTTSoulboundExplosiveBarrelUses", 0)
-            p:SetNWFloat("TTTSoulboundExplosiveBarrelNextUse", 0)
+            p:SetNWInt("TTTSoulboundDecoyUses", 0)
+            p:SetNWFloat("TTTSoulboundDecoyNextUse", 0)
         end
     end)
 end
@@ -65,8 +65,8 @@ if CLIENT then
     }
 
     function ABILITY:DrawHUD(soulbound, x, y, width, height, key)
-        local max_uses = explosivebarrel_uses:GetInt()
-        local uses = soulbound:GetNWInt("TTTSoulboundExplosiveBarrelUses", 0)
+        local max_uses = decoy_uses:GetInt()
+        local uses = soulbound:GetNWInt("TTTSoulboundDecoyUses", 0)
         local margin = 6
         local ammo_height = 28
         if max_uses == 0 then
@@ -78,8 +78,8 @@ if CLIENT then
         end
 
         local ready = true
-        local text = "Press '" .. key .. "' to place an explosive barrel"
-        local next_use = soulbound:GetNWFloat("TTTSoulboundExplosiveBarrelNextUse")
+        local text = "Press '" .. key .. "' to place a radar decoy"
+        local next_use = soulbound:GetNWFloat("TTTSoulboundDecoyNextUse")
         local cur_time = CurTime()
         if max_uses > 0 and uses <= 0 then
             ready = false
