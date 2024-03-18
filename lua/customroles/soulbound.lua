@@ -573,6 +573,32 @@ if CLIENT then
             end
             CRHUD:ShadowedText(slot, "Trebuchet22", x + (titleHeight / 2), y + (titleHeight / 2), COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
+
+        local sights_opacity = GetConVar("ttt_ironsights_crosshair_opacity")
+        local crosshair_brightness = GetConVar("ttt_crosshair_brightness")
+        local crosshair_size = GetConVar("ttt_crosshair_size")
+        local disable_crosshair = GetConVar("ttt_disable_crosshair")
+
+        if disable_crosshair:GetBool() then return end
+
+        local x = math.floor(ScrW() / 2.0)
+        local y = math.floor(ScrH() / 2.0)
+        local scale = 0.2
+
+        local alpha = sights_opacity:GetFloat() or 1
+        local bright = crosshair_brightness:GetFloat() or 1
+
+        local color = ROLE_COLORS_HIGHLIGHT[ROLE_TRAITOR]
+
+        local r, g, b, _ = color:Unpack()
+        surface.SetDrawColor(Color(r * bright, g * bright, b * bright, 255 * alpha))
+
+        local gap = math.floor(20 * scale)
+        local length = math.floor(gap + (25 * crosshair_size:GetFloat()) * scale)
+        surface.DrawLine(x - length, y, x - gap, y)
+        surface.DrawLine(x + length, y, x + gap, y)
+        surface.DrawLine(x, y - length, x, y - gap)
+        surface.DrawLine(x, y + length, x, y + gap)
     end)
 
     hook.Add("HUDDrawScoreBoard", "Soulbound_HUDDrawScoreBoard", function() -- Use HUDDrawScoreBoard instead of HUDPaint so it draws above the TTT HUD
