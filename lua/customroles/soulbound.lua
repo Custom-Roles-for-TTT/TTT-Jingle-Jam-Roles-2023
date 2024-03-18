@@ -62,7 +62,7 @@ function SOULBOUND:RegisterAbility(ability)
         return
     end
 
-    local enabled = CreateConVar("ttt_soulbound_" .. ability.Id .. "_enabled", "1")
+    local enabled = CreateConVar("ttt_soulbound_" .. ability.Id .. "_enabled", "1", FCVAR_REPLICATED)
     ability.Enabled = function()
         return enabled:GetBool()
     end
@@ -303,6 +303,8 @@ if CLIENT then
 
             local ic = nil
             for _, ability in pairs(abilities) do
+                if not ability:Enabled() then continue end
+
                 if ability.Icon then
                     ic = vgui.Create("LayeredIcon", dlist)
 

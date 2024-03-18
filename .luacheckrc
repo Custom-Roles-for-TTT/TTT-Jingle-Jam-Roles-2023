@@ -1051,7 +1051,8 @@ globals = {
     "WIN_RENEGADE",
 
     -- Optional external mods
-    "TTTKP"
+    "TTTKP",
+    "TTTPAP"
 }
 std = {
     globals = {
