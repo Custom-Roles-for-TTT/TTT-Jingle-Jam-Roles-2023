@@ -106,12 +106,10 @@ if SERVER then
         soulbound:SetNWFloat("TTTSoulboundGunshotsNextUse", CurTime() + gunshots_cooldown:GetFloat())
     end
 
-    hook.Add("TTTPrepareRound", "Soulbound_Gunshots_TTTPrepareRound", function()
-        for _, p in ipairs(player.GetAll()) do
-            p:SetNWInt("TTTSoulboundGunshotsUses", 0)
-            p:SetNWFloat("TTTSoulboundGunshotsNextUse", 0)
-        end
-    end)
+    function ABILITY:Cleanup(soulbound)
+        soulbound:SetNWInt("TTTSoulboundGunshotsUses", 0)
+        soulbound:SetNWFloat("TTTSoulboundGunshotsNextUse", 0)
+    end
 end
 
 if CLIENT then

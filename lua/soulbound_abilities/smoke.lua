@@ -73,12 +73,10 @@ if SERVER then
         soulbound:SetNWFloat("TTTSoulboundSmokeNextUse", CurTime() + smoke_cooldown:GetFloat())
     end
 
-    hook.Add("TTTPrepareRound", "Soulbound_Smoke_TTTPrepareRound", function()
-        for _, p in ipairs(player.GetAll()) do
-            p:SetNWInt("TTTSoulboundSmokeUses", 0)
-            p:SetNWFloat("TTTSoulboundSmokeNextUse", 0)
-        end
-    end)
+    function ABILITY:Cleanup(soulbound)
+        soulbound:SetNWInt("TTTSoulboundSmokeUses", 0)
+        soulbound:SetNWFloat("TTTSoulboundSmokeNextUse", 0)
+    end
 end
 
 if CLIENT then

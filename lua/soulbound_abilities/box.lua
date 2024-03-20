@@ -49,12 +49,10 @@ if SERVER then
         soulbound:SetNWFloat("TTTSoulboundBoxNextUse", CurTime() + box_cooldown:GetFloat())
     end
 
-    hook.Add("TTTPrepareRound", "Soulbound_Box_TTTPrepareRound", function()
-        for _, p in ipairs(player.GetAll()) do
-            p:SetNWInt("TTTSoulboundBoxUses", 0)
-            p:SetNWFloat("TTTSoulboundBoxNextUse", 0)
-        end
-    end)
+    function ABILITY:Cleanup(soulbound)
+        soulbound:SetNWInt("TTTSoulboundBoxUses", 0)
+        soulbound:SetNWFloat("TTTSoulboundBoxNextUse", 0)
+    end
 end
 
 if CLIENT then

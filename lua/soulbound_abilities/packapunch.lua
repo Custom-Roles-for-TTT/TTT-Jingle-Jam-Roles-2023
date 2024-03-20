@@ -42,12 +42,13 @@ if SERVER then
         soulbound:SetNWFloat("TTTSoulboundPackAPunchNextUse", CurTime() + packapunch_cooldown:GetFloat())
     end
 
+    function ABILITY:Cleanup(soulbound)
+        soulbound:SetNWInt("TTTSoulboundPackAPunchUses", 0)
+        soulbound:SetNWFloat("TTTSoulboundPackAPunchNextUse", 0)
+    end
+
     local enabled = GetConVar("ttt_soulbound_packapunch_enabled")
     hook.Add("TTTPrepareRound", "Soulbound_PackAPunch_TTTPrepareRound", function()
-        for _, p in ipairs(player.GetAll()) do
-            p:SetNWInt("TTTSoulboundPackAPunchUses", 0)
-            p:SetNWFloat("TTTSoulboundPackAPunchNextUse", 0)
-        end
         if enabled:GetBool() and not TTTPAP then
             ErrorNoHalt("WARNING: Pack-a-Punch must be installed to enable the Soulbound's Pack-a-Punch ability!")
             enabled:SetBool(false)

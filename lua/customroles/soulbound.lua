@@ -100,8 +100,32 @@ if SERVER then
 
         local target = ply:GetObserverMode() ~= OBS_MODE_ROAMING and ply:GetObserverTarget() or nil
         if not ability:Condition(ply, target) then return end
-
+        if not ability.Use then return end
         ability:Use(ply, target)
+    end)
+
+    -----------------------
+    -- PASSIVE ABILITIES --
+    -----------------------
+
+    hook.Add("Think", "Soulbound_Think", function()
+        for _, p in ipairs(player.GetAll()) do
+            if p:IsSoulbound() then
+                local max = soulbound_max_abilities:GetInt()
+                for i = 1, max do
+                    local id = p:GetNWString("TTTSoulboundAbility" .. tostring(i), "")
+                    if #id == 0 then break end
+
+                    local ability = SOULBOUND.Abilities[id]
+                    if not ability:Enabled() then return end
+
+                    local target = p:GetObserverMode() ~= OBS_MODE_ROAMING and p:GetObserverTarget() or nil
+                    if not ability:Condition(p, target) then return end
+                    if not ability.Passive then continue end
+                    ability:Passive(p, target)
+                end
+            end
+        end
     end)
 
     ----------------------
@@ -133,7 +157,12 @@ if SERVER then
     hook.Add("TTTPrepareRound", "Soulbound_TTTPrepareRound", function()
         for _, p in ipairs(player.GetAll()) do
             for i = 1, soulbound_max_abilities:GetInt() do
-                p:SetNWString("TTTSoulboundAbility" .. tostring(i), "")
+                local id = p:GetNWString("TTTSoulboundAbility" .. tostring(i), "")
+                if #id > 0 then
+                    local ability = SOULBOUND.Abilities[id]
+                    ability:Cleanup(p)
+                    p:SetNWString("TTTSoulboundAbility" .. tostring(i), "")
+                end
             end
         end
     end)
@@ -146,7 +175,12 @@ if SERVER then
         if not IsPlayer(ply) then return end
         if ply:IsSoulbound() then
             for i = 1, soulbound_max_abilities:GetInt() do
-                ply:SetNWString("TTTSoulboundAbility" .. tostring(i), "")
+                local id = ply:GetNWString("TTTSoulboundAbility" .. tostring(i), "")
+                if #id > 0 then
+                    local ability = SOULBOUND.Abilities[id]
+                    ability:Cleanup(ply)
+                    ply:SetNWString("TTTSoulboundAbility" .. tostring(i), "")
+                end
             end
             ply:SetRole(ROLE_TRAITOR)
             SendFullStateUpdate()

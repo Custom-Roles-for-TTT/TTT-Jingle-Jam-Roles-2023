@@ -50,12 +50,10 @@ if SERVER then
         soulbound:SetNWFloat("TTTSoulboundConfettiNextUse", CurTime() + confetti_cooldown:GetFloat())
     end
 
-    hook.Add("TTTPrepareRound", "Soulbound_Confetti_TTTPrepareRound", function()
-        for _, p in ipairs(player.GetAll()) do
-            p:SetNWInt("TTTSoulboundConfettiUses", 0)
-            p:SetNWFloat("TTTSoulboundConfettiNextUse", 0)
-        end
-    end)
+    function ABILITY:Cleanup(soulbound)
+        soulbound:SetNWInt("TTTSoulboundConfettiUses", 0)
+        soulbound:SetNWFloat("TTTSoulboundConfettiNextUse", 0)
+    end
 end
 
 if CLIENT then

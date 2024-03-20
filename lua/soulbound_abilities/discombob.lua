@@ -85,12 +85,10 @@ if SERVER then
         soulbound:SetNWFloat("TTTSoulboundDiscombobNextUse", CurTime() + discombob_cooldown:GetFloat())
     end
 
-    hook.Add("TTTPrepareRound", "Soulbound_Discombob_TTTPrepareRound", function()
-        for _, p in ipairs(player.GetAll()) do
-            p:SetNWInt("TTTSoulboundDiscombobUses", 0)
-            p:SetNWFloat("TTTSoulboundDiscombobNextUse", 0)
-        end
-    end)
+    function ABILITY:Cleanup(soulbound)
+        soulbound:SetNWInt("TTTSoulboundDiscombobUses", 0)
+        soulbound:SetNWFloat("TTTSoulboundDiscombobNextUse", 0)
+    end
 end
 
 if CLIENT then

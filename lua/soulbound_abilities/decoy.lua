@@ -49,12 +49,10 @@ if SERVER then
         soulbound:SetNWFloat("TTTSoulboundDecoyNextUse", CurTime() + decoy_cooldown:GetFloat())
     end
 
-    hook.Add("TTTPrepareRound", "Soulbound_Decoy_TTTPrepareRound", function()
-        for _, p in ipairs(player.GetAll()) do
-            p:SetNWInt("TTTSoulboundDecoyUses", 0)
-            p:SetNWFloat("TTTSoulboundDecoyNextUse", 0)
-        end
-    end)
+    function ABILITY:Cleanup(soulbound)
+        soulbound:SetNWInt("TTTSoulboundDecoyUses", 0)
+        soulbound:SetNWFloat("TTTSoulboundDecoyNextUse", 0)
+    end
 end
 
 if CLIENT then

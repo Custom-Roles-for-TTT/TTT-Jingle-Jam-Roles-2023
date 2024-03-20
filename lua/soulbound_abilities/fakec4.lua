@@ -65,12 +65,10 @@ if SERVER then
         soulbound:SetNWFloat("TTTSoulboundFakeC4NextUse", CurTime() + fakec4_cooldown:GetFloat())
     end
 
-    hook.Add("TTTPrepareRound", "Soulbound_FakeC4_TTTPrepareRound", function()
-        for _, p in ipairs(player.GetAll()) do
-            p:SetNWInt("TTTSoulboundFakeC4Uses", 0)
-            p:SetNWFloat("TTTSoulboundFakeC4NextUse", 0)
-        end
-    end)
+    function ABILITY:Cleanup(soulbound)
+        soulbound:SetNWInt("TTTSoulboundFakeC4Uses", 0)
+        soulbound:SetNWFloat("TTTSoulboundFakeC4NextUse", 0)
+    end
 end
 
 if CLIENT then

@@ -49,12 +49,10 @@ if SERVER then
         soulbound:SetNWFloat("TTTSoulboundExplosiveBarrelNextUse", CurTime() + explosivebarrel_cooldown:GetFloat())
     end
 
-    hook.Add("TTTPrepareRound", "Soulbound_ExplosiveBarrel_TTTPrepareRound", function()
-        for _, p in ipairs(player.GetAll()) do
-            p:SetNWInt("TTTSoulboundExplosiveBarrelUses", 0)
-            p:SetNWFloat("TTTSoulboundExplosiveBarrelNextUse", 0)
-        end
-    end)
+    function ABILITY:Cleanup(soulbound)
+        soulbound:SetNWInt("TTTSoulboundExplosiveBarrelUses", 0)
+        soulbound:SetNWFloat("TTTSoulboundExplosiveBarrelNextUse", 0)
+    end
 end
 
 if CLIENT then

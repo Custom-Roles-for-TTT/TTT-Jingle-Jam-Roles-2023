@@ -55,12 +55,10 @@ if SERVER then
         soulbound:SetNWFloat("TTTSoulboundPoisonHeadcrabNextUse", CurTime() + poisonheadcrab_cooldown:GetFloat())
     end
 
-    hook.Add("TTTPrepareRound", "Soulbound_PoisonHeadcrab_TTTPrepareRound", function()
-        for _, p in ipairs(player.GetAll()) do
-            p:SetNWInt("TTTSoulboundPoisonHeadcrabUses", 0)
-            p:SetNWFloat("TTTSoulboundPoisonHeadcrabNextUse", 0)
-        end
-    end)
+    function ABILITY:Cleanup(soulbound)
+        soulbound:SetNWInt("TTTSoulboundPoisonHeadcrabUses", 0)
+        soulbound:SetNWFloat("TTTSoulboundPoisonHeadcrabNextUse", 0)
+    end
 end
 
 if CLIENT then
