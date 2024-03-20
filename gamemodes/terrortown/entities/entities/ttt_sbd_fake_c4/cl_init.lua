@@ -13,7 +13,7 @@ local vgui = vgui
 local T = LANG.GetTranslation
 local PT = LANG.GetParamTranslation
 
-hook.Add("Initialize", "MadScientist_DeathRadar_Initialize_Lang", function()
+hook.Add("Initialize", "Soulbound_FakeC4_Initialize_Lang", function()
     LANG.AddToLanguage("english", "c4_disarm_fake", "Cut a wire to disarm the bomb. It's a fake bomb, so every wire will result in a confetti explosion.")
 end)
 

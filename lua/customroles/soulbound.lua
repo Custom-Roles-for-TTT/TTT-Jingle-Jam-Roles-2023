@@ -96,11 +96,11 @@ if SERVER then
         if #id == 0 then return end
 
         local ability = SOULBOUND.Abilities[id]
+        if not ability.Use then return end
         if not ability:Enabled() then return end
 
         local target = ply:GetObserverMode() ~= OBS_MODE_ROAMING and ply:GetObserverTarget() or nil
         if not ability:Condition(ply, target) then return end
-        if not ability.Use then return end
         ability:Use(ply, target)
     end)
 
@@ -117,11 +117,11 @@ if SERVER then
                     if #id == 0 then break end
 
                     local ability = SOULBOUND.Abilities[id]
-                    if not ability:Enabled() then return end
+                    if not ability.Passive then continue end
+                    if not ability:Enabled() then continue end
 
                     local target = p:GetObserverMode() ~= OBS_MODE_ROAMING and p:GetObserverTarget() or nil
-                    if not ability:Condition(p, target) then return end
-                    if not ability.Passive then continue end
+                    if not ability:Condition(p, target) then continue end
                     ability:Passive(p, target)
                 end
             end
