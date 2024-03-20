@@ -145,7 +145,7 @@ surface.CreateFont("C4Timer", {
 
 local disarm
 
-local function ShowC4Disarm(bomb)
+local function ShowC4Disarm(ent)
     local dframe = vgui.Create("DFrame")
     local w, h = 420, 340
     dframe:SetSize(w, h)
@@ -182,14 +182,14 @@ local function ShowC4Disarm(bomb)
     dtimer:SetWide(120)
     dtimer:SetPos(10, m)
 
-    dtimer.Bomb = bomb
+    dtimer.Bomb = ent
     dtimer.Stop = false
 
     dtimer.Think = function(s)
-        if not IsValid(bomb) then return end
+        if not IsValid(ent) then return end
         if s.Stop then return end
 
-        local t = bomb:GetExplodeTime()
+        local t = ent:GetExplodeTime()
         if t then
             local r = t - CurTime()
             if r > 0 then
@@ -229,7 +229,7 @@ local function ShowC4Disarm(bomb)
     ddesc:SetFont("DermaDefaultBold")
     ddesc:SetSize(256, desc_h)
     ddesc:SetWrap(true)
-    if LocalPlayer():IsTraitorTeam() or LocalPlayer() == bomb:GetOwner() then
+    if LocalPlayer():IsTraitorTeam() or LocalPlayer() == ent:GetOwner() then
         ddesc:SetText(T("c4_disarm_fake"))
     else
         ddesc:SetText(T("c4_disarm_other"))

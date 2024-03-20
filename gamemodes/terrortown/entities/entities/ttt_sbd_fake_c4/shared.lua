@@ -4,7 +4,6 @@ local cam = cam
 local concommand = concommand
 local draw = draw
 local ents = ents
-local hook = hook
 local ipairs = ipairs
 local IsValid = IsValid
 local math = math
