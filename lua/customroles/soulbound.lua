@@ -164,6 +164,7 @@ if SERVER then
                     p:SetNWString("TTTSoulboundAbility" .. tostring(i), "")
                 end
             end
+            p:SetNWInt("TTTSoulboundOldRole", -1)
         end
     end)
 
@@ -182,6 +183,7 @@ if SERVER then
                     ply:SetNWString("TTTSoulboundAbility" .. tostring(i), "")
                 end
             end
+            ply:SetNWInt("TTTSoulboundOldRole", -1)
             ply:SetRole(ROLE_TRAITOR)
             SendFullStateUpdate()
         end
@@ -653,6 +655,28 @@ if CLIENT then
         else
             CRHUD:ShadowedText(ROLE_STRINGS[ROLE_SOULBOUND], "TraitorState", margin + 84, ScrH() - height - margin, COLOR_WHITE, TEXT_ALIGN_CENTER)
         end
+    end)
+
+    ----------------
+    -- SCOREBOARD --
+    ----------------
+
+    hook.Add("TTTScoreboardPlayerRole", "Soulbound_TTTScoreboardPlayerRole", function(ply, cli, c, roleStr)
+        if GetRoundState() < ROUND_ACTIVE then return end
+        if not IsPlayer(ply) then return end
+        if ply:IsActive() then return end
+
+        if cli:IsScoreboardInfoOverridden(ply) then return end
+
+        if not ply:IsSoulbound() then return end
+        if not ply:GetNWBool("body_searched", false) then return end
+
+        if cli:IsTraitorTeam() or cli:IsRenegade() then return end
+
+        local oldRole = ply:GetNWInt("TTTSoulboundOldRole", -1)
+        if oldRole == ROLE_NONE then return end
+
+        return ROLE_COLORS_SCOREBOARD[oldRole], ROLE_STRINGS_SHORT[oldRole]
     end)
 
     --------------

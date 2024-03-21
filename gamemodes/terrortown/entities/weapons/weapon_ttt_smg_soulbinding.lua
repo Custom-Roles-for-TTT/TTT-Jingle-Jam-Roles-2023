@@ -31,6 +31,7 @@ if SERVER then
         message = message .. " has converted you into " .. ROLE_STRINGS_EXT[ROLE_SOULBOUND] .. "!"
         ply:QueueMessage(MSG_PRINTBOTH, message)
         ply:SetNWBool("TTTIsGhosting", true)
+        ply:SetNWInt("TTTSoulboundOldRole", ply:GetRole())
         ply:SetRole(ROLE_SOULBOUND)
         SendFullStateUpdate()
     end
