@@ -137,7 +137,7 @@ if CLIENT then
         end
 
         local ready = true
-        local text = "Press '" .. key .. "' to place a fakebody"
+        local text = "Press '" .. key .. "' to place a fake body"
         local next_use = soulbound:GetNWFloat("TTTSoulboundFakeBodyNextUse")
         local cur_time = CurTime()
         if max_uses > 0 and uses <= 0 then
