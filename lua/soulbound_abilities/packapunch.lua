@@ -28,7 +28,7 @@ if SERVER then
     function ABILITY:Condition(soulbound, target)
         if packapunch_uses:GetInt() > 0 and soulbound:GetNWInt("TTTSoulboundPackAPunchUses", 0) <= 0 then return false end
         if CurTime() < soulbound:GetNWFloat("TTTSoulboundPackAPunchNextUse") then return false end
-        if not target then return false end
+        if not target or not IsPlayer(target) then return false end
         if not TTTPAP:CanOrderPAP(target, false) then return false end
         return true
     end
