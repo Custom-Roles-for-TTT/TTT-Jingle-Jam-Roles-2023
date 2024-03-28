@@ -138,65 +138,65 @@ The Soulbound is a traitor role who is created by the Soulmage. The Soulbound ca
 \
 **ConVars**
 ```cpp
-ttt_soulbound_max_abilities 3 // The maximum number of abilities the Soulbound can buy. (Set to 0 to disable abilities)
-ttt_soulbound_box_enabled 1 // Whether the place box ability is enabled or not
-ttt_soulbound_box_uses 10 // How many uses should of the place box ability should the Soulbound get. (Set to 0 for unlimited uses)
-ttt_soulbound_box_cooldown 0 // How long should the Soulbound have to wait between uses of the place box ability
-ttt_soulbound_confetti_enabled 1 // Whether the confetti ability is enabled or not
-ttt_soulbound_confetti_uses 3 // How many uses should of the confetti ability should the Soulbound get. (Set to 0 for unlimited uses)
-ttt_soulbound_confetti_cooldown 3 // How long should the Soulbound have to wait between uses of the confetti ability
-ttt_soulbound_decoy_enabled 1 // Whether the place decoy ability is enabled or not
-ttt_soulbound_decoy_uses 5 // How many uses should of the place decoy ability should the Soulbound get. (Set to 0 for unlimited uses)
-ttt_soulbound_decoy_cooldown 0 // How long should the Soulbound have to wait between uses of the place decoy ability
-ttt_soulbound_discombob_enabled 1 // Whether the discombobulator ability is enabled or not
-ttt_soulbound_discombob_uses 2 // How many uses should of the discombobulator ability should the Soulbound get. (Set to 0 for unlimited uses)
-ttt_soulbound_discombob_cooldown 1 // How long should the Soulbound have to wait between uses of the discombobulator ability
-ttt_soulbound_discombob_fuse_time 5 // How long the fuse for the Soulbound's discombobulator should be
-ttt_soulbound_dropweapon_enabled 1 // Whether the drop weapon ability is enabled or not
-ttt_soulbound_dropweapon_uses 3 // How many uses should of the drop weapon ability should the Soulbound get. (Set to 0 for unlimited uses)
-ttt_soulbound_dropweapon_cooldown 10 // How long should the Soulbound have to wait between uses of the drop weapon ability
-ttt_soulbound_explosivebarrel_enabled 1 // Whether the place explosive barrel ability is enabled or not
-ttt_soulbound_explosivebarrel_uses 2 // How many uses should of the place explosive barrel ability should the Soulbound get. (Set to 0 for unlimited uses)
-ttt_soulbound_explosivebarrel_cooldown 0 // How long should the Soulbound have to wait between uses of the place explosive barrel ability
-ttt_soulbound_fakebody_enabled 1 // Whether the place fake body ability is enabled or not
-ttt_soulbound_fakebody_uses 1 // How many uses should of the place fake body ability should the Soulbound get. (Set to 0 for unlimited uses)
-ttt_soulbound_fakebody_cooldown 0 // How long should the Soulbound have to wait between uses of the place fake body ability
-ttt_soulbound_fakec4_enabled 1 // Whether the place fake C4 ability is enabled or not
-ttt_soulbound_fakec4_uses 1 // How many uses should of the place fake C4 ability should the Soulbound get. (Set to 0 for unlimited uses)
-ttt_soulbound_fakec4_cooldown 0 // How long should the Soulbound have to wait between uses of the place fake C4 ability
-ttt_soulbound_fakec4_fuse 60 // How long the fuse for the Soulbound's fake C4 should be
-ttt_soulbound_gunshots_enabled 1 // Whether the gunshots ability is enabled or not
-ttt_soulbound_gunshots_uses 10 // How many uses should of the gunshots grenade ability should the Soulbound get. (Set to 0 for unlimited uses)
-ttt_soulbound_gunshots_cooldown 1 // How long should the Soulbound have to wait between uses of the gunshots grenade ability
-ttt_soulbound_headcrab_enabled 1 // Whether the summon headcrab ability is enabled or not
-ttt_soulbound_headcrab_uses 5 // How many uses should of the summon headcrab ability should the Soulbound get. (Set to 0 for unlimited uses)
-ttt_soulbound_headcrab_cooldown 0 // How long should the Soulbound have to wait between uses of the summon headcrab ability
-ttt_soulbound_headcrab_health 10 // How much health headcrabs spawned by the Soulbound should have
-ttt_soulbound_heal_enabled 1 // Whether the healing presence ability is enabled or not
-ttt_soulbound_heal_rate 0.5 // How often the Soulbound's healing presence ability should heal their target
-ttt_soulbound_incendiary_enabled 1 // Whether the incendiary grenade ability is enabled or not
-ttt_soulbound_incendiary_uses 2 // How many uses should of the incendiary grenade ability should the Soulbound get. (Set to 0 for unlimited uses)
-ttt_soulbound_incendiary_cooldown 1 // How long should the Soulbound have to wait between uses of the incendiary grenade ability
-ttt_soulbound_incendiary_fuse_time 5 // How long the fuse for the Soulbound's incendiary grenade should be
-ttt_soulbound_poisonheadcrab_enabled 1 // Whether the summon poison headcrab ability is enabled or not
-ttt_soulbound_poisonheadcrab_uses 2 // How many uses should of the summon poison headcrab ability should the Soulbound get. (Set to 0 for unlimited uses)
-ttt_soulbound_poisonheadcrab_cooldown 0 // How long should the Soulbound have to wait between uses of the summon poison headcrab ability
-ttt_soulbound_poisonheadcrab_health 35 // How much health poison headcrabs spawned by the Soulbound should have
-ttt_soulbound_poltergeist_enabled 1 // Whether the poltergeist ability is enabled or not
-ttt_soulbound_poltergeist_uses 3 // How many uses should of the poltergeist ability should the Soulbound get. (Set to 0 for unlimited uses)
-ttt_soulbound_poltergeist_cooldown 0 // How long should the Soulbound have to wait between uses of the poltergeist ability
-ttt_soulbound_possession_enabled 1 // Whether the ultra prop possession ability is enabled or not
-ttt_soulbound_reveal_enabled 1 // Whether the revealing presence ability is enabled or not
-ttt_soulbound_smoke_enabled 1 // Whether the instant smoke ability is enabled or not
-ttt_soulbound_smoke_uses 3 // How many uses should of the smoke grenade ability should the Soulbound get. (Set to 0 for unlimited uses)
-ttt_soulbound_smoke_cooldown 1 // How long should the Soulbound have to wait between uses of the smoke grenade ability
-ttt_soulbound_smoke_linger_time 30 // How long the fuse for the Soulbound's instant smoke should linger for
-ttt_soulbound_swapinventory_enabled 1 // Whether the swap inventory ability is enabled or not
-ttt_soulbound_swapinventory_uses 1 // How many uses should of the swap inventory ability should the Soulbound get. (Set to 0 for unlimited uses)
-ttt_soulbound_swapinventory_cooldown 0 // How long should the Soulbound have to wait between uses of the swap inventory ability
-ttt_soulbound_packapunch_enabled 1 // Whether the Pack-a-Punch ability is enabled or not. Requires Pack-a-Punch mod
-ttt_soulbound_packapunch_uses 1 // How many uses should of the Pack-a-Punch ability should the Soulbound get. Requires Pack-a-Punch mod. (Set to 0 for unlimited uses)
-ttt_soulbound_packapunch_cooldown 5 // How long should the Soulbound have to wait between uses of the Pack-a-Punch ability. Requires Pack-a-Punch mod
+ttt_soulbound_max_abilities             3   // The maximum number of abilities the Soulbound can buy. (Set to 0 to disable abilities)
+ttt_soulbound_box_enabled               1   // Whether the place box ability is enabled or not
+ttt_soulbound_box_uses                  10  // How many uses should of the place box ability should the Soulbound get. (Set to 0 for unlimited uses)
+ttt_soulbound_box_cooldown              0   // How long should the Soulbound have to wait between uses of the place box ability
+ttt_soulbound_confetti_enabled          1   // Whether the confetti ability is enabled or not
+ttt_soulbound_confetti_uses             3   // How many uses should of the confetti ability should the Soulbound get. (Set to 0 for unlimited uses)
+ttt_soulbound_confetti_cooldown         3   // How long should the Soulbound have to wait between uses of the confetti ability
+ttt_soulbound_decoy_enabled             1   // Whether the place decoy ability is enabled or not
+ttt_soulbound_decoy_uses                5   // How many uses should of the place decoy ability should the Soulbound get. (Set to 0 for unlimited uses)
+ttt_soulbound_decoy_cooldown            0   // How long should the Soulbound have to wait between uses of the place decoy ability
+ttt_soulbound_discombob_enabled         1   // Whether the discombobulator ability is enabled or not
+ttt_soulbound_discombob_uses            2   // How many uses should of the discombobulator ability should the Soulbound get. (Set to 0 for unlimited uses)
+ttt_soulbound_discombob_cooldown        1   // How long should the Soulbound have to wait between uses of the discombobulator ability
+ttt_soulbound_discombob_fuse_time       5   // How long the fuse for the Soulbound's discombobulator should be
+ttt_soulbound_dropweapon_enabled        1   // Whether the drop weapon ability is enabled or not
+ttt_soulbound_dropweapon_uses           3   // How many uses should of the drop weapon ability should the Soulbound get. (Set to 0 for unlimited uses)
+ttt_soulbound_dropweapon_cooldown       10  // How long should the Soulbound have to wait between uses of the drop weapon ability
+ttt_soulbound_explosivebarrel_enabled   1   // Whether the place explosive barrel ability is enabled or not
+ttt_soulbound_explosivebarrel_uses      2   // How many uses should of the place explosive barrel ability should the Soulbound get. (Set to 0 for unlimited uses)
+ttt_soulbound_explosivebarrel_cooldown  0   // How long should the Soulbound have to wait between uses of the place explosive barrel ability
+ttt_soulbound_fakebody_enabled          1   // Whether the place fake body ability is enabled or not
+ttt_soulbound_fakebody_uses             1   // How many uses should of the place fake body ability should the Soulbound get. (Set to 0 for unlimited uses)
+ttt_soulbound_fakebody_cooldown         0   // How long should the Soulbound have to wait between uses of the place fake body ability
+ttt_soulbound_fakec4_enabled            1   // Whether the place fake C4 ability is enabled or not
+ttt_soulbound_fakec4_uses               1   // How many uses should of the place fake C4 ability should the Soulbound get. (Set to 0 for unlimited uses)
+ttt_soulbound_fakec4_cooldown           0   // How long should the Soulbound have to wait between uses of the place fake C4 ability
+ttt_soulbound_fakec4_fuse               60  // How long the fuse for the Soulbound's fake C4 should be
+ttt_soulbound_gunshots_enabled          1   // Whether the gunshots ability is enabled or not
+ttt_soulbound_gunshots_uses             10  // How many uses should of the gunshots grenade ability should the Soulbound get. (Set to 0 for unlimited uses)
+ttt_soulbound_gunshots_cooldown         1   // How long should the Soulbound have to wait between uses of the gunshots grenade ability
+ttt_soulbound_headcrab_enabled          1   // Whether the summon headcrab ability is enabled or not
+ttt_soulbound_headcrab_uses             5   // How many uses should of the summon headcrab ability should the Soulbound get. (Set to 0 for unlimited uses)
+ttt_soulbound_headcrab_cooldown         0   // How long should the Soulbound have to wait between uses of the summon headcrab ability
+ttt_soulbound_headcrab_health           10  // How much health headcrabs spawned by the Soulbound should have
+ttt_soulbound_heal_enabled              1   // Whether the healing presence ability is enabled or not
+ttt_soulbound_heal_rate                 0.5 // How often the Soulbound's healing presence ability should heal their target
+ttt_soulbound_incendiary_enabled        1   // Whether the incendiary grenade ability is enabled or not
+ttt_soulbound_incendiary_uses           2   // How many uses should of the incendiary grenade ability should the Soulbound get. (Set to 0 for unlimited uses)
+ttt_soulbound_incendiary_cooldown       1   // How long should the Soulbound have to wait between uses of the incendiary grenade ability
+ttt_soulbound_incendiary_fuse_time      5   // How long the fuse for the Soulbound's incendiary grenade should be
+ttt_soulbound_poisonheadcrab_enabled    1   // Whether the summon poison headcrab ability is enabled or not
+ttt_soulbound_poisonheadcrab_uses       2   // How many uses should of the summon poison headcrab ability should the Soulbound get. (Set to 0 for unlimited uses)
+ttt_soulbound_poisonheadcrab_cooldown   0   // How long should the Soulbound have to wait between uses of the summon poison headcrab ability
+ttt_soulbound_poisonheadcrab_health     35  // How much health poison headcrabs spawned by the Soulbound should have
+ttt_soulbound_poltergeist_enabled       1   // Whether the poltergeist ability is enabled or not
+ttt_soulbound_poltergeist_uses          3   // How many uses should of the poltergeist ability should the Soulbound get. (Set to 0 for unlimited uses)
+ttt_soulbound_poltergeist_cooldown      0   // How long should the Soulbound have to wait between uses of the poltergeist ability
+ttt_soulbound_possession_enabled        1   // Whether the ultra prop possession ability is enabled or not
+ttt_soulbound_reveal_enabled            1   // Whether the revealing presence ability is enabled or not
+ttt_soulbound_smoke_enabled             1   // Whether the instant smoke ability is enabled or not
+ttt_soulbound_smoke_uses                3   // How many uses should of the smoke grenade ability should the Soulbound get. (Set to 0 for unlimited uses)
+ttt_soulbound_smoke_cooldown            1   // How long should the Soulbound have to wait between uses of the smoke grenade ability
+ttt_soulbound_smoke_linger_time         30  // How long the fuse for the Soulbound's instant smoke should linger for
+ttt_soulbound_swapinventory_enabled     1   // Whether the swap inventory ability is enabled or not
+ttt_soulbound_swapinventory_uses        1   // How many uses should of the swap inventory ability should the Soulbound get. (Set to 0 for unlimited uses)
+ttt_soulbound_swapinventory_cooldown    0   // How long should the Soulbound have to wait between uses of the swap inventory ability
+ttt_soulbound_packapunch_enabled        1   // Whether the Pack-a-Punch ability is enabled or not. Requires Pack-a-Punch mod
+ttt_soulbound_packapunch_uses           1   // How many uses should of the Pack-a-Punch ability should the Soulbound get. Requires Pack-a-Punch mod. (Set to 0 for unlimited uses)
+ttt_soulbound_packapunch_cooldown       5   // How long should the Soulbound have to wait between uses of the Pack-a-Punch ability. Requires Pack-a-Punch mod
 ```
 
 ## Soulmage
