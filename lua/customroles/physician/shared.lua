@@ -17,7 +17,7 @@ Press {menukey} to access the standard equipment shop, featuring an upgrade for 
 ROLE.team = ROLE_TEAM_DETECTIVE
 ROLE.shopsyncroles = {ROLE_DETECTIVE}
 
-ROLE.loadout = {"weapon_ttt_physician_tracker"}
+ROLE.loadout = {"weapon_ttt_phy_tracker"}
 
 ROLE.translations = {}
 

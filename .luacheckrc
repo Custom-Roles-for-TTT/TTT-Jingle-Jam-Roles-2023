@@ -558,6 +558,7 @@ globals = {
     "DrawColorModify",
     "DynamicLight",
     "EffectData",
+    "EmitSound",
     "EndRound",
     "Entity",
     "EnumToSWEP",
@@ -1039,14 +1040,19 @@ globals = {
     "PHYSICIAN_TRACKER_ACTIVE",
     "PHYSICIAN_TRACKER_DEAD",
     "PHYSICIAN_TRACKER_INACTIVE",
+    "ROLE_ADMIN",
     "ROLE_ELEMENTALIST",
+    "ROLE_GHOSTWHISPERER",
     "ROLE_PHYSICIAN",
     "ROLE_RENEGADE",
-    "ROLE_ADMIN",
+    "ROLE_SOULBOUND",
+    "ROLE_SOULMAGE",
+    "SOULBOUND",
     "WIN_RENEGADE",
 
     -- Optional external mods
-    "TTTKP"
+    "TTTKP",
+    "TTTPAP"
 }
 std = {
     globals = {
