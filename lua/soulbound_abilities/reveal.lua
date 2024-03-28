@@ -51,7 +51,7 @@ if CLIENT then
             local target = v:GetObserverMode() ~= OBS_MODE_ROAMING and v:GetObserverTarget() or nil
             if not target or not IsPlayer(target) then continue end
             if not target:Alive() or client:IsSpec() then continue end
-                if target:IsTraitorTeam() then continue end
+            if target:IsTraitorTeam() then continue end
 
             if not table.HasValue(highlighted_players, target) then
                 table.insert(highlighted_players, target)
