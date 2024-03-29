@@ -3,7 +3,7 @@ local ABILITY = {}
 ABILITY.Name = "Summon Headcrab"
 ABILITY.Id = "headcrab"
 ABILITY.Description = "Summon a headcrab"
-ABILITY.Icon = "vgui/ttt/icon_headcrab.png"
+ABILITY.Icon = "vgui/ttt/roles/sbd/abilities/icon_headcrab.png"
 
 local headcrab_health = CreateConVar("ttt_soulbound_headcrab_health", "10", FCVAR_NONE, "How much health headcrabs spawned by the Soulbound should have", 0, 200)
 local headcrab_uses = CreateConVar("ttt_soulbound_headcrab_uses", "5", FCVAR_REPLICATED, "How many uses should of the summon headcrab ability should the Soulbound get. (Set to 0 for unlimited uses)", 0, 10)

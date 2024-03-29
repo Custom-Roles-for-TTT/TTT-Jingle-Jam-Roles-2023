@@ -92,7 +92,6 @@ ttt_ghostwhisperer_ghosting_time    8   // The amount of time (in seconds) the G
 ## Physician
 _Suggested By_: Logan\
 The Physician is a detective role who spawns with a Health Tracker. The Physician can use their custom weapon to place trackers on terrorists to monitor their health from the scoreboard.
-An upgrade exclusive to them is available in their shop which upgrades the range and quality of tracking.
 \
 \
 **ConVars**

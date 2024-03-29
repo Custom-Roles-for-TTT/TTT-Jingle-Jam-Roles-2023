@@ -3,7 +3,7 @@ local ABILITY = {}
 ABILITY.Name = "Fake Gunshots"
 ABILITY.Id = "gunshots"
 ABILITY.Description = "Play fake gunshot sounds"
-ABILITY.Icon = "vgui/ttt/icon_gunshots.png"
+ABILITY.Icon = "vgui/ttt/roles/sbd/abilities/icon_gunshots.png"
 
 local gunshots_uses = CreateConVar("ttt_soulbound_gunshots_uses", "10", FCVAR_REPLICATED, "How many uses should of the gunshots grenade ability should the Soulbound get. (Set to 0 for unlimited uses)", 0, 50)
 local gunshots_cooldown = CreateConVar("ttt_soulbound_gunshots_cooldown", "1", FCVAR_NONE, "How long should the Soulbound have to wait between uses of the gunshots grenade ability", 0, 10)

@@ -3,7 +3,7 @@ local ABILITY = {}
 ABILITY.Name = "Drop Weapon"
 ABILITY.Id = "dropweapon"
 ABILITY.Description = "Force the player you are spectating to drop their weapon"
-ABILITY.Icon = "vgui/ttt/icon_dropweapon.png"
+ABILITY.Icon = "vgui/ttt/roles/sbd/abilities/icon_dropweapon.png"
 
 local dropweapon_uses = CreateConVar("ttt_soulbound_dropweapon_uses", "3", FCVAR_REPLICATED, "How many uses should of the drop weapon ability should the Soulbound get. (Set to 0 for unlimited uses)", 0, 50)
 local dropweapon_cooldown = CreateConVar("ttt_soulbound_dropweapon_cooldown", "10", FCVAR_NONE, "How long should the Soulbound have to wait between uses of the drop weapon ability", 0, 10)

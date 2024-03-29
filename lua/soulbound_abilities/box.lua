@@ -3,7 +3,7 @@ local ABILITY = {}
 ABILITY.Name = "Place Box"
 ABILITY.Id = "box"
 ABILITY.Description = "Place a box"
-ABILITY.Icon = "vgui/ttt/icon_box.png"
+ABILITY.Icon = "vgui/ttt/roles/sbd/abilities/icon_box.png"
 
 local box_uses = CreateConVar("ttt_soulbound_box_uses", "10", FCVAR_REPLICATED, "How many uses should of the place box ability should the Soulbound get. (Set to 0 for unlimited uses)", 0, 50)
 local box_cooldown = CreateConVar("ttt_soulbound_box_cooldown", "0", FCVAR_NONE, "How long should the Soulbound have to wait between uses of the place box ability", 0, 10)

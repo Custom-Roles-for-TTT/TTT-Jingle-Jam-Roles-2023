@@ -3,7 +3,7 @@ local ABILITY = {}
 ABILITY.Name = "Revealing Presence"
 ABILITY.Id = "reveal"
 ABILITY.Description = "Reveal the location of the player you are spectating to your fellow traitors"
-ABILITY.Icon = "vgui/ttt/icon_reveal.png"
+ABILITY.Icon = "vgui/ttt/roles/sbd/abilities/icon_reveal.png"
 
 if SERVER then
     function ABILITY:Bought(soulbound)
