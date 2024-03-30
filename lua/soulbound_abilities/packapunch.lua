@@ -50,7 +50,7 @@ if SERVER then
     local enabled = GetConVar("ttt_soulbound_packapunch_enabled")
     hook.Add("TTTPrepareRound", "Soulbound_PackAPunch_TTTPrepareRound", function()
         if enabled:GetBool() and not TTTPAP then
-            ErrorNoHalt("WARNING: Pack-a-Punch must be installed to enable the Soulbound's Pack-a-Punch ability!")
+            ErrorNoHalt("WARNING: Pack-a-Punch must be installed to enable the Soulbound's Pack-a-Punch ability!\n")
             enabled:SetBool(false)
         end
     end)
