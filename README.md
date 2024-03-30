@@ -137,7 +137,7 @@ The Soulbound is a traitor role who is created by the Soulmage. The Soulbound ca
 \
 **ConVars**
 ```cpp
-ttt_soulbound_max_abilities             3   // The maximum number of abilities the Soulbound can buy. (Set to 0 to disable abilities)
+ttt_soulbound_max_abilities             4   // The maximum number of abilities the Soulbound can buy. (Set to 0 to disable abilities)
 ttt_soulbound_box_enabled               1   // Whether the place box ability is enabled or not
 ttt_soulbound_box_uses                  10  // How many uses should of the place box ability should the Soulbound get. (Set to 0 for unlimited uses)
 ttt_soulbound_box_cooldown              0   // How long should the Soulbound have to wait between uses of the place box ability
@@ -182,7 +182,7 @@ ttt_soulbound_poisonheadcrab_uses       2   // How many uses should of the summo
 ttt_soulbound_poisonheadcrab_cooldown   0   // How long should the Soulbound have to wait between uses of the summon poison headcrab ability
 ttt_soulbound_poisonheadcrab_health     35  // How much health poison headcrabs spawned by the Soulbound should have
 ttt_soulbound_poltergeist_enabled       1   // Whether the poltergeist ability is enabled or not
-ttt_soulbound_poltergeist_uses          3   // How many uses should of the poltergeist ability should the Soulbound get. (Set to 0 for unlimited uses)
+ttt_soulbound_poltergeist_uses          1   // How many uses should of the poltergeist ability should the Soulbound get. (Set to 0 for unlimited uses)
 ttt_soulbound_poltergeist_cooldown      0   // How long should the Soulbound have to wait between uses of the poltergeist ability
 ttt_soulbound_possession_enabled        1   // Whether the ultra prop possession ability is enabled or not
 ttt_soulbound_reveal_enabled            1   // Whether the revealing presence ability is enabled or not
