@@ -13,17 +13,17 @@ ROLE.ConvarLifeUpgrades = CreateConVar("ttt_elementalist_allow_lifesteal_upgrade
 if SERVER then
     -- Durations & associated chances
     ROLE.ConvarFrostEffectDur = CreateConVar("ttt_elementalist_frostbite_effect_duration", "3", FCVAR_NONE, "How long the Frostbite slow & freeze effect lasts. Value must be greater than 0 and less than 6", 1, 5)
-    ROLE.ConvarFrostExplodeCha = CreateConVar("ttt_elementalist_frostbite+_freeze_chance", "5", FCVAR_NONE, "The percent chance shooting a victim which has been slowed by Frostbite will instead freeze them. Value must be greater than 0 and less than 101", 1, 100)
+    ROLE.ConvarFrostExplodeCha = CreateConVar("ttt_elementalist_frostbite+_freeze_chance", "15", FCVAR_NONE, "The percent chance shooting a victim which has been slowed by Frostbite will instead freeze them. Value must be greater than 0 and less than 101", 1, 100)
     ROLE.ConvarPyroBurnDur = CreateConVar("ttt_elementalist_pyromancer_burn_duration", "3", FCVAR_NONE, "How long the Pryomancer effect should burn the victim for. 100 damage would scale for the full length. Value must be greater than 0 and less than 6", 1, 5)
-    ROLE.ConvarPyroExplodeCha = CreateConVar("ttt_elementalist_pyromancer+_explode_chance", "5", FCVAR_NONE, "The percent chance shooting a victim ignited by Pyromancer will cause them to explode. Value must be greater than 0 and less than 101", 1, 100)
+    ROLE.ConvarPyroExplodeCha = CreateConVar("ttt_elementalist_pyromancer+_explode_chance", "15", FCVAR_NONE, "The percent chance shooting a victim ignited by Pyromancer will cause them to explode. Value must be greater than 0 and less than 101", 1, 100)
     ROLE.ConvarMidEffectDur = CreateConVar("ttt_elementalist_midnight_dim_duration", "3", FCVAR_NONE, "How long the Midnight screen dimming effect should last. Value must be greater than 0 and less than 6", 1, 5)
-    ROLE.ConvarMidBlindCha = CreateConVar("ttt_elementalist_midnight+_blindness_chance", "5", FCVAR_NONE, "The percent chance shooting a victim affected by Midnight will instead completely blind them. Value must be greater than 0 and less than 101", 1, 100)
+    ROLE.ConvarMidBlindCha = CreateConVar("ttt_elementalist_midnight+_blindness_chance", "15", FCVAR_NONE, "The percent chance shooting a victim affected by Midnight will instead completely blind them. Value must be greater than 0 and less than 101", 1, 100)
 
     -- One-offs and associated chances
     ROLE.ConvarWindPushPow = CreateConVar("ttt_elementalist_windburn_push_power", "700", FCVAR_NONE, "How much push power the windburn effect should apply to victims, scales with damage done. Must be greater than 299 and less than 1001", 300, 1000)
-    ROLE.ConvarWindLaunchCha = CreateConVar("ttt_elementalist_windburn+_launch_chance", "5", FCVAR_NONE, "The percent chance shooting a victim will launch instead of push them. Value must be greater than 0 and less than 101", 1, 100)
+    ROLE.ConvarWindLaunchCha = CreateConVar("ttt_elementalist_windburn+_launch_chance", "15", FCVAR_NONE, "The percent chance shooting a victim will launch instead of push them. Value must be greater than 0 and less than 101", 1, 100)
     ROLE.ConvarDisPunchPow = CreateConVar("ttt_elementalist_discharge_punch_power", "5", FCVAR_NONE, "How much view punch power the discharge effect should apply to victims, scales with damage done. Must be greater than 0 and less than 11", 1, 10)
-    ROLE.ConvarDisInputCha = CreateConVar("ttt_elementalist_discharge+_input_chance", "5", FCVAR_NONE, "The percent chance shooting a victim will cause them to apply a random input in additional to the view punch. Value must be greater than 0 and less than 101", 1, 100)
+    ROLE.ConvarDisInputCha = CreateConVar("ttt_elementalist_discharge+_input_chance", "15", FCVAR_NONE, "The percent chance shooting a victim will cause them to apply a random input in additional to the view punch. Value must be greater than 0 and less than 101", 1, 100)
     ROLE.ConvarLifeHealPer = CreateConVar("ttt_elementalist_lifesteal_heal_percentage", "30", FCVAR_NONE, "What percent of damage done by shooting should be converted into health for the Elementalist. Must be greater than 0 and less than 101", 1, 100)
     ROLE.ConvarLifeExecute = CreateConVar("ttt_elementalist_lifesteal+_execute_amount", "15", FCVAR_NONE, "How much life a victim must reach before Lifesteal+ will execute them. Value must be greater than 0 and less than 101", 1, 100)
 end
