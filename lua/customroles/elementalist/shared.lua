@@ -52,10 +52,6 @@ table.insert(ROLE.convars, {
     type = ROLE_CONVAR_TYPE_BOOL
 })
 table.insert(ROLE.convars, {
-    cvar = "ttt_elementalist_allow_discharge_upgrades",
-    type = ROLE_CONVAR_TYPE_BOOL
-})
-table.insert(ROLE.convars, {
     cvar = "ttt_elementalist_allow_midnight_upgrades",
     type = ROLE_CONVAR_TYPE_BOOL
 })
