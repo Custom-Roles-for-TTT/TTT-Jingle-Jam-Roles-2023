@@ -3,7 +3,7 @@ local ABILITY = {}
 ABILITY.Name = "Healing Presence"
 ABILITY.Id = "heal"
 ABILITY.Description = "Slowly heal the player you are spectating"
-ABILITY.Icon = "vgui/ttt/icon_heal.png"
+ABILITY.Icon = "vgui/ttt/roles/sbd/abilities/icon_heal.png"
 
 local heal_rate = CreateConVar("ttt_soulbound_heal_rate", "0.5", FCVAR_REPLICATED, "How often the Soulbound's healing presence ability should heal their target", 0, 10)
 

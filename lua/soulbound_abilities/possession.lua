@@ -3,7 +3,7 @@ local ABILITY = {}
 ABILITY.Name = "Ultra Prop Possession"
 ABILITY.Id = "possession"
 ABILITY.Description = "Removes the cooldown/recharge time and increases force for prop possession"
-ABILITY.Icon = "vgui/ttt/icon_possession.png"
+ABILITY.Icon = "vgui/ttt/roles/sbd/abilities/icon_possession.png"
 
 if SERVER then
     function ABILITY:Bought(soulbound)

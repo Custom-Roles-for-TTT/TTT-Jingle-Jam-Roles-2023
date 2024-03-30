@@ -15,7 +15,7 @@ Press {menukey} to receive your special equipment!]]
 
 ROLE.team = ROLE_TEAM_TRAITOR
 
-local soulbound_max_abilities = CreateConVar("ttt_soulbound_max_abilities", "3", FCVAR_REPLICATED, "The maximum number of abilities the Soulbound can buy. (Set to 0 to disable abilities)", 0, 9)
+local soulbound_max_abilities = CreateConVar("ttt_soulbound_max_abilities", "4", FCVAR_REPLICATED, "The maximum number of abilities the Soulbound can buy. (Set to 0 to disable abilities)", 0, 9)
 
 ROLE.convars = {}
 table.insert(ROLE.convars, {

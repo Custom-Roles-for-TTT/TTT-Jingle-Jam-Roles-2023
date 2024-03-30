@@ -3,7 +3,7 @@ local ABILITY = {}
 ABILITY.Name = "Instant Smoke"
 ABILITY.Id = "smoke"
 ABILITY.Description = "Create a cloud of smoke"
-ABILITY.Icon = "vgui/ttt/icon_smoke.png"
+ABILITY.Icon = "vgui/ttt/roles/sbd/abilities/icon_smoke.png"
 
 local smoke_linger_time = CreateConVar("ttt_soulbound_smoke_linger_time", "30", FCVAR_REPLICATED, "How long the fuse for the Soulbound's instant smoke should linger for", 5, 120)
 local smoke_uses = CreateConVar("ttt_soulbound_smoke_uses", "3", FCVAR_REPLICATED, "How many uses should of the smoke grenade ability should the Soulbound get. (Set to 0 for unlimited uses)", 0, 10)

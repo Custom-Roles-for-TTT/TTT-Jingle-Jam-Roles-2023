@@ -3,7 +3,7 @@ local ABILITY = {}
 ABILITY.Name = "Confetti"
 ABILITY.Id = "confetti"
 ABILITY.Description = "Throw confetti and play a sound as if a Clown had activated"
-ABILITY.Icon = "vgui/ttt/icon_confetti.png"
+ABILITY.Icon = "vgui/ttt/roles/sbd/abilities/icon_confetti.png"
 
 local confetti_uses = CreateConVar("ttt_soulbound_confetti_uses", "3", FCVAR_REPLICATED, "How many uses should of the confetti ability should the Soulbound get. (Set to 0 for unlimited uses)", 0, 10)
 local confetti_cooldown = CreateConVar("ttt_soulbound_confetti_cooldown", "3", FCVAR_NONE, "How long should the Soulbound have to wait between uses of the confetti ability", 0, 10)

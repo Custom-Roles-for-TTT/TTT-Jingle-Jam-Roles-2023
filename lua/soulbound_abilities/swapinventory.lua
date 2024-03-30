@@ -3,7 +3,7 @@ local ABILITY = {}
 ABILITY.Name = "Swap Inventory"
 ABILITY.Id = "swapinventory"
 ABILITY.Description = "Swap the inventory of two different players. Doesn't swap role specific weapons"
-ABILITY.Icon = "vgui/ttt/icon_swapinventory.png"
+ABILITY.Icon = "vgui/ttt/roles/sbd/abilities/icon_swapinventory.png"
 
 local swapinventory_uses = CreateConVar("ttt_soulbound_swapinventory_uses", "1", FCVAR_REPLICATED, "How many uses should of the swap inventory ability should the Soulbound get. (Set to 0 for unlimited uses)", 0, 10)
 local swapinventory_cooldown = CreateConVar("ttt_soulbound_swapinventory_cooldown", "0", FCVAR_NONE, "How long should the Soulbound have to wait between uses of the swap inventory ability", 0, 10)
