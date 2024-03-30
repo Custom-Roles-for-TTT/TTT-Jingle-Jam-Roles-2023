@@ -351,6 +351,10 @@ if CLIENT then
     -- WIN CHECKS --
     ----------------
 
+    hook.Add("TTTSyncWinIDs", "Renegade_TTTSyncWinIDs", function()
+        WIN_RENEGADE = WINS_BY_ROLE[ROLE_RENEGADE]
+    end)
+
     AddHook("TTTScoringWinTitle", "Renegade_TTTScoringWinTitle", function(wintype, wintitles, title, secondary_win_role)
         if wintype == WIN_RENEGADE then
             return { txt = "hilite_win_role_singular", params = { role = StringUpper(ROLE_STRINGS[ROLE_RENEGADE]) }, c = ROLE_COLORS[ROLE_RENEGADE] }
