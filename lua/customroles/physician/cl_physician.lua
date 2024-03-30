@@ -69,7 +69,7 @@ end
 net.Receive("GetAllPhysicianTrackedPlayersCallback", function(len)
     local numPlayers = net.ReadInt(16)
 
-    for i = 0, numPlayers do
+    for i = 1, numPlayers do
         local playerSteamId = net.ReadString()
         local playerTrackedStatus = net.ReadInt(4)
 
