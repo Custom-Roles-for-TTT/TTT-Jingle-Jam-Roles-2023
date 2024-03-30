@@ -86,7 +86,7 @@ end)
 
 -- Reset scoreboard on given role
 hook.Add("TTTPlayerRoleChanged", "Physician_TTTPlayerRoleChanged", function(_, oldRole, newRole)
-    if oldRole ~= ROLE_PHYSICIAN and newRole == ROLE_PHYSICIAN then
+    if oldRole == ROLE_PHYSICIAN or newRole == ROLE_PHYSICIAN then
         ResetScoreboard()
     end
 end)
