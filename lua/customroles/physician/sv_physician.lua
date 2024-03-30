@@ -17,7 +17,10 @@ function PHYSICIAN:AddNewTrackedPlayer(physician, trackedPly)
 
     local physicianSteamId = physician:SteamID64()
 
-    self.tracking[physicianSteamId] = self.tracking[physicianSteamId] or {physicianSteamId = PHYSICIAN_TRACKER_ACTIVE}
+    if not self.tracking[physicianSteamId] then
+        self.tracking[physicianSteamId] = {}
+        self.tracking[physicianSteamId][physicianSteamId] = PHYSICIAN_TRACKER_ACTIVE
+    end
     self.tracking[physicianSteamId][trackedPly:SteamID64()] = PHYSICIAN_TRACKER_ACTIVE
 end
 
