@@ -12,6 +12,7 @@
     "*.rockspec",
     "*.vcproj",
     "*.svn*",
+    "*.tmpl",
     "LICENSE",
     "templates*",
     "images*"

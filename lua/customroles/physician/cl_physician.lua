@@ -69,7 +69,7 @@ end
 net.Receive("GetAllPhysicianTrackedPlayersCallback", function(len)
     local numPlayers = net.ReadInt(16)
 
-    for i = 0, numPlayers do
+    for i = 1, numPlayers do
         local playerSteamId = net.ReadString()
         local playerTrackedStatus = net.ReadInt(4)
 
@@ -86,7 +86,7 @@ end)
 
 -- Reset scoreboard on given role
 hook.Add("TTTPlayerRoleChanged", "Physician_TTTPlayerRoleChanged", function(_, oldRole, newRole)
-    if oldRole ~= ROLE_PHYSICIAN and newRole == ROLE_PHYSICIAN then
+    if oldRole == ROLE_PHYSICIAN or newRole == ROLE_PHYSICIAN then
         ResetScoreboard()
     end
 end)
