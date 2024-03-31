@@ -167,9 +167,14 @@ if SERVER then
         -- Send the message as a role message to all traitors and renegades
         else
             net.Start("TTT_RoleChat")
-            net.WriteInt(ply:GetRole(), 8)
-            net.WriteEntity(ply)
-            net.WriteString(text)
+                net.WriteInt(ply:GetRole(), 8)
+                -- TODO: Remove after 2.1.10 is pushed to release
+                if CRVersion("2.1.10") then
+                    net.WritePlayer(ply)
+                else
+                    net.WriteEntity(ply)
+                end
+                net.WriteString(text)
             net.Send(targets)
         end
         return ""
@@ -192,9 +197,14 @@ if SERVER then
             end
 
             net.Start("TTT_RoleChat")
-            net.WriteInt(ROLE_TRAITOR, 8)
-            net.WriteEntity(sender)
-            net.WriteString(msg)
+                net.WriteInt(ROLE_TRAITOR, 8)
+                -- TODO: Remove after 2.1.10 is pushed to release
+                if CRVersion("2.1.10") then
+                    net.WritePlayer(sender)
+                else
+                    net.WriteEntity(sender)
+                end
+                net.WriteString(msg)
             net.Send(renegades)
         -- Send renegade messages to traitors and themselves
         elseif sender:IsRenegade() then
