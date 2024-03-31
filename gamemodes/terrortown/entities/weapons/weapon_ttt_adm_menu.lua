@@ -1,16 +1,18 @@
 AddCSLuaFile()
 
-local math = math
-local util = util
-local timer = timer
-local hook = hook
-local table = table
 local ents = ents
+local hook = hook
+local math = math
+local player = player
+local table = table
+local timer = timer
+local util = util
 
 local MathRandom = math.random
 local MathRand = math.Rand
 local MathSqrt = math.sqrt
 local MathNormalizeAngle = math.NormalizeAngle
+local PlayerIterator = player.Iterator
 local TableInsert = table.insert
 
 if CLIENT then
@@ -251,7 +253,7 @@ function SWEP:PrimaryAttack()
                 dtargetto:AddColumn("Players")
             end
 
-            for _, p in ipairs(player.GetAll()) do
+            for _, p in PlayerIterator() do
                 local sid64 = p:SteamID64()
                 if sid64 == self:GetOwner():SteamID64() and CantTargetSelf(command) then continue end
                 dtarget:AddLine(p:Nick(), sid64)
