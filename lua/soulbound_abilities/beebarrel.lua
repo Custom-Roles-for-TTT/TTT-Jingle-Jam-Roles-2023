@@ -103,7 +103,7 @@ if CLIENT then
 
     function ABILITY:DrawHUD(soulbound, x, y, width, height, key)
         local max_uses = beebarrel_uses:GetInt()
-        local uses = soulbound:GetNWInt("TTTSoulboundbeeBarrelUses", 0)
+        local uses = soulbound:GetNWInt("TTTSoulboundBeeBarrelUses", 0)
         local margin = 6
         local ammo_height = 28
         if max_uses == 0 then
