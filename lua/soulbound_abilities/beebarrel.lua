@@ -19,6 +19,11 @@ table.insert(ROLE_CONVARS[ROLE_SOULBOUND], {
     type = ROLE_CONVAR_TYPE_NUM,
     decimal = 1
 })
+table.insert(ROLE_CONVARS[ROLE_SOULBOUND], {
+    cvar = "ttt_soulbound_beebarrel_bees",
+    type = ROLE_CONVAR_TYPE_NUM,
+    decimal = 0
+})
 
 if SERVER then
     local function BeeBarrelDamage(target, dmginfo)
