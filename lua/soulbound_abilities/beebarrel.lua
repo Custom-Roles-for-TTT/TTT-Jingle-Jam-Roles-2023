@@ -28,7 +28,7 @@ if SERVER then
             local model = target:GetModel()
             if model == "models/bee_drum/beedrum001_explosive.mdl" and dmginfo:GetDamage() >= 1 then
                 local pos = target:GetPos()
-                timer.Create("barrelbeesspawn",0.1,beebarrel_bees:GetInt(),function()
+                timer.Create("TTTSoulboundBeeBarrelSpawn",0.1,beebarrel_bees:GetInt(),function()
                     local spos = pos + Vector(math.random(-50, 50), math.random(-50, 50), math.random(0, 100))
                     local headBee = ents.Create("npc_manhack")
                     headBee:SetPos(spos)
@@ -49,8 +49,8 @@ if SERVER then
     end
 
     function ABILITY:Bought(soulbound)
-        soulbound:SetNWInt("TTTSoulboundbeeBarrelUses", beebarrel_uses:GetInt())
-        soulbound:SetNWFloat("TTTSoulboundbeeBarrelNextUse", CurTime())
+        soulbound:SetNWInt("TTTSoulboundBeeBarrelUses", beebarrel_uses:GetInt())
+        soulbound:SetNWFloat("TTTSoulboundBeeBarrelNextUse", CurTime())
         hook.Add( "EntityTakeDamage", "TTTSoulboundbeeBarrelDamage", BeebarrelDamage)
     end
 
@@ -80,12 +80,12 @@ if SERVER then
         local uses = soulbound:GetNWInt("TTTSoulboundbeeBarrelUses", 0)
         uses = math.max(uses - 1, 0)
         soulbound:SetNWInt("TTTSoulboundbeeBarrelUses", uses)
-        soulbound:SetNWFloat("TTTSoulboundbeeBarrelNextUse", CurTime() + beebarrel_cooldown:GetFloat())
+        soulbound:SetNWFloat("TTTSoulboundBeeBarrelNextUse", CurTime() + beebarrel_cooldown:GetFloat())
     end
 
     function ABILITY:Cleanup(soulbound)
-        soulbound:SetNWInt("TTTSoulboundbeeBarrelUses", 0)
-        soulbound:SetNWFloat("TTTSoulboundbeeBarrelNextUse", 0)
+        soulbound:SetNWInt("TTTSoulboundBeeBarrelUses", 0)
+        soulbound:SetNWFloat("TTTSoulboundBeeBarrelNextUse", 0)
     end
 end
 
@@ -98,7 +98,7 @@ if CLIENT then
 
     function ABILITY:DrawHUD(soulbound, x, y, width, height, key)
         local max_uses = beebarrel_uses:GetInt()
-        local uses = soulbound:GetNWInt("TTTSoulboundbeeBarrelUses", 0)
+        local uses = soulbound:GetNWInt("TTTSoulboundBeeBarrelUses", 0)
         local margin = 6
         local ammo_height = 28
         if max_uses == 0 then
@@ -111,7 +111,7 @@ if CLIENT then
 
         local ready = true
         local text = "Press '" .. key .. "' to place an bee barrel"
-        local next_use = soulbound:GetNWFloat("TTTSoulboundbeeBarrelNextUse")
+        local next_use = soulbound:GetNWFloat("TTTSoulboundBeeBarrelNextUse")
         local cur_time = CurTime()
         if max_uses > 0 and uses <= 0 then
             ready = false
