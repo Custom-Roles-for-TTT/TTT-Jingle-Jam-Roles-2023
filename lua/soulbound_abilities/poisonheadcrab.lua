@@ -42,7 +42,12 @@ if SERVER then
         local plyPos = soulbound:GetPos()
         local hitPos = soulbound:GetEyeTrace().HitPos
         local vec = hitPos - plyPos
-        local spawnPos = hitPos - (vec:GetNormalized() * 30)
+        local fwd = Vector(0, 0, 0)
+        if target then
+            fwd = soulbound:GetForward() * 48
+            vec = Vector(0, 0, -1)
+        end
+        local spawnPos = hitPos - (vec:GetNormalized() * 30) + fwd
 
         local ent = ents.Create("npc_headcrab_black")
         ent:SetPos(spawnPos)

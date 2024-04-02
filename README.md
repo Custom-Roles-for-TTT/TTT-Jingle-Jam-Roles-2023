@@ -138,6 +138,9 @@ The Soulbound is a traitor role who is created by the Soulmage. The Soulbound ca
 **ConVars**
 ```cpp
 ttt_soulbound_max_abilities             4   // The maximum number of abilities the Soulbound can buy. (Set to 0 to disable abilities)
+ttt_soulbound_beebarrel_enabled         1   // Whether the place bee barrel ability is enabled or not
+ttt_soulbound_beebarrel_uses            3   // How many uses should of the place bee barrel ability should the Soulbound get. (Set to 0 for unlimited uses)
+ttt_soulbound_beebarrel_cooldown        0   // How long should the Soulbound have to wait between uses of the place bee barrel ability
 ttt_soulbound_box_enabled               1   // Whether the place box ability is enabled or not
 ttt_soulbound_box_uses                  10  // How many uses should of the place box ability should the Soulbound get. (Set to 0 for unlimited uses)
 ttt_soulbound_box_cooldown              0   // How long should the Soulbound have to wait between uses of the place box ability
@@ -154,9 +157,6 @@ ttt_soulbound_discombob_fuse_time       5   // How long the fuse for the Soulbou
 ttt_soulbound_dropweapon_enabled        1   // Whether the drop weapon ability is enabled or not
 ttt_soulbound_dropweapon_uses           3   // How many uses should of the drop weapon ability should the Soulbound get. (Set to 0 for unlimited uses)
 ttt_soulbound_dropweapon_cooldown       10  // How long should the Soulbound have to wait between uses of the drop weapon ability
-ttt_soulbound_explosivebarrel_enabled   1   // Whether the place explosive barrel ability is enabled or not
-ttt_soulbound_explosivebarrel_uses      2   // How many uses should of the place explosive barrel ability should the Soulbound get. (Set to 0 for unlimited uses)
-ttt_soulbound_explosivebarrel_cooldown  0   // How long should the Soulbound have to wait between uses of the place explosive barrel ability
 ttt_soulbound_fakebody_enabled          1   // Whether the place fake body ability is enabled or not
 ttt_soulbound_fakebody_uses             1   // How many uses should of the place fake body ability should the Soulbound get. (Set to 0 for unlimited uses)
 ttt_soulbound_fakebody_cooldown         0   // How long should the Soulbound have to wait between uses of the place fake body ability

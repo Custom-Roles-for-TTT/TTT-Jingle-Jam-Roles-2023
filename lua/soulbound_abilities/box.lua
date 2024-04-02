@@ -36,7 +36,12 @@ if SERVER then
         local plyPos = soulbound:GetPos()
         local hitPos = soulbound:GetEyeTrace().HitPos
         local vec = hitPos - plyPos
-        local spawnPos = hitPos - (vec:GetNormalized() * 40)
+        local fwd = Vector(0, 0, 0)
+        if target then
+            fwd = soulbound:GetForward() * 64
+            vec = Vector(0, 0, -1)
+        end
+        local spawnPos = hitPos - (vec:GetNormalized() * 40) + fwd
 
         local ent = ents.Create("prop_physics")
         ent:SetModel("models/props_junk/wood_crate001a.mdl")
