@@ -138,6 +138,7 @@ The Soulbound is a traitor role who is created by the Soulmage. The Soulbound ca
 **ConVars**
 ```cpp
 ttt_soulbound_max_abilities             4   // The maximum number of abilities the Soulbound can buy. (Set to 0 to disable abilities)
+ttt_soulbound_beebarrel_bees            3   // The number of bees that spawn per exploded beebarrel
 ttt_soulbound_beebarrel_enabled         1   // Whether the place bee barrel ability is enabled or not
 ttt_soulbound_beebarrel_uses            3   // How many uses should of the place bee barrel ability should the Soulbound get. (Set to 0 for unlimited uses)
 ttt_soulbound_beebarrel_cooldown        0   // How long should the Soulbound have to wait between uses of the place bee barrel ability
