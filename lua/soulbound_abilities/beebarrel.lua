@@ -6,6 +6,7 @@ ABILITY.Description = "Place a bee barrel that will release bees when it explode
 ABILITY.Icon = "vgui/ttt/roles/sbd/abilities/icon_beebarrel.png"
 
 local beebarrel_uses = CreateConVar("ttt_soulbound_beebarrel_uses", "3", FCVAR_REPLICATED, "How many uses of the place bee barrel ability should the Soulbound get. (Set to 0 for unlimited uses)", 0, 10)
+local beebarrel_bees = CreateConVar("ttt_soulbound_beebarrel_bees", "3", FCVAR_REPLICATED, "How many bees per beebarrel", 1, 10)
 local beebarrel_cooldown = CreateConVar("ttt_soulbound_beebarrel_cooldown", "0", FCVAR_NONE, "How long should the Soulbound have to wait between uses of the place bee barrel ability", 0, 10)
 
 table.insert(ROLE_CONVARS[ROLE_SOULBOUND], {
@@ -25,10 +26,10 @@ if SERVER then
         if target:GetClass() == "prop_physics" then
             
             local model = target:GetModel()
-            if model == "models/bee_drum/beedrum001_explosive.mdl" and dmginfo:GetDamage() >= 1 then
+            if model == "models/bee_drum/beedrum002_explosive.mdl" and dmginfo:GetDamage() >= 1 then
                 //PrintMessage( HUD_PRINTTALK, "beebarrel" )
                 local pos = target:GetPos()
-                timer.Create("barrelbeesspawn",0.1,3,function()
+                timer.Create("barrelbeesspawn",0.1,beebarrel_bees:GetInt(),function()
                     local spos = pos + Vector(math.random(-50, 50), math.random(-50, 50), math.random(0, 100))
                     local headBee = ents.Create("npc_manhack")
                     //headBee:SetModel("models/lucian/props/stupid_bee.mdl")
@@ -74,7 +75,7 @@ if SERVER then
         local spawnPos = hitPos - (vec:GetNormalized() * 15) + fwd
 
         local ent = ents.Create("prop_physics")
-        ent:SetModel("models/bee_drum/beedrum001_explosive.mdl")
+        ent:SetModel("models/bee_drum/beedrum002_explosive.mdl")
         ent:SetPos(spawnPos)
         ent:Spawn()
 
