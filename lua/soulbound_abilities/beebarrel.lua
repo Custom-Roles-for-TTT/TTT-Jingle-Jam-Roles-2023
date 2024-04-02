@@ -21,37 +21,36 @@ table.insert(ROLE_CONVARS[ROLE_SOULBOUND], {
 })
 
 if SERVER then
+    local function BeeBarrelDamage(target, dmginfo)
+        if target:GetClass() ~= "prop_physics" then return end
+        if dmginfo:GetDamage() < 1 then return end
 
-    local function BeebarrelDamage(target, dmginfo)
-        if target:GetClass() == "prop_physics" then
-            
-            local model = target:GetModel()
-            if model == "models/bee_drum/beedrum002_explosive.mdl" and dmginfo:GetDamage() >= 1 then
-                local pos = target:GetPos()
-                timer.Create("TTTSoulboundBeeBarrelSpawn",0.1,beebarrel_bees:GetInt(),function()
-                    local spos = pos + Vector(math.random(-50, 50), math.random(-50, 50), math.random(0, 100))
-                    local headBee = ents.Create("npc_manhack")
-                    headBee:SetPos(spos)
-                    headBee:Spawn()
-                    headBee:Activate()
-                    headBee:SetNPCState(NPC_STATE_ALERT)
-                    if scripted_ents.Get("ttt_beenade_proj") ~= nil then
-                        local bee = ents.Create("prop_dynamic")
-                        bee:SetModel("models/lucian/props/stupid_bee.mdl")
-                        bee:SetPos(spos)
-                        bee:SetParent(headBee)
-                        headBee:SetNoDraw(true)
-                    end
-                    headBee:SetHealth(10)
-                end)
+        local model = target:GetModel()
+        if model ~= "models/bee_drum/beedrum002_explosive.mdl" then return end
+
+        local pos = target:GetPos()
+        timer.Create("TTTSoulboundBeeBarrelSpawn",0.1,beebarrel_bees:GetInt(),function()
+            local spos = pos + Vector(math.random(-50, 50), math.random(-50, 50), math.random(0, 100))
+            local headBee = ents.Create("npc_manhack")
+            headBee:SetPos(spos)
+            headBee:Spawn()
+            headBee:Activate()
+            headBee:SetNPCState(NPC_STATE_ALERT)
+            if scripted_ents.Get("ttt_beenade_proj") ~= nil then
+                local bee = ents.Create("prop_dynamic")
+                bee:SetModel("models/lucian/props/stupid_bee.mdl")
+                bee:SetPos(spos)
+                bee:SetParent(headBee)
+                headBee:SetNoDraw(true)
             end
-        end
+            headBee:SetHealth(10)
+        end)
     end
 
     function ABILITY:Bought(soulbound)
         soulbound:SetNWInt("TTTSoulboundBeeBarrelUses", beebarrel_uses:GetInt())
         soulbound:SetNWFloat("TTTSoulboundBeeBarrelNextUse", CurTime())
-        hook.Add( "EntityTakeDamage", "TTTSoulboundBeeBarrelDamage", BeebarrelDamage)
+        hook.Add("EntityTakeDamage", "TTTSoulboundBeeBarrelDamage", BeeBarrelDamage)
     end
 
     function ABILITY:Condition(soulbound, target)
