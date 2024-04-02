@@ -90,7 +90,7 @@ if SERVER then
 
     function ABILITY:Cleanup(soulbound)
         soulbound:SetNWInt("TTTSoulboundBeeBarrelUses", 0)
-        soulbound:SetNWFloat("TTTSoulboundbeeBarrelNextUse", 0)
+        soulbound:SetNWFloat("TTTSoulboundBeeBarrelNextUse", 0)
     end
 end
 
