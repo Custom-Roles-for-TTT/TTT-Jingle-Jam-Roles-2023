@@ -116,7 +116,7 @@ if CLIENT then
 
         local ready = true
         local text = "Press '" .. key .. "' to place an bee barrel"
-        local next_use = soulbound:GetNWFloat("TTTSoulboundbeeBarrelNextUse")
+        local next_use = soulbound:GetNWFloat("TTTSoulboundBeeBarrelNextUse")
         local cur_time = CurTime()
         if max_uses > 0 and uses <= 0 then
             ready = false
