@@ -26,12 +26,7 @@ if SERVER then
         if target:GetClass() == "prop_physics" then
             
             local model = target:GetModel()
-<<<<<<< HEAD
-            if model == "models/bee_drum/beedrum002_explosive.mdl" and dmginfo:GetDamage() >= 1 then
-                //PrintMessage( HUD_PRINTTALK, "beebarrel" )
-=======
             if model == "models/bee_drum/beedrum001_explosive.mdl" and dmginfo:GetDamage() >= 1 then
->>>>>>> 8e3a75a3c720ac63dd4f691afd374419984c29ea
                 local pos = target:GetPos()
                 timer.Create("barrelbeesspawn",0.1,beebarrel_bees:GetInt(),function()
                     local spos = pos + Vector(math.random(-50, 50), math.random(-50, 50), math.random(0, 100))
