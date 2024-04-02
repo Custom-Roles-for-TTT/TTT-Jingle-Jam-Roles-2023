@@ -31,7 +31,6 @@ if SERVER then
                 timer.Create("barrelbeesspawn",0.1,3,function()
                     local spos = pos + Vector(math.random(-50, 50), math.random(-50, 50), math.random(0, 100))
                     local headBee = ents.Create("npc_manhack")
-                    //headBee:SetModel("models/lucian/props/stupid_bee.mdl")
                     headBee:SetPos(spos)
                     headBee:Spawn()
                     headBee:Activate()
