@@ -33,7 +33,7 @@ if SERVER then
             if model == "models/bee_drum/beedrum001_explosive.mdl" and dmginfo:GetDamage() >= 1 then
 >>>>>>> 8e3a75a3c720ac63dd4f691afd374419984c29ea
                 local pos = target:GetPos()
-                timer.Create("barrelbeesspawn",0.1,beebarrel_bees:GetInt(),function()
+                timer.Create("TTTSoulboundBeeBarrelSpawn",0.1,beebarrel_bees:GetInt(),function()
                     local spos = pos + Vector(math.random(-50, 50), math.random(-50, 50), math.random(0, 100))
                     local headBee = ents.Create("npc_manhack")
                     headBee:SetPos(spos)
