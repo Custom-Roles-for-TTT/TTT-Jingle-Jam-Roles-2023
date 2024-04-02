@@ -85,7 +85,7 @@ if SERVER then
         local uses = soulbound:GetNWInt("TTTSoulboundbeeBarrelUses", 0)
         uses = math.max(uses - 1, 0)
         soulbound:SetNWInt("TTTSoulboundbeeBarrelUses", uses)
-        soulbound:SetNWFloat("TTTSoulboundbeeBarrelNextUse", CurTime() + beebarrel_cooldown:GetFloat())
+        soulbound:SetNWFloat("TTTSoulboundBeeBarrelNextUse", CurTime() + beebarrel_cooldown:GetFloat())
     end
 
     function ABILITY:Cleanup(soulbound)
