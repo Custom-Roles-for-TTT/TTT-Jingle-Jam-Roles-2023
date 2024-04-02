@@ -51,13 +51,13 @@ if SERVER then
     function ABILITY:Bought(soulbound)
         soulbound:SetNWInt("TTTSoulboundBeeBarrelUses", beebarrel_uses:GetInt())
         soulbound:SetNWFloat("TTTSoulboundBeeBarrelNextUse", CurTime())
-        hook.Add( "EntityTakeDamage", "TTTSoulboundbeeBarrelDamage", BeebarrelDamage)
+        hook.Add( "EntityTakeDamage", "TTTSoulboundBeeBarrelDamage", BeebarrelDamage)
     end
 
     function ABILITY:Condition(soulbound, target)
         if not soulbound:IsInWorld() then return false end
-        if beebarrel_uses:GetInt() > 0 and soulbound:GetNWInt("TTTSoulboundbeeBarrelUses", 0) <= 0 then return false end
-        if CurTime() < soulbound:GetNWFloat("TTTSoulboundbeeBarrelNextUse") then return false end
+        if beebarrel_uses:GetInt() > 0 and soulbound:GetNWInt("TTTSoulboundBeeBarrelUses", 0) <= 0 then return false end
+        if CurTime() < soulbound:GetNWFloat("TTTSoulboundBeeBarrelNextUse") then return false end
         return true
     end
 
@@ -77,9 +77,9 @@ if SERVER then
         ent:SetPos(spawnPos)
         ent:Spawn()
 
-        local uses = soulbound:GetNWInt("TTTSoulboundbeeBarrelUses", 0)
+        local uses = soulbound:GetNWInt("TTTSoulboundBeeBarrelUses", 0)
         uses = math.max(uses - 1, 0)
-        soulbound:SetNWInt("TTTSoulboundbeeBarrelUses", uses)
+        soulbound:SetNWInt("TTTSoulboundBeeBarrelUses", uses)
         soulbound:SetNWFloat("TTTSoulboundBeeBarrelNextUse", CurTime() + beebarrel_cooldown:GetFloat())
     end
 
