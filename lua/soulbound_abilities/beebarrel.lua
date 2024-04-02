@@ -54,7 +54,7 @@ if SERVER then
     end
 
     function ABILITY:Bought(soulbound)
-        soulbound:SetNWInt("TTTSoulboundbeeBarrelUses", beebarrel_uses:GetInt())
+        soulbound:SetNWInt("TTTSoulboundBeeBarrelUses", beebarrel_uses:GetInt())
         soulbound:SetNWFloat("TTTSoulboundbeeBarrelNextUse", CurTime())
         hook.Add( "EntityTakeDamage", "TTTSoulboundbeeBarrelDamage", BeebarrelDamage)
     end
