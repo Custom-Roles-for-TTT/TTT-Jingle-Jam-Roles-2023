@@ -54,8 +54,8 @@ SOULBOUND = {
     Abilities = {}
 }
 
-function SOULBOUND:RegisterAbility(ability, enabled)
-    enabled = enabled or 1
+function SOULBOUND:RegisterAbility(ability, defaultEnabled)
+    defaultEnabled = defaultEnabled or 1
     ability.Id = ability.Id or ability.id or ability.ID
 
     if SOULBOUND.Abilities[ability.Id] then
@@ -63,7 +63,7 @@ function SOULBOUND:RegisterAbility(ability, enabled)
         return
     end
 
-    local enabled = CreateConVar("ttt_soulbound_" .. ability.Id .. "_enabled", tostring(enabled), FCVAR_REPLICATED)
+    local enabled = CreateConVar("ttt_soulbound_" .. ability.Id .. "_enabled", tostring(defaultEnabled), FCVAR_REPLICATED)
     ability.Enabled = function()
         return enabled:GetBool()
     end
