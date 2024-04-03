@@ -93,6 +93,14 @@ if SERVER then
     end
 end
 
+local enabled = GetConVar("ttt_soulbound_beebarrel_enabled")
+hook.Add("TTTPrepareRound", "Soulbound_beebarrel_TTTPrepareRound", function()
+    if enabled:GetBool() and not scripted_ents.Get("ttt_beenade_proj") then
+        ErrorNoHalt("WARNING: Jenssen's BeeNade must be installed to enable the Soulbound's Place Bee Barrel ability!\n")
+        enabled:SetBool(false)
+    end
+end)
+
 if CLIENT then
     local ammo_colors = {
         border = COLOR_WHITE,

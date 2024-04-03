@@ -138,10 +138,6 @@ The Soulbound is a traitor role who is created by the Soulmage. The Soulbound ca
 **ConVars**
 ```cpp
 ttt_soulbound_max_abilities             4   // The maximum number of abilities the Soulbound can buy. (Set to 0 to disable abilities)
-ttt_soulbound_beebarrel_bees            3   // The number of bees that spawn per exploded beebarrel
-ttt_soulbound_beebarrel_enabled         1   // Whether the place bee barrel ability is enabled or not
-ttt_soulbound_beebarrel_uses            3   // How many uses should of the place bee barrel ability should the Soulbound get. (Set to 0 for unlimited uses)
-ttt_soulbound_beebarrel_cooldown        0   // How long should the Soulbound have to wait between uses of the place bee barrel ability
 ttt_soulbound_box_enabled               1   // Whether the place box ability is enabled or not
 ttt_soulbound_box_uses                  10  // How many uses should of the place box ability should the Soulbound get. (Set to 0 for unlimited uses)
 ttt_soulbound_box_cooldown              0   // How long should the Soulbound have to wait between uses of the place box ability
@@ -156,6 +152,9 @@ ttt_soulbound_discombob_uses            2   // How many uses should of the disco
 ttt_soulbound_discombob_cooldown        1   // How long should the Soulbound have to wait between uses of the discombobulator ability
 ttt_soulbound_discombob_fuse_time       5   // How long the fuse for the Soulbound's discombobulator should be
 ttt_soulbound_dropweapon_enabled        1   // Whether the drop weapon ability is enabled or not
+ttt_soulbound_explosivebarrel_enabled   1   // Whether the place explosive barrel ability is enabled or not
+ttt_soulbound_explosivebarrel_uses      2   // How many uses should of the place explosive barrel ability should the Soulbound get. (Set to 0 for unlimited uses)
+ttt_soulbound_explosivebarrel_cooldown  0   // How long should the Soulbound have to wait between uses of the place explosive barrel ability
 ttt_soulbound_dropweapon_uses           3   // How many uses should of the drop weapon ability should the Soulbound get. (Set to 0 for unlimited uses)
 ttt_soulbound_dropweapon_cooldown       10  // How long should the Soulbound have to wait between uses of the drop weapon ability
 ttt_soulbound_fakebody_enabled          1   // Whether the place fake body ability is enabled or not
@@ -194,6 +193,10 @@ ttt_soulbound_smoke_linger_time         30  // How long the fuse for the Soulbou
 ttt_soulbound_swapinventory_enabled     1   // Whether the swap inventory ability is enabled or not
 ttt_soulbound_swapinventory_uses        1   // How many uses should of the swap inventory ability should the Soulbound get. (Set to 0 for unlimited uses)
 ttt_soulbound_swapinventory_cooldown    0   // How long should the Soulbound have to wait between uses of the swap inventory ability
+ttt_soulbound_beebarrel_enabled         1   // Whether the place bee barrel ability is enabled or not
+ttt_soulbound_beebarrel_uses            3   // How many uses should of the place bee barrel ability should the Soulbound get. (Set to 0 for unlimited uses)
+ttt_soulbound_beebarrel_cooldown        0   // How long should the Soulbound have to wait between uses of the place bee barrel ability
+ttt_soulbound_beebarrel_bees            3   // The number of bees that spawn per exploded beebarrel
 ttt_soulbound_packapunch_enabled        1   // Whether the Pack-a-Punch ability is enabled or not. Requires Pack-a-Punch mod
 ttt_soulbound_packapunch_uses           1   // How many uses should of the Pack-a-Punch ability should the Soulbound get. Requires Pack-a-Punch mod. (Set to 0 for unlimited uses)
 ttt_soulbound_packapunch_cooldown       5   // How long should the Soulbound have to wait between uses of the Pack-a-Punch ability. Requires Pack-a-Punch mod
