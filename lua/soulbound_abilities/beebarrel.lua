@@ -34,7 +34,7 @@ if SERVER then
         if model ~= "models/bee_drum/beedrum002_explosive.mdl" then return end
 
         local pos = target:GetPos()
-        timer.Create("TTTSoulboundBeeBarrelSpawn",0.1,beebarrel_bees:GetInt(),function()
+        timer.Create("TTTSoulboundBeeBarrelSpawn", 0.1, beebarrel_bees:GetInt(), function()
             local spos = pos + Vector(math.random(-50, 50), math.random(-50, 50), math.random(0, 100))
             local headBee = ents.Create("npc_manhack")
             headBee:SetPos(spos)
