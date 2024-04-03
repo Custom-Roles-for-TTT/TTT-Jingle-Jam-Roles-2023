@@ -152,7 +152,7 @@ ttt_soulbound_discombob_uses            2   // How many uses should of the disco
 ttt_soulbound_discombob_cooldown        1   // How long should the Soulbound have to wait between uses of the discombobulator ability
 ttt_soulbound_discombob_fuse_time       5   // How long the fuse for the Soulbound's discombobulator should be
 ttt_soulbound_dropweapon_enabled        1   // Whether the drop weapon ability is enabled or not
-ttt_soulbound_explosivebarrel_enabled   1   // Whether the place explosive barrel ability is enabled or not
+ttt_soulbound_explosivebarrel_enabled   0   // Whether the place explosive barrel ability is enabled or not
 ttt_soulbound_explosivebarrel_uses      2   // How many uses should of the place explosive barrel ability should the Soulbound get. (Set to 0 for unlimited uses)
 ttt_soulbound_explosivebarrel_cooldown  0   // How long should the Soulbound have to wait between uses of the place explosive barrel ability
 ttt_soulbound_dropweapon_uses           3   // How many uses should of the drop weapon ability should the Soulbound get. (Set to 0 for unlimited uses)
