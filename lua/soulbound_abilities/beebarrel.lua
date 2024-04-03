@@ -94,9 +94,9 @@ if SERVER then
 end
 
 local enabled = GetConVar("ttt_soulbound_beebarrel_enabled")
-hook.Add("TTTPrepareRound", "Soulbound_beebarrel_TTTPrepareRound", function()
+hook.Add("TTTPrepareRound", "Soulbound_BeeBarrel_TTTPrepareRound", function()
     if enabled:GetBool() and not scripted_ents.Get("ttt_beenade_proj") then
-        ErrorNoHalt("WARNING: Jenssen's BeeNade must be installed to enable the Soulbound's Place Bee Barrel ability!\n")
+        ErrorNoHalt("WARNING: Jenssen's BeeNade must be installed to enable the Soulbound's place bee barrel ability!\n")
         enabled:SetBool(false)
     end
 end)
