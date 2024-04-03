@@ -193,7 +193,7 @@ ttt_soulbound_smoke_linger_time         30  // How long the fuse for the Soulbou
 ttt_soulbound_swapinventory_enabled     1   // Whether the swap inventory ability is enabled or not
 ttt_soulbound_swapinventory_uses        1   // How many uses should of the swap inventory ability should the Soulbound get. (Set to 0 for unlimited uses)
 ttt_soulbound_swapinventory_cooldown    0   // How long should the Soulbound have to wait between uses of the swap inventory ability
-ttt_soulbound_beebarrel_enabled         1   // Whether the place bee barrel ability is enabled or not
+ttt_soulbound_beebarrel_enabled         1   // Whether the place bee barrel ability is enabled or not. Requires Jensson's BeeNade mod
 ttt_soulbound_beebarrel_uses            3   // How many uses should of the place bee barrel ability should the Soulbound get. (Set to 0 for unlimited uses)
 ttt_soulbound_beebarrel_cooldown        0   // How long should the Soulbound have to wait between uses of the place bee barrel ability
 ttt_soulbound_beebarrel_bees            3   // The number of bees that spawn per exploded beebarrel
