@@ -1,3 +1,7 @@
+local player = player
+
+local PlayerIterator = player.Iterator
+
 local ABILITY = {}
 
 ABILITY.Name = "Revealing Presence"
@@ -44,7 +48,7 @@ if CLIENT then
         highlighted_players = {}
         if not IsPlayer(client) or not client:Alive() or client:IsSpec() then return end
         if not client:IsTraitorTeam() then return end
-        for _, v in ipairs(player.GetAll()) do
+        for _, v in PlayerIterator() do
             if not v:IsSoulbound() then continue end
             if not v:GetNWBool("TTTSoulboundRevealBought", false) then continue end
 

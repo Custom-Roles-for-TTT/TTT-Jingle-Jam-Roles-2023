@@ -1,8 +1,11 @@
-local net = net
-local util = util
-local table = table
-local hook = hook
 local draw = draw
+local hook = hook
+local player = player
+local table = table
+local timer = timer
+local util = util
+
+local PlayerIterator = player.Iterator
 
 local ROLE = {}
 
@@ -123,7 +126,7 @@ if SERVER then
     util.AddNetworkString("TTT_AdminMessage")
 
     hook.Add("TTTPrepareRound", "Admin_TTTPrepareRound", function()
-        for _, p in ipairs(player.GetAll()) do
+        for _, p in PlayerIterator() do
             p:SetNWInt("TTTAdminPower", 0)
         end
     end)
@@ -132,7 +135,7 @@ if SERVER then
         local time = admin_power_rate:GetFloat()
         if time <= 0 then return end
         timer.Create("AdminPowerTimer", time, 0, function()
-            for _, p in ipairs(player.GetAll()) do
+            for _, p in PlayerIterator() do
                 if p:IsActiveAdmin() then
                     local power = p:GetNWInt("TTTAdminPower")
                     if power < 100 then
@@ -145,7 +148,7 @@ if SERVER then
     end)
 
     hook.Add("TTTEndRound", "Admin_TTTEndRound", function()
-        for _, p in ipairs(player.GetAll()) do
+        for _, p in PlayerIterator() do
             p:SetNWInt("TTTAdminPower", 0)
         end
         timer.Remove("AdminPowerTimer")

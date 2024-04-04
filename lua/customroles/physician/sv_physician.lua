@@ -1,6 +1,10 @@
 -- Logan Christianson
 AddCSLuaFile()
 
+local player = player
+
+local PlayerIterator = player.Iterator
+
 util.AddNetworkString("GetAllPhysicianTrackedPlayers")
 util.AddNetworkString("GetAllPhysicianTrackedPlayersCallback")
 
@@ -25,7 +29,7 @@ function PHYSICIAN:AddNewTrackedPlayer(physician, trackedPly)
 end
 
 function PHYSICIAN:DestructTracker(plyToDestruct, plyCauser) -- Doing anything with plyCauser?
-    for _, v in ipairs(player.GetAll()) do
+    for _, v in PlayerIterator() do
         local plyId = v:SteamID64()
 
         if self.tracking[plyId] then
@@ -58,7 +62,7 @@ net.Receive("GetAllPhysicianTrackedPlayers", function(len, ply)
     maxDist = maxDist * 10
     maxDist = maxDist * maxDist
 
-    for _, p in pairs(player.GetAll()) do
+    for _, p in PlayerIterator() do
         local plyId = p:SteamID64()
         if PHYSICIAN.tracking[physicianSteamId][plyId] and (not p:Alive() or plyPos:DistToSqr(p:GetPos()) > maxDist) then
             distanceOverride[plyId] = PHYSICIAN_TRACKER_DEAD

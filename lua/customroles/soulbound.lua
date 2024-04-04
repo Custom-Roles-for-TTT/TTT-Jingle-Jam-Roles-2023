@@ -1,3 +1,7 @@
+local player = player
+
+local PlayerIterator = player.Iterator
+
 local ROLE = {}
 
 ROLE.nameraw = "soulbound"
@@ -109,7 +113,7 @@ if SERVER then
     -----------------------
 
     hook.Add("Think", "Soulbound_Think", function()
-        for _, p in ipairs(player.GetAll()) do
+        for _, p in PlayerIterator() do
             if p:IsSoulbound() then
                 local max = soulbound_max_abilities:GetInt()
                 for i = 1, max do
@@ -155,7 +159,7 @@ if SERVER then
     -------------
 
     hook.Add("TTTPrepareRound", "Soulbound_TTTPrepareRound", function()
-        for _, p in ipairs(player.GetAll()) do
+        for _, p in PlayerIterator() do
             for i = 1, soulbound_max_abilities:GetInt() do
                 local id = p:GetNWString("TTTSoulboundAbility" .. tostring(i), "")
                 if #id > 0 then
