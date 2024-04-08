@@ -4,7 +4,6 @@ local cam = cam
 local concommand = concommand
 local draw = draw
 local ents = ents
-local ipairs = ipairs
 local IsValid = IsValid
 local math = math
 local net = net
@@ -13,6 +12,9 @@ local surface = surface
 local table = table
 local timer = timer
 local util = util
+
+local GetAllPlayers = player.GetAll
+local PlayerIterator = player.Iterator
 
 if SERVER then
     AddCSLuaFile("cl_init.lua")
@@ -100,7 +102,7 @@ function ENT:WeldToGround(state)
     if state then
         -- getgroundentity does not work for non-players
         -- so sweep ent downward to find what we're lying on
-        local ignore = player.GetAll()
+        local ignore = GetAllPlayers()
         table.insert(ignore, self)
 
         local tr = util.TraceEntity({ start = self:GetPos(), endpos = self:GetPos() - Vector(0, 0, 16), filter = ignore, mask = MASK_SOLID }, self)
@@ -198,7 +200,7 @@ function ENT:IsDetectiveNear()
     local r = self.DetectiveNearRadius ^ 2
     local d
     local diff
-    for _, ent in ipairs(player.GetAll()) do
+    for _, ent in PlayerIterator() do
         if IsValid(ent) and ent:IsActiveDetectiveLike() then
             -- dot of the difference with itself is distance squared
             diff = center - ent:GetPos()

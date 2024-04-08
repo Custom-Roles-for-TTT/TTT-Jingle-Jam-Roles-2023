@@ -4,7 +4,7 @@ local string = string
 local table = table
 
 local AddHook = hook.Add
-local GetAllPlayers = player.GetAll
+local PlayerIterator = player.Iterator
 local StringUpper = string.upper
 local StringLower = string.lower
 local TableInsert = table.insert
@@ -73,11 +73,9 @@ if SERVER then
     -- Warn other players that there is a renegade
     AddHook("TTTBeginRound", "Renegade_Announce_TTTBeginRound", function()
         timer.Simple(1.5, function()
-            local plys = GetAllPlayers()
-
             local renegade = nil
             local hasGlitch = false
-            for _, v in ipairs(plys) do
+            for _, v in PlayerIterator() do
                 if v:IsRenegade() then
                     renegade = v
                 elseif v:IsGlitch() then
@@ -86,7 +84,7 @@ if SERVER then
             end
 
             if renegade then
-                for _, v in ipairs(plys) do
+                for _, v in PlayerIterator() do
                     -- Warn the Renegade about the glitch, if there is one
                     -- Do this in the loop in case there are multiple renegades
                     if v:IsRenegade() then
@@ -116,7 +114,7 @@ if SERVER then
     AddHook("TTTCheckForWin", "Renegade_TTTCheckForWin", function()
         local renegade_alive = false
         local other_alive = false
-        for _, v in ipairs(GetAllPlayers()) do
+        for _, v in PlayerIterator() do
             if v:IsActive() then
                 if v:IsRenegade() then
                     renegade_alive = true
@@ -153,7 +151,7 @@ if SERVER then
 
         local hasGlitch = false
         local targets = {}
-        for _, v in pairs(GetAllPlayers()) do
+        for _, v in PlayerIterator() do
             if v:IsGlitch() then
                 hasGlitch = true
             elseif v:IsTraitorTeam() or v:IsRenegade() then
@@ -167,9 +165,14 @@ if SERVER then
         -- Send the message as a role message to all traitors and renegades
         else
             net.Start("TTT_RoleChat")
-            net.WriteInt(ply:GetRole(), 8)
-            net.WriteEntity(ply)
-            net.WriteString(text)
+                net.WriteInt(ply:GetRole(), 8)
+                -- TODO: Remove after 2.1.10 is pushed to release
+                if CRVersion("2.1.10") then
+                    net.WritePlayer(ply)
+                else
+                    net.WriteEntity(ply)
+                end
+                net.WriteString(text)
             net.Send(targets)
         end
         return ""
@@ -185,20 +188,25 @@ if SERVER then
             if not from_chat then return end
 
             local renegades = {}
-            for _, v in ipairs(GetAllPlayers()) do
+            for _, v in PlayerIterator() do
                 if v:IsActive() and v:IsRenegade() then
                     TableInsert(renegades, v)
                 end
             end
 
             net.Start("TTT_RoleChat")
-            net.WriteInt(ROLE_TRAITOR, 8)
-            net.WriteEntity(sender)
-            net.WriteString(msg)
+                net.WriteInt(ROLE_TRAITOR, 8)
+                -- TODO: Remove after 2.1.10 is pushed to release
+                if CRVersion("2.1.10") then
+                    net.WritePlayer(sender)
+                else
+                    net.WriteEntity(sender)
+                end
+                net.WriteString(msg)
             net.Send(renegades)
         -- Send renegade messages to traitors and themselves
         elseif sender:IsRenegade() then
-            for _, v in ipairs(GetAllPlayers()) do
+            for _, v in PlayerIterator() do
                 if v:IsActive() and (v:IsRenegade() or v:IsTraitorTeam()) then
                     TableInsert(targets, v)
                 end
@@ -212,14 +220,14 @@ if SERVER then
 
         -- Add renegades to the traitor team target list
         if speaker:IsTraitorTeam() then
-            for _, v in ipairs(GetAllPlayers()) do
+            for _, v in PlayerIterator() do
                 if v:IsActive() and v:IsRenegade() then
                     TableInsert(targets, v)
                 end
             end
         -- Send renegade messages to traitors and themselves
         elseif speaker:IsRenegade() then
-            for _, v in ipairs(GetAllPlayers()) do
+            for _, v in PlayerIterator() do
                 if v:IsActive() and (v:IsRenegade() or v:IsTraitorTeam()) then
                     TableInsert(targets, v)
                 end
@@ -323,7 +331,7 @@ if CLIENT then
         if not cli:IsRenegade() then return end
 
         local traitorlist = ""
-        for _, ply in ipairs(GetAllPlayers()) do
+        for _, ply in PlayerIterator() do
             if ply:IsTraitorTeam() then
                 traitorlist = traitorlist .. string.rep(" ", 42) .. ply:Nick() .. "\n"
             -- Don't show the list of comrades if there is a glitch
@@ -339,7 +347,7 @@ if CLIENT then
         if not cli:IsRenegade() then return end
         if not renegade_show_glitch:GetBool() then return end
 
-        for _, ply in ipairs(GetAllPlayers()) do
+        for _, ply in PlayerIterator() do
             -- Show a different popup if there is a glitch
             if renegade_show_glitch:GetBool() and ply:IsGlitch() then
                 return roleString .. "_glitch"

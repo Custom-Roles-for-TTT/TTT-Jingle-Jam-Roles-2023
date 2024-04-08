@@ -1,3 +1,7 @@
+local player = player
+
+local PlayerIterator = player.Iterator
+
 local ROLE = {}
 
 ROLE.nameraw = "ghostwhisperer"
@@ -28,7 +32,7 @@ RegisterRole(ROLE)
 
 if SERVER then
     hook.Add("TTTPrepareRound", "GhostWhisperer_TTTPrepareRound", function()
-        for _, p in ipairs(player.GetAll()) do
+        for _, p in PlayerIterator() do
             p:SetNWBool("TTTIsGhosting", false)
         end
     end)
