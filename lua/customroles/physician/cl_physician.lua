@@ -88,7 +88,14 @@ end)
 hook.Add("TTTPlayerRoleChanged", "Physician_TTTPlayerRoleChanged", function(_, oldRole, newRole)
     if oldRole == ROLE_PHYSICIAN or newRole == ROLE_PHYSICIAN then
         ResetScoreboard()
+        PHYSICIAN.trackedPlayers = {}
     end
+end)
+
+-- Reset scoreboard when a new round starts
+hook.Add("TTTPrepareRound", "Physician_Cleaup_TTTPrepareRound", function()
+    ResetScoreboard()
+    PHYSICIAN.trackedPlayers = {}
 end)
 
 hook.Add("TTTScoreboardColumns", "Physician_TTTScoreboardColumns", function(basePanel)
