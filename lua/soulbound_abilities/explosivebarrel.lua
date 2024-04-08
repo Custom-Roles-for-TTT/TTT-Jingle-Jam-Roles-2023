@@ -95,4 +95,4 @@ if CLIENT then
     end
 end
 
-SOULBOUND:RegisterAbility(ABILITY)
+SOULBOUND:RegisterAbility(ABILITY, 0)
