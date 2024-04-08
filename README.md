@@ -101,8 +101,8 @@ ttt_physician_spawn_weight          1   // The weight assigned to spawning the p
 ttt_physician_min_players           0   // The minimum number of players required to spawn the physician
 ttt_physician_starting_health       100 // The amount of health a physician starts with
 ttt_physician_max_health            100 // The maximum amount of health a physician can have
-ttt_physician_tracker_range_default 200 // Default range of the physician's tracker device
-ttt_physician_tracker_range_boosted 400 // Boosted range of the physician's tracker device after the upgrade has been purchased
+ttt_physician_tracker_range_default 50  // Default range of the physician's tracker device in meters
+ttt_physician_tracker_range_boosted 100 // Boosted range of the physician's tracker device in meters after the upgrade has been purchased
 ttt_physician_credits_starting      1   // The number of credits a physician should start with
 ttt_physician_shop_sync             0   // Whether a physician should have all weapons that vanilla detectives have in their weapon shop
 ttt_physician_shop_random_percent   0   // The percent chance that a weapon in the shop will be not be shown for the physician
