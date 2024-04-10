@@ -214,7 +214,7 @@ ttt_soulmage_spawn_weight           1   // The weight assigned to spawning the S
 ttt_soulmage_min_players            0   // The minimum number of players required to spawn the Soulmage
 ttt_soulmage_starting_health        100 // The amount of health a Soulmage starts with
 ttt_soulmage_max_health             100 // The maximum amount of health a Soulmage can have
-ttt_soulmage_ghosting_time          8   // The amount of time (in seconds) the Soulmage's soulbinding device takes to use
+ttt_soulmage_soulbinding_time       8   // The amount of time (in seconds) the Soulmage's soulbinding device takes to use
 ttt_soulmage_credits_starting       0   // The number of credits a Soulmage should start with
 ttt_soulmage_shop_sync              0   // Whether Soulmages should have all weapons that vanilla traitors have in their weapon shop
 ttt_soulmage_shop_random_percent    0   // The percent chance that a weapon in the shop will be not be shown for Soulmages
