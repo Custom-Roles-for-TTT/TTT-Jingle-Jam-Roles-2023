@@ -59,7 +59,7 @@ net.Receive("GetAllPhysicianTrackedPlayers", function(len, ply)
         maxDist = GetConVar("ttt_physician_tracker_range_default"):GetInt()
     end
 
-    maxDist = maxDist * 10
+    maxDist = maxDist * UNITS_PER_METER
     maxDist = maxDist * maxDist
 
     for _, p in PlayerIterator() do

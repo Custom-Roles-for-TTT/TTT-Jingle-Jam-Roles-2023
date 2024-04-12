@@ -55,8 +55,8 @@ end)
 if SERVER then
     AddCSLuaFile()
 
-    CreateConVar("ttt_physician_tracker_range_default", "200", FCVAR_NONE, "Default range of the Physician's tracker device", 0, 300)
-    CreateConVar("ttt_physician_tracker_range_boosted", "400", FCVAR_NONE, "Boosted range of the Physician's tracker device after the upgrade has been purchased", 300, 600)
+    CreateConVar("ttt_physician_tracker_range_default", "50", FCVAR_NONE, "Default range of the Physician's tracker device in meters", 0, 250)
+    CreateConVar("ttt_physician_tracker_range_boosted", "100", FCVAR_NONE, "Boosted range of the Physician's tracker device in meters after the upgrade has been purchased", 0, 500)
 
     ROLE.moverolestate = function(source, target, keepOnSource)
         local sourceId = source:SteamID64()

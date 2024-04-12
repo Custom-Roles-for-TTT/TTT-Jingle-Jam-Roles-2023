@@ -101,8 +101,8 @@ ttt_physician_spawn_weight          1   // The weight assigned to spawning the p
 ttt_physician_min_players           0   // The minimum number of players required to spawn the physician
 ttt_physician_starting_health       100 // The amount of health a physician starts with
 ttt_physician_max_health            100 // The maximum amount of health a physician can have
-ttt_physician_tracker_range_default 200 // Default range of the physician's tracker device
-ttt_physician_tracker_range_boosted 400 // Boosted range of the physician's tracker device after the upgrade has been purchased
+ttt_physician_tracker_range_default 50  // Default range of the physician's tracker device in meters
+ttt_physician_tracker_range_boosted 100 // Boosted range of the physician's tracker device in meters after the upgrade has been purchased
 ttt_physician_credits_starting      1   // The number of credits a physician should start with
 ttt_physician_shop_sync             0   // Whether a physician should have all weapons that vanilla detectives have in their weapon shop
 ttt_physician_shop_random_percent   0   // The percent chance that a weapon in the shop will be not be shown for the physician
@@ -154,7 +154,7 @@ ttt_soulbound_discombob_fuse_time       5   // How long the fuse for the Soulbou
 ttt_soulbound_dropweapon_enabled        1   // Whether the drop weapon ability is enabled or not
 ttt_soulbound_dropweapon_uses           3   // How many uses should of the drop weapon ability should the Soulbound get. (Set to 0 for unlimited uses)
 ttt_soulbound_dropweapon_cooldown       10  // How long should the Soulbound have to wait between uses of the drop weapon ability
-ttt_soulbound_explosivebarrel_enabled   1   // Whether the place explosive barrel ability is enabled or not
+ttt_soulbound_explosivebarrel_enabled   0   // Whether the place explosive barrel ability is enabled or not
 ttt_soulbound_explosivebarrel_uses      2   // How many uses should of the place explosive barrel ability should the Soulbound get. (Set to 0 for unlimited uses)
 ttt_soulbound_explosivebarrel_cooldown  0   // How long should the Soulbound have to wait between uses of the place explosive barrel ability
 ttt_soulbound_fakebody_enabled          1   // Whether the place fake body ability is enabled or not
@@ -193,6 +193,10 @@ ttt_soulbound_smoke_linger_time         30  // How long the fuse for the Soulbou
 ttt_soulbound_swapinventory_enabled     1   // Whether the swap inventory ability is enabled or not
 ttt_soulbound_swapinventory_uses        1   // How many uses should of the swap inventory ability should the Soulbound get. (Set to 0 for unlimited uses)
 ttt_soulbound_swapinventory_cooldown    0   // How long should the Soulbound have to wait between uses of the swap inventory ability
+ttt_soulbound_beebarrel_enabled         1   // Whether the place bee barrel ability is enabled or not. Requires Jensson's BeeNade mod
+ttt_soulbound_beebarrel_uses            3   // How many uses should of the place bee barrel ability should the Soulbound get. Requires Jensson's BeeNade mod. (Set to 0 for unlimited uses)
+ttt_soulbound_beebarrel_cooldown        0   // How long should the Soulbound have to wait between uses of the place bee barrel ability. Requires Jensson's BeeNade mod
+ttt_soulbound_beebarrel_bees            3   // The number of bees that spawn per exploded beebarrel. Requires Jensson's BeeNade mod
 ttt_soulbound_packapunch_enabled        1   // Whether the Pack-a-Punch ability is enabled or not. Requires Pack-a-Punch mod
 ttt_soulbound_packapunch_uses           1   // How many uses should of the Pack-a-Punch ability should the Soulbound get. Requires Pack-a-Punch mod. (Set to 0 for unlimited uses)
 ttt_soulbound_packapunch_cooldown       5   // How long should the Soulbound have to wait between uses of the Pack-a-Punch ability. Requires Pack-a-Punch mod
@@ -210,7 +214,7 @@ ttt_soulmage_spawn_weight           1   // The weight assigned to spawning the S
 ttt_soulmage_min_players            0   // The minimum number of players required to spawn the Soulmage
 ttt_soulmage_starting_health        100 // The amount of health a Soulmage starts with
 ttt_soulmage_max_health             100 // The maximum amount of health a Soulmage can have
-ttt_soulmage_ghosting_time          8   // The amount of time (in seconds) the Soulmage's soulbinding device takes to use
+ttt_soulmage_soulbinding_time       8   // The amount of time (in seconds) the Soulmage's soulbinding device takes to use
 ttt_soulmage_credits_starting       0   // The number of credits a Soulmage should start with
 ttt_soulmage_shop_sync              0   // Whether Soulmages should have all weapons that vanilla traitors have in their weapon shop
 ttt_soulmage_shop_random_percent    0   // The percent chance that a weapon in the shop will be not be shown for Soulmages
