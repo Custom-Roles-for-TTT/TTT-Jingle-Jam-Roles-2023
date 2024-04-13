@@ -143,24 +143,33 @@ if SERVER then
     -- TRAITOR CHAT --
     ------------------
 
+    -- TODO: Replace with direct call to ShouldGlitchBlockCommunications after 2.1.10 is pushed to release
+    local function ShouldRenegadeBlockCommunications()
+        if ShouldGlitchBlockCommunications then return ShouldGlitchBlockCommunications() end
+
+        for _, v in PlayerIterator() do
+            if v:IsGlitch() then
+                return true
+            end
+        end
+        return false
+    end
+
     -- Allow renegade to send messages to traitor team
     AddHook("PlayerSay", "Renegade_PlayerSay", function(ply, text, team_only)
         if not team_only then return end
         if not IsPlayer(ply) or not ply:Alive() or ply:IsSpec() then return end
         if not ply:IsRenegade() then return end
 
-        local hasGlitch = false
         local targets = {}
         for _, v in PlayerIterator() do
-            if v:IsGlitch() then
-                hasGlitch = true
-            elseif v:IsTraitorTeam() or v:IsRenegade() then
+            if v:IsTraitorTeam() or v:IsRenegade() then
                 TableInsert(targets, v)
             end
         end
 
         -- Don't send chat messages if there is a glitch
-        if hasGlitch then
+        if ShouldRenegadeBlockCommunications() then
             ply:PrintMessage(HUD_PRINTTALK, "The glitch is scrambling your communications")
         -- Send the message as a role message to all traitors and renegades
         else
