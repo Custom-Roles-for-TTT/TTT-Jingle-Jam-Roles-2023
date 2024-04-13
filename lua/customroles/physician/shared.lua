@@ -25,9 +25,8 @@ PHYSICIAN_TRACKER_INACTIVE = 0  -- Player is untracked
 PHYSICIAN_TRACKER_ACTIVE = 1    -- Player is being tracked
 PHYSICIAN_TRACKER_DEAD = 2      -- Player is dead (or, potentially in future, has destroyed their tracker)
 
-hook.Add("TTTPrepareRound", "Physician_Equipment_TTTPrepareRound", function()
-    EQUIP_PHS_TRACKER = EQUIP_PHS_TRACKER or GenerateNewEquipmentID()
-
+EQUIP_PHS_TRACKER = EQUIP_PHS_TRACKER or GenerateNewEquipmentID()
+local function InitializeEquipment()
     if DefaultEquipment then
         DefaultEquipment[ROLE_PHYSICIAN] = {
             EQUIP_PHS_TRACKER
@@ -50,7 +49,11 @@ hook.Add("TTTPrepareRound", "Physician_Equipment_TTTPrepareRound", function()
             })
         end
     end
-end)
+end
+InitializeEquipment()
+
+hook.Add("Initialize", "Physician_Equipment_Initialize", InitializeEquipment)
+hook.Add("TTTPrepareRound", "Physician_Equipment_TTTPrepareRound", InitializeEquipment)
 
 if SERVER then
     AddCSLuaFile()
