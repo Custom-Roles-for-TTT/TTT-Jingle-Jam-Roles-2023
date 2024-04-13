@@ -317,6 +317,7 @@ local function InitializeEquipment()
         end
     end
 end
+InitializeEquipment()
 
 hook.Add("Initialize", "Elementalist_Equipment_Initialize", InitializeEquipment)
 hook.Add("TTTPrepareRound", "Elementalist_Equipment_TTTPrepareRound", InitializeEquipment)
