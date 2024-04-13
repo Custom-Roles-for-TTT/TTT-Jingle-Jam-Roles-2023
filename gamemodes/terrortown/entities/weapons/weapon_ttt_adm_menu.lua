@@ -962,6 +962,7 @@ if SERVER then
         local ragdoll = ents.Create("prop_ragdoll")
         ragdoll.playerHealth = ply:Health()
         ragdoll.playerColor = ply:GetPlayerColor()
+        ragdoll.playerCredits = ply:GetCredits()
 
         ragdoll.WYOZIBHDontEat = true -- Don't let the red matter bomb destroy this ragdoll
 
@@ -1010,6 +1011,7 @@ if SERVER then
             ply:SetAngles(Angle(0, yaw, 0))
             ply:SetModel(ragdoll:GetModel())
             ply:SetPlayerColor(ragdoll.playerColor)
+            ply:SetCredits(ragdoll.playerCredits)
 
             ply:DrawViewModel(true)
             ply:DrawWorldModel(true)
