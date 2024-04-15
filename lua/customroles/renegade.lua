@@ -143,18 +143,6 @@ if SERVER then
     -- TRAITOR CHAT --
     ------------------
 
-    -- TODO: Replace with direct call to ShouldGlitchBlockCommunications after 2.1.10 is pushed to release
-    local function ShouldRenegadeBlockCommunications()
-        if ShouldGlitchBlockCommunications then return ShouldGlitchBlockCommunications() end
-
-        for _, v in PlayerIterator() do
-            if v:IsGlitch() then
-                return true
-            end
-        end
-        return false
-    end
-
     -- Allow renegade to send messages to traitor team
     AddHook("PlayerSay", "Renegade_PlayerSay", function(ply, text, team_only)
         if not team_only then return end
@@ -169,18 +157,13 @@ if SERVER then
         end
 
         -- Don't send chat messages if there is a glitch
-        if ShouldRenegadeBlockCommunications() then
+        if ShouldGlitchBlockCommunications() then
             ply:PrintMessage(HUD_PRINTTALK, "The glitch is scrambling your communications")
         -- Send the message as a role message to all traitors and renegades
         else
             net.Start("TTT_RoleChat")
                 net.WriteInt(ply:GetRole(), 8)
-                -- TODO: Remove after 2.1.10 is pushed to release
-                if CRVersion("2.1.10") then
-                    net.WritePlayer(ply)
-                else
-                    net.WriteEntity(ply)
-                end
+                net.WritePlayer(ply)
                 net.WriteString(text)
             net.Send(targets)
         end
@@ -205,12 +188,7 @@ if SERVER then
 
             net.Start("TTT_RoleChat")
                 net.WriteInt(ROLE_TRAITOR, 8)
-                -- TODO: Remove after 2.1.10 is pushed to release
-                if CRVersion("2.1.10") then
-                    net.WritePlayer(sender)
-                else
-                    net.WriteEntity(sender)
-                end
+                net.WritePlayer(sender)
                 net.WriteString(msg)
             net.Send(renegades)
         -- Send renegade messages to traitors and themselves
