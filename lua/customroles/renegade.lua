@@ -188,7 +188,7 @@ if SERVER then
     end)
 
     -- Allow renegades to read traitor chat
-    AddHook("TTTBeforeTeamChat", "Renegade_TTTBeforeTeamChat", function(sender, msg, targets, from_chat)
+    AddHook("TTTTeamChatTargets", "Renegade_TTTTeamChatTargets", function(sender, msg, targets, from_chat)
         if not IsPlayer(sender) or not sender:Alive() or sender:IsSpec() then return end
 
         -- Send traitor chat messages to renegades, but use a separate message so we can override their role to always show "traitor"
