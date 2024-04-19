@@ -13,6 +13,7 @@ Use your Health Tracker device to plant trackers on players to monitor their hea
 Open the scoreboard to view tracked player's health status, but beware its limited range!
 
 Press {menukey} to access the standard equipment shop, featuring an upgrade for your tracker.]]
+ROLE.shortdesc = "Has a Health Tracker which allows them to plant tracking devices on players, allowing them to see their health status from a distance."
 
 ROLE.team = ROLE_TEAM_DETECTIVE
 ROLE.shopsyncroles = {ROLE_DETECTIVE}

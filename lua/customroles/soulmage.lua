@@ -13,6 +13,7 @@ help you and your fellow {traitors} while pretending
 to be an innocent ghost.
 
 Press {menukey} to receive your special equipment!]]
+ROLE.shortdesc = "Can use their Soulbinding Device to convert a dead player to be their Soulbound, granting them abilities to help their new teammates."
 
 ROLE.team = ROLE_TEAM_TRAITOR
 

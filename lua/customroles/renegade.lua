@@ -24,6 +24,7 @@ it's completely up to you!
 
 These are the {traitors}:
 {traitorlist}]]
+ROLE.shortdesc = "Can see and be seen by the traitors and so must choose to work with or against them. Wins by being the last player alive."
 
 ROLE.team = ROLE_TEAM_INDEPENDENT
 
