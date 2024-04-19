@@ -12,6 +12,7 @@ ROLE.nameshort = "gwh"
 
 ROLE.desc = [[You are {role}! Use your ghosting device to
 allow a dead player to talk in chat.]]
+ROLE.shortdesc = "Has a Ghosting Device that they can use on dead players to allow speaking from beyond the grave."
 
 ROLE.team = ROLE_TEAM_INNOCENT
 

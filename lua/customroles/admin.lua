@@ -20,6 +20,7 @@ You can use your admin menu to access commands
 that will help in the battle against the {traitors}.
 
 Press {menukey} to receive your equipment!]]
+ROLE.shortdesc = "Has a menu of admin commands that they can spend thier regenerating power on to use against other players to help or to hurt."
 
 ROLE.team = ROLE_TEAM_DETECTIVE
 
