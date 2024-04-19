@@ -126,7 +126,7 @@ ROLE.desc = [[You are an {role}! {comrades}
 Bullets you shoot may activate special effects when they hit your target.
 
 Press {menukey} to purchase new effects as you unlock additional credits!]]
-ROLE.shortdesc = "Can purchase elemental abilities and upgrades from their shop which cause different affects on the players they shoot."
+ROLE.shortdesc = "Can purchase elemental abilities from their shop which cause different effects on the players they shoot."
 
 ROLE.team = ROLE_TEAM_TRAITOR
 
