@@ -292,9 +292,9 @@ function SWEP:PrimaryAttack()
                 else
                     net.Start("TTT_Admin" .. command:gsub("^%l", string.upper) .. "Command")
                     local sid64 = dtarget:GetSelected()[1]:GetValue(2)
-                    net.WriteString(sid64)
+                    net.WriteUInt64(sid64)
                     if command == "send" then
-                        net.WriteString(dtargetto:GetSelected()[1]:GetValue(2))
+                        net.WriteUInt64(dtargetto:GetSelected()[1]:GetValue(2))
                     elseif IsTimedCommand(command) then
                         net.WriteUInt(time, 8)
                     elseif command == "kick" then
@@ -450,7 +450,7 @@ if SERVER then
         return true
     end
     net.Receive("TTT_AdminSlapCommand", function(_, admin)
-        local sid64 = net.ReadString()
+        local sid64 = net.ReadUInt64()
         local ply = player.GetBySteamID64(sid64)
 
         local cost = admin_slap_cost:GetInt()
@@ -532,7 +532,7 @@ if SERVER then
         return false
     end
     net.Receive("TTT_AdminBringCommand", function(_, admin)
-        local sid64 = net.ReadString()
+        local sid64 = net.ReadUInt64()
         local ply = player.GetBySteamID64(sid64)
 
         local cost = admin_bring_cost:GetInt()
@@ -562,7 +562,7 @@ if SERVER then
         return false
     end
     net.Receive("TTT_AdminGotoCommand", function(_, admin)
-        local sid64 = net.ReadString()
+        local sid64 = net.ReadUInt64()
         local ply = player.GetBySteamID64(sid64)
 
         local cost = admin_goto_cost:GetInt()
@@ -596,9 +596,9 @@ if SERVER then
         return false
     end
     net.Receive("TTT_AdminSendCommand", function(_, admin)
-        local fromSid64 = net.ReadString()
+        local fromSid64 = net.ReadUInt64()
         local from = player.GetBySteamID64(fromSid64)
-        local toSid64 = net.ReadString()
+        local toSid64 = net.ReadUInt64()
         local to = player.GetBySteamID64(toSid64)
 
         local cost = admin_send_cost:GetInt()
@@ -711,7 +711,7 @@ if SERVER then
         return true
     end
     net.Receive("TTT_AdminJailCommand", function(_, admin)
-        local sid64 = net.ReadString()
+        local sid64 = net.ReadUInt64()
         local ply = player.GetBySteamID64(sid64)
         local time = net.ReadUInt(8)
 
@@ -762,7 +762,7 @@ if SERVER then
         return true
     end
     net.Receive("TTT_AdminIgniteCommand", function(_, admin)
-        local sid64 = net.ReadString()
+        local sid64 = net.ReadUInt64()
         local ply = player.GetBySteamID64(sid64)
         local time = net.ReadUInt(8)
 
@@ -851,7 +851,7 @@ if SERVER then
         return true
     end
     net.Receive("TTT_AdminBlindCommand", function(_, admin)
-        local sid64 = net.ReadString()
+        local sid64 = net.ReadUInt64()
         local ply = player.GetBySteamID64(sid64)
         local time = net.ReadUInt(8)
 
@@ -927,7 +927,7 @@ if SERVER then
         return true
     end
     net.Receive("TTT_AdminFreezeCommand", function(_, admin)
-        local sid64 = net.ReadString()
+        local sid64 = net.ReadUInt64()
         local ply = player.GetBySteamID64(sid64)
         local time = net.ReadUInt(8)
 
@@ -1145,7 +1145,7 @@ if SERVER then
         return true
     end
     net.Receive("TTT_AdminRagdollCommand", function(_, admin)
-        local sid64 = net.ReadString()
+        local sid64 = net.ReadUInt64()
         local ply = player.GetBySteamID64(sid64)
         local time = net.ReadUInt(8)
 
@@ -1186,7 +1186,7 @@ if SERVER then
         return true
     end
     net.Receive("TTT_AdminStripCommand", function(_, admin)
-        local sid64 = net.ReadString()
+        local sid64 = net.ReadUInt64()
         local ply = player.GetBySteamID64(sid64)
 
         local cost = admin_strip_cost:GetInt()
@@ -1224,7 +1224,7 @@ if SERVER then
         return true
     end
     net.Receive("TTT_AdminRespawnCommand", function(_, admin)
-        local sid64 = net.ReadString()
+        local sid64 = net.ReadUInt64()
         local ply = player.GetBySteamID64(sid64)
 
         local cost = admin_respawn_cost:GetInt()
@@ -1259,7 +1259,7 @@ if SERVER then
         return true
     end
     net.Receive("TTT_AdminSlayCommand", function(_, admin)
-        local sid64 = net.ReadString()
+        local sid64 = net.ReadUInt64()
         local ply = player.GetBySteamID64(sid64)
 
         local cost = admin_slay_cost:GetInt()
@@ -1303,7 +1303,7 @@ if SERVER then
         return true
     end
     net.Receive("TTT_AdminKickCommand", function(_, admin)
-        local sid64 = net.ReadString()
+        local sid64 = net.ReadUInt64()
         local ply = player.GetBySteamID64(sid64)
         local reason = net.ReadString()
 
@@ -1351,7 +1351,7 @@ if SERVER then
         return true
     end
     net.Receive("TTT_AdminPunishCommand", function(_, admin)
-        local sid64 = net.ReadString()
+        local sid64 = net.ReadUInt64()
         local ply = player.GetBySteamID64(sid64)
 
         local cost = admin_punish_cost:GetInt()
