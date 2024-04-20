@@ -100,7 +100,7 @@ function PANEL:SetWireIndex(i)
     self.Index = i
 end
 
-vgui.Register("DisarmWire", PANEL, "DImageButton")
+vgui.Register("FakeDisarmWire", PANEL, "DImageButton")
 
 
 -- Bomb
@@ -120,7 +120,7 @@ function PANEL:Init()
 
     local wx, wy = -84, 70
     for i = 1, self:GetWireCount() do
-        local w = vgui.Create("DisarmWire", self)
+        local w = vgui.Create("FakeDisarmWire", self)
         w:SetPos(wx, wy)
         w:SetImage(c4_wire_mat:GetName())
         w:SizeToContents()
@@ -135,7 +135,7 @@ function PANEL:Init()
     self:SetPaintBackground(false)
 end
 
-vgui.Register("DisarmPanel", PANEL, "DPanel")
+vgui.Register("FakeDisarmPanel", PANEL, "DPanel")
 
 surface.CreateFont("C4Timer", {
     font = "TabLarge",
@@ -240,7 +240,7 @@ local function ShowC4Disarm(ent)
     bg:StretchToParent(m, m + desc_h, m, m)
     bg:SetColor(Color(20, 20, 20, 255))
 
-    local dbomb = vgui.Create("DisarmPanel", bg)
+    local dbomb = vgui.Create("FakeDisarmPanel", bg)
     dbomb:SetSize(256, 256)
     dbomb:Center()
 
