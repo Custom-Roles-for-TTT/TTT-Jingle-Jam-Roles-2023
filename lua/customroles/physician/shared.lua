@@ -13,6 +13,7 @@ Use your Health Tracker device to plant trackers on players to monitor their hea
 Open the scoreboard to view tracked player's health status, but beware its limited range!
 
 Press {menukey} to access the standard equipment shop, featuring an upgrade for your tracker.]]
+ROLE.shortdesc = "Has a Health Tracker which allows them to plant tracking devices on players, allowing them to see their health status from a distance."
 
 ROLE.team = ROLE_TEAM_DETECTIVE
 ROLE.shopsyncroles = {ROLE_DETECTIVE}
@@ -21,13 +22,38 @@ ROLE.loadout = {"weapon_ttt_phy_tracker"}
 
 ROLE.translations = {}
 
+ROLE.convars = {}
+table.insert(ROLE.convars, {
+    cvar = "ttt_physician_tracker_range_default",
+    type = ROLE_CONVAR_TYPE_NUM,
+    decimal = 0
+})
+table.insert(ROLE.convars, {
+    cvar = "ttt_physician_tracker_range_boosted",
+    type = ROLE_CONVAR_TYPE_NUM,
+    decimal = 0
+})
+
+ROLE.moverolestate = function(source, target, keepOnSource)
+    local sourceId = source:SteamID64()
+    local targetId = target:SteamID64()
+
+    GAMEMODE.PHYSICIAN.tracking[targetId] = GAMEMODE.PHYSICIAN.tracking[sourceId] or {}
+
+    if not keepOnSource then
+        table.Empty(GAMEMODE.PHYSICIAN.tracking[sourceId])
+        GAMEMODE.PHYSICIAN.tracking[sourceId] = nil
+    end
+end
+
+RegisterRole(ROLE)
+
 PHYSICIAN_TRACKER_INACTIVE = 0  -- Player is untracked
 PHYSICIAN_TRACKER_ACTIVE = 1    -- Player is being tracked
 PHYSICIAN_TRACKER_DEAD = 2      -- Player is dead (or, potentially in future, has destroyed their tracker)
 
-hook.Add("TTTPrepareRound", "Physician_Equipment_TTTPrepareRound", function()
-    EQUIP_PHS_TRACKER = EQUIP_PHS_TRACKER or GenerateNewEquipmentID()
-
+EQUIP_PHS_TRACKER = EQUIP_PHS_TRACKER or GenerateNewEquipmentID()
+local function InitializeEquipment()
     if DefaultEquipment then
         DefaultEquipment[ROLE_PHYSICIAN] = {
             EQUIP_PHS_TRACKER
@@ -50,37 +76,15 @@ hook.Add("TTTPrepareRound", "Physician_Equipment_TTTPrepareRound", function()
             })
         end
     end
-end)
+end
+InitializeEquipment()
+
+hook.Add("Initialize", "Physician_Equipment_Initialize", InitializeEquipment)
+hook.Add("TTTPrepareRound", "Physician_Equipment_TTTPrepareRound", InitializeEquipment)
 
 if SERVER then
     AddCSLuaFile()
 
     CreateConVar("ttt_physician_tracker_range_default", "50", FCVAR_NONE, "Default range of the Physician's tracker device in meters", 0, 250)
     CreateConVar("ttt_physician_tracker_range_boosted", "100", FCVAR_NONE, "Boosted range of the Physician's tracker device in meters after the upgrade has been purchased", 0, 500)
-
-    ROLE.moverolestate = function(source, target, keepOnSource)
-        local sourceId = source:SteamID64()
-        local targetId = target:SteamID64()
-
-        GAMEMODE.PHYSICIAN.tracking[targetId] = GAMEMODE.PHYSICIAN.tracking[sourceId] or {}
-
-        if not keepOnSource then
-            table.Empty(GAMEMODE.PHYSICIAN.tracking[sourceId])
-            GAMEMODE.PHYSICIAN.tracking[sourceId] = nil
-        end
-    end
-
-    ROLE.convars = {}
-    table.insert(ROLE.convars, {
-        cvar = "ttt_physician_tracker_range_default",
-        type = ROLE_CONVAR_TYPE_NUM,
-        decimal = 0
-    })
-    table.insert(ROLE.convars, {
-        cvar = "ttt_physician_tracker_range_boosted",
-        type = ROLE_CONVAR_TYPE_NUM,
-        decimal = 0
-    })
 end
-
-RegisterRole(ROLE)

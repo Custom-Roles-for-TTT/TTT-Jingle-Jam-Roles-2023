@@ -1006,6 +1006,7 @@ globals = {
     "SetRoleMaxHealth",
     "SetRoleStartingHealth",
     "SetTurncoatTeam",
+    "ShouldGlitchBlockCommunications",
     "ShouldPromoteDetectiveLike",
     "ShouldShowTraitorExtraInfo",
     "StartsWithVowel",

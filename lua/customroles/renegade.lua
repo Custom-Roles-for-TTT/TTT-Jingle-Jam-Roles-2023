@@ -24,6 +24,7 @@ it's completely up to you!
 
 These are the {traitors}:
 {traitorlist}]]
+ROLE.shortdesc = "Can see and be seen by the traitors and so must choose to work with or against them. Wins by being the last player alive."
 
 ROLE.team = ROLE_TEAM_INDEPENDENT
 
@@ -149,29 +150,21 @@ if SERVER then
         if not IsPlayer(ply) or not ply:Alive() or ply:IsSpec() then return end
         if not ply:IsRenegade() then return end
 
-        local hasGlitch = false
         local targets = {}
         for _, v in PlayerIterator() do
-            if v:IsGlitch() then
-                hasGlitch = true
-            elseif v:IsTraitorTeam() or v:IsRenegade() then
+            if v:IsTraitorTeam() or v:IsRenegade() then
                 TableInsert(targets, v)
             end
         end
 
         -- Don't send chat messages if there is a glitch
-        if hasGlitch then
+        if ShouldGlitchBlockCommunications() then
             ply:PrintMessage(HUD_PRINTTALK, "The glitch is scrambling your communications")
         -- Send the message as a role message to all traitors and renegades
         else
             net.Start("TTT_RoleChat")
                 net.WriteInt(ply:GetRole(), 8)
-                -- TODO: Remove after 2.1.10 is pushed to release
-                if CRVersion("2.1.10") then
-                    net.WritePlayer(ply)
-                else
-                    net.WriteEntity(ply)
-                end
+                net.WritePlayer(ply)
                 net.WriteString(text)
             net.Send(targets)
         end
@@ -179,7 +172,7 @@ if SERVER then
     end)
 
     -- Allow renegades to read traitor chat
-    AddHook("TTTBeforeTeamChat", "Renegade_TTTBeforeTeamChat", function(sender, msg, targets, from_chat)
+    AddHook("TTTTeamChatTargets", "Renegade_TTTTeamChatTargets", function(sender, msg, targets, from_chat)
         if not IsPlayer(sender) or not sender:Alive() or sender:IsSpec() then return end
 
         -- Send traitor chat messages to renegades, but use a separate message so we can override their role to always show "traitor"
@@ -196,12 +189,7 @@ if SERVER then
 
             net.Start("TTT_RoleChat")
                 net.WriteInt(ROLE_TRAITOR, 8)
-                -- TODO: Remove after 2.1.10 is pushed to release
-                if CRVersion("2.1.10") then
-                    net.WritePlayer(sender)
-                else
-                    net.WriteEntity(sender)
-                end
+                net.WritePlayer(sender)
                 net.WriteString(msg)
             net.Send(renegades)
         -- Send renegade messages to traitors and themselves

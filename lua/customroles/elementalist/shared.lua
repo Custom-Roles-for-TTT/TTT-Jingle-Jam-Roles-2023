@@ -125,7 +125,8 @@ ROLE.desc = [[You are an {role}! {comrades}
 
 Bullets you shoot may activate special effects when they hit your target.
 
-Press {menukey} to purchase new effects as you unlock additional equipment points!]]
+Press {menukey} to purchase new effects as you unlock additional credits!]]
+ROLE.shortdesc = "Can purchase elemental abilities from their shop which cause different effects on the players they shoot."
 
 ROLE.team = ROLE_TEAM_TRAITOR
 
@@ -140,20 +141,20 @@ if SERVER then
     AddCSLuaFile()
 end
 
-hook.Add("TTTPrepareRound", "Elementalist_Equipment_TTTPrepareRound", function()
-    EQUIP_ELEMENTALIST_FROSTBITE = EQUIP_ELEMENTALIST_FROSTBITE or GenerateNewEquipmentID()
-    EQUIP_ELEMENTALIST_FROSTBITE_UP = EQUIP_ELEMENTALIST_FROSTBITE_UP or GenerateNewEquipmentID()
-    EQUIP_ELEMENTALIST_PYROMANCER = EQUIP_ELEMENTALIST_PYROMANCER or GenerateNewEquipmentID()
-    EQUIP_ELEMENTALIST_PYROMANCER_UP = EQUIP_ELEMENTALIST_PYROMANCER_UP or GenerateNewEquipmentID()
-    EQUIP_ELEMENTALIST_WINDBURN = EQUIP_ELEMENTALIST_WINDBURN or GenerateNewEquipmentID()
-    EQUIP_ELEMENTALIST_WINDBURN_UP = EQUIP_ELEMENTALIST_WINDBURN_UP or GenerateNewEquipmentID()
-    EQUIP_ELEMENTALIST_DISCHARGE = EQUIP_ELEMENTALIST_DISCHARGE or GenerateNewEquipmentID()
-    EQUIP_ELEMENTALIST_DISCHARGE_UP = EQUIP_ELEMENTALIST_DISCHARGE_UP or GenerateNewEquipmentID()
-    EQUIP_ELEMENTALIST_MIDNIGHT = EQUIP_ELEMENTALIST_MIDNIGHT or GenerateNewEquipmentID()
-    EQUIP_ELEMENTALIST_MIDNIGHT_UP = EQUIP_ELEMENTALIST_MIDNIGHT_UP or GenerateNewEquipmentID()
-    EQUIP_ELEMENTALIST_LIFESTEAL = EQUIP_ELEMENTALIST_LIFESTEAL or GenerateNewEquipmentID()
-    EQUIP_ELEMENTALIST_LIFESTEAL_UP = EQUIP_ELEMENTALIST_LIFESTEAL_UP or GenerateNewEquipmentID()
+EQUIP_ELEMENTALIST_FROSTBITE = EQUIP_ELEMENTALIST_FROSTBITE or GenerateNewEquipmentID()
+EQUIP_ELEMENTALIST_FROSTBITE_UP = EQUIP_ELEMENTALIST_FROSTBITE_UP or GenerateNewEquipmentID()
+EQUIP_ELEMENTALIST_PYROMANCER = EQUIP_ELEMENTALIST_PYROMANCER or GenerateNewEquipmentID()
+EQUIP_ELEMENTALIST_PYROMANCER_UP = EQUIP_ELEMENTALIST_PYROMANCER_UP or GenerateNewEquipmentID()
+EQUIP_ELEMENTALIST_WINDBURN = EQUIP_ELEMENTALIST_WINDBURN or GenerateNewEquipmentID()
+EQUIP_ELEMENTALIST_WINDBURN_UP = EQUIP_ELEMENTALIST_WINDBURN_UP or GenerateNewEquipmentID()
+EQUIP_ELEMENTALIST_DISCHARGE = EQUIP_ELEMENTALIST_DISCHARGE or GenerateNewEquipmentID()
+EQUIP_ELEMENTALIST_DISCHARGE_UP = EQUIP_ELEMENTALIST_DISCHARGE_UP or GenerateNewEquipmentID()
+EQUIP_ELEMENTALIST_MIDNIGHT = EQUIP_ELEMENTALIST_MIDNIGHT or GenerateNewEquipmentID()
+EQUIP_ELEMENTALIST_MIDNIGHT_UP = EQUIP_ELEMENTALIST_MIDNIGHT_UP or GenerateNewEquipmentID()
+EQUIP_ELEMENTALIST_LIFESTEAL = EQUIP_ELEMENTALIST_LIFESTEAL or GenerateNewEquipmentID()
+EQUIP_ELEMENTALIST_LIFESTEAL_UP = EQUIP_ELEMENTALIST_LIFESTEAL_UP or GenerateNewEquipmentID()
 
+local function InitializeEquipment()
     if DefaultEquipment then
         DefaultEquipment[ROLE_ELEMENTALIST] = {
             EQUIP_ELEMENTALIST_FROSTBITE,
@@ -316,4 +317,8 @@ hook.Add("TTTPrepareRound", "Elementalist_Equipment_TTTPrepareRound", function()
             })
         end
     end
-end)
+end
+InitializeEquipment()
+
+hook.Add("Initialize", "Elementalist_Equipment_Initialize", InitializeEquipment)
+hook.Add("TTTPrepareRound", "Elementalist_Equipment_TTTPrepareRound", InitializeEquipment)
