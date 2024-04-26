@@ -121,8 +121,6 @@ ttt_renegade_spawn_weight      1   // The weight assigned to spawning the renega
 ttt_renegade_min_players       0   // The minimum number of players required to spawn the renegade
 ttt_renegade_starting_health   100 // The amount of health a renegade starts with
 ttt_renegade_max_health        100 // The maximum amount of health a renegade can have
-ttt_renegade_can_see_jesters   1   // Whether jesters are revealed (via head icons, color/icon on the scoreboard, etc.) to the renegade
-ttt_renegade_update_scoreboard 1   // Whether the renegade shows dead players as missing in action
 ttt_renegade_warn_all          0   // Whether to warn all players there is a renegade in the round. If disabled, only traitors are warned
 ttt_renegade_show_glitch       0   // Whether to allow the renegade to see the glitch. They will show as an unknown traitor
 ttt_renegade_shop_mode         0   // What additional items are available to the renegade in the shop (See the CR4TTT shop convars documentation for possible values)
