@@ -122,7 +122,7 @@ if CLIENT then
         end
 
         local ready = true
-        local text = "Press '" .. key .. "' to place an bee barrel"
+        local text = "Press '" .. key .. "' to place a bee barrel"
         local next_use = soulbound:GetNWFloat("TTTSoulboundBeeBarrelNextUse")
         local cur_time = CurTime()
         if max_uses > 0 and uses <= 0 then
