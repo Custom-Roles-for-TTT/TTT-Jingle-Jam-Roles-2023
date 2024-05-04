@@ -2,18 +2,18 @@
 local shouldDrawdarkOverlay = false
 local iceOverlay = nil
 local darkOverlay = {
-	["$pp_colour_brightness"] = 1,
-	["$pp_colour_colour"] = 1
+    ["$pp_colour_brightness"] = 1,
+    ["$pp_colour_colour"] = 1
 }
 
--- I ripped this from my other addon lol
-local function CreateiceOverlay(maxOverlay)
+local function CreateIceOverlay(maxOverlay)
     if IsValid(iceOverlay) and ispanel(iceOverlay) then return end
 
     local alphaCounter = 0
     if maxOverlay then alphaCounter = 230 end
 
-    timer.Simple(2, function() LocalPlayer():SetDSP(14, false) end) --We're assuming the player is emitting the ice-over sound
+    -- We're assuming the player is emitting the ice-over sound
+    timer.Simple(2, function() LocalPlayer():SetDSP(14, true) end)
 
     iceOverlay = vgui.Create("DFrame")
     iceOverlay:SetSize(ScrW(), ScrH())
@@ -37,8 +37,11 @@ local function CreateiceOverlay(maxOverlay)
     end
 end
 
-local function CloseiceOverlay()
-    if iceOverlay and ispanel(iceOverlay) then iceOverlay:Remove() end
+local function CloseIceOverlay()
+    if iceOverlay and ispanel(iceOverlay) then
+        iceOverlay:Remove()
+        LocalPlayer():SetDSP(0, false)
+    end
 end
 
 local function StartBlindOverlay()
@@ -48,18 +51,17 @@ local function StartBlindOverlay()
     }
 end
 
-local function StartdarkOverlay(percent)
-    local actualPercent = percent * 0.01
-
+local function StartDarkOverlay(percent)
     shouldDrawdarkOverlay = true
 
+    local actualPercent = percent * 0.01
     darkOverlay = {
         ["$pp_colour_brightness"] = -0.25 * actualPercent,
         ["$pp_colour_colour"] = 1 - (1 * actualPercent)
     }
 end
 
-local function EnddarkOverlay()
+local function EndDarkOverlay()
     shouldDrawdarkOverlay = false
 
     darkOverlay = {
@@ -76,30 +78,28 @@ hook.Add("RenderScreenspaceEffects", "Elementalist_RenderScreenspaceEffects", fu
 end)
 
 net.Receive("BeginIceScreen", function(len)
-    local frozen = net.ReadBool()
-    CreateiceOverlay(frozen)
+    CreateIceOverlay(net.ReadBool())
 end)
 
 net.Receive("EndIceScreen", function(len)
-    CloseiceOverlay()
+    CloseIceOverlay()
 end)
 
 net.Receive("BeginDimScreen", function(len)
     local amount = net.ReadUInt(6)
-
     if amount == 100 then
         StartBlindOverlay()
     else
-        StartdarkOverlay(amount)
+        StartDarkOverlay(amount)
     end
 end)
 
 net.Receive("EndDimScreen", function(len)
-    EnddarkOverlay()
+    EndDarkOverlay()
 end)
 
 hook.Add("TTTTutorialRoleText", "Elementalist_TTTTutorialRoleText", function(playerRole)
-    local function getStyleString(role)
+    local function GetStyleString(role)
         local roleColor = ROLE_COLORS[role]
         return "<span style='color: rgb(" .. roleColor.r .. ", " .. roleColor.g .. ", " .. roleColor.b .. ")'>"
     end
@@ -108,9 +108,9 @@ hook.Add("TTTTutorialRoleText", "Elementalist_TTTTutorialRoleText", function(pla
         local divStart = "<div style='margin-top: 10px;'>"
         local styleEnd = "</span>"
 
-        local html = "The " .. ROLE_STRINGS[ROLE_ELEMENTALIST] .. " is a member of the " .. getStyleString(ROLE_TRAITOR) .. "traitor team" .. styleEnd .. " whose goal is to eliminate all innocents and independents."
+        local html = "The " .. ROLE_STRINGS[ROLE_ELEMENTALIST] .. " is a member of the " .. GetStyleString(ROLE_TRAITOR) .. "traitor team" .. styleEnd .. " whose goal is to eliminate all innocents and independents."
 
-        html = html .. divStart .. "They have access to " .. getStyleString(ROLE_ELEMENTALIST) .. "special powerups" .. styleEnd .. " in the " .. getStyleString(ROLE_TRAITOR) .. "traitor shop" .. styleEnd .. " which do a variety of things when they shoot other terrorists.</div>"
+        html = html .. divStart .. "They have access to " .. GetStyleString(ROLE_ELEMENTALIST) .. "special powerups" .. styleEnd .. " in the " .. GetStyleString(ROLE_TRAITOR) .. "traitor shop" .. styleEnd .. " which do a variety of things when they shoot other terrorists.</div>"
 
         html = html .. divStart .. "The powerups available are:<ul style='margin-bottom: 0px; padding-bottom: 0px;'>"
 

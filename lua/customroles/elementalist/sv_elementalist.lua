@@ -78,15 +78,15 @@ hook.Add("EntityTakeDamage", "Elementalist_EntityTakeDamage", function(ent, dmgi
             end
         end
 
-        if not timer.Exists(vicId .. "_IsSlowed") then
-            timer.Create(vicId .. "_IsSlowed", Timer, 1, EndFrostbite)
+        if not timer.Exists(vicId .. "_Elementalist_IsSlowed") then
+            timer.Create(vicId .. "_Elementalist_IsSlowed", Timer, 1, EndFrostbite)
         else
-            timer.Adjust(vicId .. "_IsSlowed", Timer, 1, EndFrostbite)
+            timer.Adjust(vicId .. "_Elementalist_IsSlowed", Timer, 1, EndFrostbite)
         end
     end
 
     if att:HasEquipmentItem(EQUIP_ELEMENTALIST_PYROMANCER) then
-        local fixTimerId = vicId .. "_IsBurningShotgunFix"
+        local fixTimerId = vicId .. "_Elementalist_IsBurningShotgunFix"
 
         if att:HasEquipmentItem(EQUIP_ELEMENTALIST_PYROMANCER_UP) and ignitedPlayers[vicId] and GetChanceConVarOutcome("ttt_elementalist_pyromancer+_explode_chance") then
             --Upgrade functionality
@@ -112,7 +112,7 @@ hook.Add("EntityTakeDamage", "Elementalist_EntityTakeDamage", function(ent, dmgi
         else
             --Base functionality
             ignitedPlayers[vicId] = true
-            local timerId = vicId .. "_IsBurning"
+            local timerId = vicId .. "_Elementalist_IsBurning"
 
             local timeToBurn = 1 + (ROLE.ConvarPyroBurnDur:GetInt() * scale)
 
@@ -234,10 +234,10 @@ hook.Add("EntityTakeDamage", "Elementalist_EntityTakeDamage", function(ent, dmgi
             net.Send(ent)
         end
 
-        if not timer.Exists(vicId .. "_IsBlind") then
-            timer.Create(vicId .. "_IsBlind", ROLE.ConvarMidEffectDur:GetInt(), 1, EndBlind)
+        if not timer.Exists(vicId .. "_Elementalist_IsBlind") then
+            timer.Create(vicId .. "_Elementalist_IsBlind", ROLE.ConvarMidEffectDur:GetInt(), 1, EndBlind)
         else
-            timer.Adjust(vicId .. "_IsBlind", ROLE.ConvarMidEffectDur:GetInt(), 1, EndBlind)
+            timer.Adjust(vicId .. "_Elementalist_IsBlind", ROLE.ConvarMidEffectDur:GetInt(), 1, EndBlind)
         end
     end
 
@@ -268,22 +268,18 @@ local function ResetEffects(ply)
     ignitedPlayers[id] = nil
     blindedPlayers[id] = nil
 
-    timer.Remove(id .. "_IsSlowed")
+    ply:Freeze(false)
+    timer.Remove(id .. "_Elementalist_IsSlowed")
     net.Start("EndIceScreen")
     net.Send(ply)
 
     ply:Extinguish()
-    timer.Remove(id .. "_IsBurning")
+    timer.Remove(id .. "_Elementalist_IsBurning")
+    timer.Remove(id .. "_Elementalist_IsBurningShotgunFix")
 
-    timer.Remove(id .. "_IsBlind")
+    timer.Remove(id .. "_Elementalist_IsBlind")
     net.Start("EndDimScreen")
     net.Send(ply)
 end
 
-hook.Add("PlayerDeath", "Reset Elementalist On Player Death", function(ply)
-    ResetEffects(ply)
-end)
-
-hook.Add("PlayerSilentDeath", "Reset Elementalist On Silent Player death", function(ply)
-    ResetEffects(ply)
-end)
+hook.Add("PostPlayerDeath", "Elementalist_PostPlayerDeath", ResetEffects)
