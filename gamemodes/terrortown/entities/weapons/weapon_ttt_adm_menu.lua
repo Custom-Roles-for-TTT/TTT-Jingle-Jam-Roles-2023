@@ -384,15 +384,23 @@ function SWEP:PrimaryAttack()
         end
 
         dframe.OnClose = function()
-            hook.Remove("Think", "Admin_Think")
+            hook.Remove("Think", "Admin_Think_" .. self:EntIndex())
         end
 
         dframe:MakePopup()
 
         local client = LocalPlayer()
-        hook.Add("Think", "Admin_Think", function()
-            if not client:Alive() then
+        hook.Add("Think", "Admin_Think_" .. self:EntIndex(), function()
+            if not dframe or not IsValid(dframe) then
+                hook.Remove("Think", "Admin_Think_" .. self:EntIndex())
+                return
+            end
+
+            local round_state = GetRoundState()
+            -- Automatically close the menu when the player dies or the round is in a state where they wouldn't have the weapon anymore
+            if not client:Alive() or (round_state ~= ROUND_ACTIVE and round_state ~= ROUND_POST) then
                 dframe:Close()
+                hook.Remove("Think", "Admin_Think_" .. self:EntIndex())
             end
         end)
     end
