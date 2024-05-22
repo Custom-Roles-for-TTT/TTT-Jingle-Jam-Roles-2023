@@ -16,6 +16,7 @@ Seeing this message should be impossible! Please let
 us know how you are seeing this so we can fix it.
 
 Press {menukey} to receive your special equipment!]]
+ROLE.shortdesc = "Created by a Soulmage soulbinding a dead body and can use special powers while dead to help their fellow traitors."
 
 ROLE.team = ROLE_TEAM_TRAITOR
 
