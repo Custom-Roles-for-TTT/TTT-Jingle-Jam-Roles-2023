@@ -253,9 +253,14 @@ function SWEP:PrimaryAttack()
                 dtargetto:AddColumn("Players")
             end
 
+            local ownerSid64 = self:GetOwner():SteamID64()
             for _, p in PlayerIterator() do
+                -- Skip players who are true spectators, not just dead players
+                if p:IsSpec() and p:GetRole() == ROLE_NONE then continue end
+
                 local sid64 = p:SteamID64()
-                if sid64 == self:GetOwner():SteamID64() and CantTargetSelf(command) then continue end
+                if sid64 == ownerSid64 and CantTargetSelf(command) then continue end
+
                 dtarget:AddLine(p:Nick(), sid64)
                 if command == "send" then
                     dtargetto:AddLine(p:Nick(), sid64)
