@@ -2,8 +2,15 @@
 local shouldDrawdarkOverlay = false
 local iceOverlay = nil
 local darkOverlay = {
-    ["$pp_colour_brightness"] = 1,
-    ["$pp_colour_colour"] = 1
+    [ "$pp_colour_addr" ] = 0,
+    [ "$pp_colour_addg" ] = 0,
+    [ "$pp_colour_addb" ] = 0,
+    [ "$pp_colour_brightness" ] = 0,
+    [ "$pp_colour_contrast" ] = 1,
+    [ "$pp_colour_colour" ] = 1,
+    [ "$pp_colour_mulr" ] = 0,
+    [ "$pp_colour_mulg" ] = 0,
+    [ "$pp_colour_mulb" ] = 0
 }
 
 local function CreateIceOverlay(maxOverlay)
@@ -47,29 +54,23 @@ end
 local function StartBlindOverlay()
     shouldDrawdarkOverlay = true
 
-    darkOverlay = {
-        ["$pp_colour_brightness"] = -1,
-        ["$pp_colour_colour"] = 0
-    }
+    darkOverlay["$pp_colour_brightness"] = -1
+    darkOverlay["$pp_colour_colour"] = 0
 end
 
 local function StartDarkOverlay(percent)
     shouldDrawdarkOverlay = true
 
     local actualPercent = percent * 0.01
-    darkOverlay = {
-        ["$pp_colour_brightness"] = -0.25 * actualPercent,
-        ["$pp_colour_colour"] = 1 - actualPercent
-    }
+    darkOverlay["$pp_colour_brightness"] = -0.25 * actualPercent
+    darkOverlay["$pp_colour_colour"] = 1 - actualPercent
 end
 
 local function EndDarkOverlay()
     shouldDrawdarkOverlay = false
 
-    darkOverlay = {
-        ["$pp_colour_brightness"] = 0,
-        ["$pp_colour_colour"] = 1
-    }
+    darkOverlay["$pp_colour_brightness"] = 0
+    darkOverlay["$pp_colour_colour"] = 1
 end
 
 -- Screen dimming
