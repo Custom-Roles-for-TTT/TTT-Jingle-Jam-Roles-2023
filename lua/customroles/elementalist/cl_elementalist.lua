@@ -57,7 +57,7 @@ local function StartDarkOverlay(percent)
     local actualPercent = percent * 0.01
     darkOverlay = {
         ["$pp_colour_brightness"] = -0.25 * actualPercent,
-        ["$pp_colour_colour"] = 1 - (1 * actualPercent)
+        ["$pp_colour_colour"] = 1 - actualPercent
     }
 end
 
