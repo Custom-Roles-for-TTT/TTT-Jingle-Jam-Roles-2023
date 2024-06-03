@@ -45,6 +45,8 @@ local function CloseIceOverlay()
 end
 
 local function StartBlindOverlay()
+    shouldDrawdarkOverlay = true
+
     darkOverlay = {
         ["$pp_colour_brightness"] = -1,
         ["$pp_colour_colour"] = 0
