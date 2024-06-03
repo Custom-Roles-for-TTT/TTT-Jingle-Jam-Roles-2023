@@ -89,7 +89,7 @@ net.Receive("EndIceScreen", function(len)
 end)
 
 net.Receive("BeginDimScreen", function(len)
-    local amount = net.ReadUInt(6)
+    local amount = net.ReadUInt(7)
     if amount == 100 then
         StartBlindOverlay()
     else

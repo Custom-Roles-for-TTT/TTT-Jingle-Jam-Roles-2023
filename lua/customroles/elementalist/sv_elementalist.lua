@@ -224,7 +224,7 @@ hook.Add("EntityTakeDamage", "Elementalist_EntityTakeDamage", function(ent, dmgi
         end
 
         net.Start("BeginDimScreen")
-            net.WriteUInt(blindedPlayers[vicId], 6)
+            net.WriteUInt(blindedPlayers[vicId], 7)
         net.Send(ent)
 
         local function EndBlind()
