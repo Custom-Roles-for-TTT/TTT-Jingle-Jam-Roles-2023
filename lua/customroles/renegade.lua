@@ -320,10 +320,7 @@ if CLIENT then
 
         local traitorlist = ""
         for _, ply in PlayerIterator() do
-            if ply:IsTraitorTeam() then
-                traitorlist = traitorlist .. string.rep(" ", 42) .. ply:Nick() .. "\n"
-            -- Don't show the list of comrades if there is a glitch
-            elseif renegade_show_glitch:GetBool() and ply:IsGlitch() then
+            if ply:IsTraitorTeam() or (renegade_show_glitch:GetBool() and ply:IsGlitch()) then
                 traitorlist = traitorlist .. string.rep(" ", 42) .. ply:Nick() .. "\n"
             end
         end

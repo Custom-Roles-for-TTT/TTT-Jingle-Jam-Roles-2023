@@ -91,15 +91,15 @@ if SERVER then
         soulbound:SetNWInt("TTTSoulboundBeeBarrelUses", 0)
         soulbound:SetNWFloat("TTTSoulboundBeeBarrelNextUse", 0)
     end
-end
 
-local enabled = GetConVar("ttt_soulbound_beebarrel_enabled")
-hook.Add("TTTPrepareRound", "Soulbound_BeeBarrel_TTTPrepareRound", function()
-    if enabled:GetBool() and not scripted_ents.Get("ttt_beenade_proj") then
-        ErrorNoHalt("WARNING: Jenssen's BeeNade must be installed to enable the Soulbound's place bee barrel ability!\n")
-        enabled:SetBool(false)
-    end
-end)
+    local enabled = GetConVar("ttt_soulbound_beebarrel_enabled")
+    hook.Add("TTTPrepareRound", "Soulbound_BeeBarrel_TTTPrepareRound", function()
+        if enabled:GetBool() and not scripted_ents.Get("ttt_beenade_proj") then
+            ErrorNoHalt("WARNING: Jenssen's BeeNade must be installed to enable the Soulbound's place bee barrel ability!\n")
+            enabled:SetBool(false)
+        end
+    end)
+end
 
 if CLIENT then
     local ammo_colors = {
