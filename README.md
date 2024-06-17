@@ -4,7 +4,7 @@ A pack of [Custom Roles for TTT](https://github.com/Custom-Roles-for-TTT/TTT-Cus
 # Roles
 
 ## Admin
-_Suggested By_: Noxx\
+_Contributed By_: Noxx\
 The Admin is a detective role who slowly gains power over time which can be spent to run admin commands.
 \
 \
@@ -38,7 +38,7 @@ ttt_admin_shop_random_enabled 0   // Whether role shop randomization is enabled 
 ```
 
 ## Elementalist
-_Suggested By_: Logan\
+_Contributed By_: Logan\
 The Elementalist is a traitor role who, instead of regular traitor weapons, gains access to special elemental power-ups in their shop.
 \
 \
@@ -90,7 +90,7 @@ ttt_ghostwhisperer_ghosting_time    8   // The amount of time (in seconds) the G
 ```
 
 ## Physician
-_Suggested By_: Logan\
+_Contributed By_: Logan\
 The Physician is a detective role who spawns with a Health Tracker. The Physician can use their custom weapon to place trackers on terrorists to monitor their health from the scoreboard.
 \
 \
