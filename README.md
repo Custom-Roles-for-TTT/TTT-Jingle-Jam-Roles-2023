@@ -1,6 +1,8 @@
 # _Custom Roles for TTT_ Roles Pack for Jingle Jam 2023
 A pack of [Custom Roles for TTT](https://github.com/Custom-Roles-for-TTT/TTT-Custom-Roles) roles created based on the generous donations of our community members in support of [Jingle Jam 2023](https://www.jinglejam.co.uk/).
 
+Also be sure to check out the supplementary Randomat event created by Logan in support of Jingle Jam 2023: [A Round Of Yogscast Poker](https://steamcommunity.com/sharedfiles/filedetails/?id=3270708577)
+
 # Roles
 
 ## Admin
