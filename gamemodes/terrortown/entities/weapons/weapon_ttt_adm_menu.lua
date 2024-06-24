@@ -24,7 +24,7 @@ if CLIENT then
     SWEP.ViewModelFlip      = false
 end
 
-SWEP.ViewModel              = "models/weapons/v_slam.mdl"
+SWEP.ViewModel              = "models/weapons/c_slam.mdl"
 SWEP.WorldModel             = "models/weapons/w_slam.mdl"
 SWEP.Weight                 = 2
 
