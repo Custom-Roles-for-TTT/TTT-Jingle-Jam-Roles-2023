@@ -24,7 +24,7 @@ table.insert(ROLE.convars, {
 })
 table.insert(ROLE.convars, {
     cvar = "ttt_ghostwhisperer_limited_chat",
-    type = ROLE_CONVAR_TYPE_BOOLEAN
+    type = ROLE_CONVAR_TYPE_BOOL
 })
 
 ROLE.translations = {
