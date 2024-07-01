@@ -34,22 +34,20 @@ RegisterRole(ROLE)
 if SERVER then
     hook.Add("TTTPrepareRound", "GhostWhisperer_TTTPrepareRound", function()
         for _, p in PlayerIterator() do
-            p:SetNWBool("TTTIsGhosting", false)
+            p.TTTIsGhosting = false
         end
     end)
 
     hook.Add("PlayerCanSeePlayersChat", "GhostWhisperer_PlayerCanSeePlayersChat", function(text, teamOnly, listener, speaker)
         if not IsPlayer(listener) or not IsPlayer(speaker) then return end
-        if speaker:Team() == TEAM_SPEC and speaker:GetNWBool("TTTIsGhosting", false) then
+        if speaker:Team() == TEAM_SPEC and speaker.TTTIsGhosting then
             return true
         end
     end)
 
     hook.Add("TTTPlayerSpawnForRound", "GhostWhisperer_TTTPlayerSpawnForRound", function(ply, dead_only)
         if not IsPlayer(ply) then return end
-        if ply:GetNWBool("TTTIsGhosting", false) then
-            ply:SetNWBool("TTTIsGhosting", false)
-        end
+        ply.TTTIsGhosting = false
     end)
 end
 
