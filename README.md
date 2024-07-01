@@ -89,6 +89,7 @@ ttt_ghostwhisperer_min_players      0   // The minimum number of players require
 ttt_ghostwhisperer_starting_health  100 // The amount of health a Ghost Whisperer starts with
 ttt_ghostwhisperer_max_health       100 // The maximum amount of health a Ghost Whisperer can have
 ttt_ghostwhisperer_ghosting_time    8   // The amount of time (in seconds) the Ghost Whisperer's ghosting device takes to use
+ttt_ghostwhisperer_limited_chat     0   // Whether only the ghost whisperer should be able to see the chat of their dead target
 ```
 
 ## Physician
