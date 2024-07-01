@@ -30,11 +30,11 @@ if SERVER then
         message = message:gsub("^%l", string.upper)
         message = message .. " has granted you the ability to talk in chat!"
         ply:QueueMessage(MSG_PRINTBOTH, message)
-        ply:SetNWBool("TTTIsGhosting", true)
+        ply.TTTIsGhosting = true
     end
 
     function SWEP:ValidateTarget(ply, body, bone)
-        if ply:GetNWBool("TTTIsGhosting", false) then
+        if ply.TTTIsGhosting then
             return false, "SUBJECT IS ALREADY GHOSTING"
         end
         return true, ""
