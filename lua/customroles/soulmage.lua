@@ -34,6 +34,10 @@ ROLE.translations = {
 
 RegisterRole(ROLE)
 
+if SERVER then
+    AddCSLuaFile()
+end
+
 if CLIENT then
     --------------
     -- TUTORIAL --

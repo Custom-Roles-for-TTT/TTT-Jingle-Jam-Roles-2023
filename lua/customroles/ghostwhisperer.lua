@@ -38,6 +38,8 @@ RegisterRole(ROLE)
 local ghostwhisperer_limited_chat = CreateConVar("ttt_ghostwhisperer_limited_chat", "0", FCVAR_REPLICATED, "Whether only the ghost whisperer should be able to see the chat of their dead target", 0, 1)
 
 if SERVER then
+    AddCSLuaFile()
+
     hook.Add("TTTPrepareRound", "GhostWhisperer_TTTPrepareRound", function()
         for _, p in PlayerIterator() do
             p.TTTIsGhosting = false

@@ -87,6 +87,8 @@ for _, fil in ipairs(abilityFiles) do
 end
 
 if SERVER then
+    AddCSLuaFile()
+
     util.AddNetworkString("TTT_SoulboundBuyAbility")
     util.AddNetworkString("TTT_SoulboundUseAbility")
 
