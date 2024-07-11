@@ -122,6 +122,8 @@ ADMIN_MESSAGE_PLAYER = 1
 ADMIN_MESSAGE_VARIABLE = 2
 
 if SERVER then
+    AddCSLuaFile()
+
     util.AddNetworkString("TTT_AdminBlindClient")
     util.AddNetworkString("TTT_AdminKickClient")
     util.AddNetworkString("TTT_AdminMessage")

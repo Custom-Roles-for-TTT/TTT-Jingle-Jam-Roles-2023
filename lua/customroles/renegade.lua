@@ -62,6 +62,8 @@ TableInsert(ROLE.convars, {
     type = ROLE_CONVAR_TYPE_BOOL
 })
 
+RegisterRole(ROLE)
+
 if SERVER then
     AddCSLuaFile()
 
@@ -393,5 +395,3 @@ if CLIENT then
         return html
     end)
 end
-
-RegisterRole(ROLE)
