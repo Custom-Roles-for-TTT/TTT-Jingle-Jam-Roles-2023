@@ -42,7 +42,7 @@ if SERVER then
 
     hook.Add("TTTPrepareRound", "GhostWhisperer_TTTPrepareRound", function()
         for _, p in PlayerIterator() do
-            p.TTTIsGhosting = false
+            p:ClearProperty("TTTIsGhosting")
         end
     end)
 
@@ -60,7 +60,7 @@ if SERVER then
 
     hook.Add("TTTPlayerSpawnForRound", "GhostWhisperer_TTTPlayerSpawnForRound", function(ply, dead_only)
         if not IsPlayer(ply) then return end
-        ply.TTTIsGhosting = false
+        ply:ClearProperty("TTTIsGhosting")
     end)
 end
 
