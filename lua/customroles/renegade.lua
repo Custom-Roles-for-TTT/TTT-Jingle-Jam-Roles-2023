@@ -240,12 +240,13 @@ if CLIENT then
     ---------------
 
     AddHook("TTTTargetIDPlayerRoleIcon", "Renegade_TTTTargetIDPlayerRoleIcon", function(ply, cli, role, noz, color_role, hideBeggar, showJester, hideBodysnatcher)
-        if cli:IsActiveRenegade() and (ply:IsTraitorTeam() or (renegade_show_glitch:GetBool() and ply:IsGlitch())) then
+        if GetRoundState() < ROUND_ACTIVE then return end
+        if cli:IsRenegade() and (ply:IsTraitorTeam() or (renegade_show_glitch:GetBool() and ply:IsGlitch())) then
             local icon_overridden, _, _ = ply:IsTargetIDOverridden(cli)
             if icon_overridden then return end
 
             return ROLE_NONE, false, ROLE_TRAITOR
-        elseif cli:IsTraitorTeam() and ply:IsActiveRenegade() then
+        elseif cli:IsTraitorTeam() and ply:IsRenegade() then
             return ROLE_RENEGADE, false, ROLE_RENEGADE
         end
     end)
@@ -254,12 +255,12 @@ if CLIENT then
         if GetRoundState() < ROUND_ACTIVE then return end
         if not IsPlayer(ent) then return end
 
-        if cli:IsActiveRenegade() and (ent:IsTraitorTeam() or (renegade_show_glitch:GetBool() and ent:IsGlitch())) then
+        if cli:IsRenegade() and (ent:IsTraitorTeam() or (renegade_show_glitch:GetBool() and ent:IsGlitch())) then
             local _, ring_overridden, _ = ent:IsTargetIDOverridden(cli)
             if ring_overridden then return end
 
             return true, ROLE_COLORS_RADAR[ROLE_TRAITOR]
-        elseif cli:IsTraitorTeam() and ent:IsActiveRenegade() then
+        elseif cli:IsTraitorTeam() and ent:IsRenegade() then
             return true, ROLE_COLORS_RADAR[ROLE_RENEGADE]
         end
     end)
@@ -268,22 +269,23 @@ if CLIENT then
         if GetRoundState() < ROUND_ACTIVE then return end
         if not IsPlayer(ent) then return end
 
-        if cli:IsActiveRenegade() and (ent:IsTraitorTeam() or (renegade_show_glitch:GetBool() and ent:IsGlitch())) then
+        if cli:IsRenegade() and (ent:IsTraitorTeam() or (renegade_show_glitch:GetBool() and ent:IsGlitch())) then
             local _, _, text_overridden = ent:IsTargetIDOverridden(cli)
             if text_overridden then return end
 
             local role_string = LANG.GetParamTranslation("target_unknown_team", { targettype = LANG.GetTranslation("traitor")})
             return StringUpper(role_string), ROLE_COLORS_RADAR[ROLE_TRAITOR]
-        elseif IsPlayer(ent) and cli:IsTraitorTeam() and ent:IsActiveRenegade() then
+        elseif IsPlayer(ent) and cli:IsTraitorTeam() and ent:IsRenegade() then
             return StringUpper(ROLE_STRINGS[ROLE_RENEGADE]), ROLE_COLORS_RADAR[ROLE_RENEGADE]
         end
     end)
 
     ROLE.istargetidoverridden = function(ply, target)
+        if GetRoundState() < ROUND_ACTIVE then return end
         if not IsPlayer(target) then return end
 
-        local visible = (ply:IsActiveRenegade() and (target:IsTraitorTeam() or (renegade_show_glitch:GetBool() and target:IsGlitch()))) or
-                        (ply:IsTraitorTeam() and target:IsActiveRenegade())
+        local visible = (ply:IsRenegade() and (target:IsTraitorTeam() or (renegade_show_glitch:GetBool() and target:IsGlitch()))) or
+                        (ply:IsTraitorTeam() and target:IsRenegade())
         ------ icon,    ring,    text
         return visible, visible, visible
     end
@@ -293,22 +295,24 @@ if CLIENT then
     ----------------
 
     AddHook("TTTScoreboardPlayerRole", "Renegade_TTTScoreboardPlayerRole", function(ply, cli, color, roleFileName)
-        if cli:IsActiveRenegade() and (ply:IsTraitorTeam() or (renegade_show_glitch:GetBool() and ply:IsGlitch())) then
+        if GetRoundState() < ROUND_ACTIVE then return end
+        if cli:IsRenegade() and (ply:IsTraitorTeam() or (renegade_show_glitch:GetBool() and ply:IsGlitch())) then
             local _, role_overridden = ply:IsScoreboardInfoOverridden(cli)
             if role_overridden then return end
 
             return ROLE_COLORS_SCOREBOARD[ROLE_TRAITOR], ROLE_STRINGS_SHORT[ROLE_NONE]
         end
-        if (cli:IsTraitorTeam() and ply:IsActiveRenegade()) or (cli == ply and cli:IsRenegade()) then
+        if (cli:IsTraitorTeam() and ply:IsRenegade()) or (cli == ply and cli:IsRenegade()) then
             return ROLE_COLORS_SCOREBOARD[ROLE_RENEGADE], ROLE_STRINGS_SHORT[ROLE_RENEGADE]
         end
     end)
 
     ROLE.isscoreboardinfooverridden = function(ply, target)
+        if GetRoundState() < ROUND_ACTIVE then return end
         if not IsPlayer(target) then return end
 
-        local visible = (ply:IsActiveRenegade() and (target:IsTraitorTeam() or (renegade_show_glitch:GetBool() and target:IsGlitch()))) or
-                        (ply:IsTraitorTeam() and target:IsActiveRenegade())
+        local visible = (ply:IsRenegade() and (target:IsTraitorTeam() or (renegade_show_glitch:GetBool() and target:IsGlitch()))) or
+                        (ply:IsTraitorTeam() and target:IsRenegade())
         ------ name,  role
         return false, visible
     end
@@ -346,7 +350,7 @@ if CLIENT then
     -- WIN CHECKS --
     ----------------
 
-    hook.Add("TTTSyncWinIDs", "Renegade_TTTSyncWinIDs", function()
+    AddHook("TTTSyncWinIDs", "Renegade_TTTSyncWinIDs", function()
         WIN_RENEGADE = WINS_BY_ROLE[ROLE_RENEGADE]
     end)
 
