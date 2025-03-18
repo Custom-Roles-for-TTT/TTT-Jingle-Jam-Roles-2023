@@ -83,14 +83,32 @@ The Ghost Whisperer is an innocent role who spawns with a ghosting device that c
 \
 **ConVars**
 ```cpp
-ttt_ghostwhisperer_enabled          0   // Whether or not the Ghost Whisperer should spawn
-ttt_ghostwhisperer_spawn_weight     1   // The weight assigned to spawning the Ghost Whisperer
-ttt_ghostwhisperer_min_players      0   // The minimum number of players required to spawn the Ghost Whisperer
-ttt_ghostwhisperer_starting_health  100 // The amount of health a Ghost Whisperer starts with
-ttt_ghostwhisperer_max_health       100 // The maximum amount of health a Ghost Whisperer can have
-ttt_ghostwhisperer_ghosting_time    8   // The amount of time (in seconds) the Ghost Whisperer's ghosting device takes to use
-ttt_ghostwhisperer_limited_chat     0   // Whether only the ghost whisperer should be able to see the chat of their dead target
-ttt_ghostwhisperer_max_abilities    0   // The maximum number of Soulbound abilities (see Soulbound below) the target of the Ghost Whisperer can buy. (Set to 0 to disable abilities)
+ttt_ghostwhisperer_enabled                  0   // Whether or not the Ghost Whisperer should spawn
+ttt_ghostwhisperer_spawn_weight             1   // The weight assigned to spawning the Ghost Whisperer
+ttt_ghostwhisperer_min_players              0   // The minimum number of players required to spawn the Ghost Whisperer
+ttt_ghostwhisperer_starting_health          100 // The amount of health a Ghost Whisperer starts with
+ttt_ghostwhisperer_max_health               100 // The maximum amount of health a Ghost Whisperer can have
+ttt_ghostwhisperer_ghosting_time            8   // The amount of time (in seconds) the Ghost Whisperer's ghosting device takes to use
+ttt_ghostwhisperer_limited_chat             0   // Whether only the ghost whisperer should be able to see the chat of their dead target
+ttt_ghostwhisperer_max_abilities            0   // The maximum number of Soulbound abilities (see Soulbound below) the target of the Ghost Whisperer can buy. (Set to 0 to disable abilities)
+ttt_ghostwhisperer_box_enabled              1   // Whether the place box ability is enabled or not
+ttt_ghostwhisperer_confetti_enabled         1   // Whether the confetti ability is enabled or not
+ttt_ghostwhisperer_decoy_enabled            1   // Whether the place decoy ability is enabled or not
+ttt_ghostwhisperer_discombob_enabled        1   // Whether the discombobulator ability is enabled or not
+ttt_ghostwhisperer_dropweapon_enabled       1   // Whether the drop weapon ability is enabled or not
+ttt_ghostwhisperer_explosivebarrel_enabled  0   // Whether the place explosive barrel ability is enabled or not
+ttt_ghostwhisperer_fakebody_enabled         1   // Whether the place fake body ability is enabled or not
+ttt_ghostwhisperer_fakec4_enabled           1   // Whether the place fake C4 ability is enabled or not
+ttt_ghostwhisperer_gunshots_enabled         1   // Whether the gunshots ability is enabled or not
+ttt_ghostwhisperer_headcrab_enabled         1   // Whether the summon headcrab ability is enabled or not
+ttt_ghostwhisperer_incendiary_enabled       1   // Whether the incendiary grenade ability is enabled or not
+ttt_ghostwhisperer_poisonheadcrab_enabled   1   // Whether the summon poison headcrab ability is enabled or not
+ttt_ghostwhisperer_poltergeist_enabled      1   // Whether the poltergeist ability is enabled or not
+ttt_ghostwhisperer_possession_enabled       1   // Whether the ultra prop possession ability is enabled or not
+ttt_ghostwhisperer_smoke_enabled            1   // Whether the instant smoke ability is enabled or not
+ttt_ghostwhisperer_swapinventory_enabled    1   // Whether the swap inventory ability is enabled or not
+ttt_ghostwhisperer_beebarrel_enabled        1   // Whether the place bee barrel ability is enabled or not. Requires Jensson's BeeNade mod
+ttt_ghostwhisperer_packapunch_enabled       1   // Whether the Pack-a-Punch ability is enabled or not. Requires Pack-a-Punch mod
 ```
 
 ## Physician
