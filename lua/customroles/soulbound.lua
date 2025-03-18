@@ -370,7 +370,7 @@ if CLIENT then
         dhelp:SetSize(diw, 64)
         dhelp:MoveBelow(dinfo, m)
 
-        local function FillAbilityList(abilities, soulbound)
+        local function FillAbilityList(abilities)
             dlist:Clear()
 
             local paneltablefav = {}
@@ -378,8 +378,8 @@ if CLIENT then
 
             local ic = nil
             for _, ability in pairs(abilities) do
-                if soulbound and not ability:Enabled() then continue end
-                if not soulbound and (ability.SoulboundOnly or not ability:EnabledGW()) then continue end
+                if isSoulbound and not ability:Enabled() then continue end
+                if not isSoulbound and (ability.SoulboundOnly or not ability:EnabledGW()) then continue end
 
                 if ability.Icon then
                     ic = vgui.Create("LayeredIcon", dlist)
