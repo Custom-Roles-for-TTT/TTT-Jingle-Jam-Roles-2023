@@ -25,10 +25,16 @@ if CLIENT then
 end
 
 if SERVER then
+    local ghostwhisperer_max_abilities = GetConVar("ttt_ghostwhisperer_max_abilities")
+
     function SWEP:OnSuccess(ply, body)
         local message = ROLE_STRINGS_EXT[ROLE_GHOSTWHISPERER]
         message = message:gsub("^%l", string.upper)
-        message = message .. " has granted you the ability to talk in chat!"
+        message = message .. " has granted you the ability to talk in chat"
+        if ghostwhisperer_max_abilities:GetInt() > 0 then
+            message = message .. " and use abilities"
+        end
+        message = message .. "!"
         ply:QueueMessage(MSG_PRINTBOTH, message)
         ply:SetProperty("TTTIsGhosting", true, ply)
     end
