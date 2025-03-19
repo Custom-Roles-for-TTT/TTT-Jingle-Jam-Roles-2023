@@ -612,6 +612,8 @@ if CLIENT then
     -- HUD --
     ---------
 
+    local hide_role = GetConVar("ttt_hide_role")
+
     hook.Add("HUDPaint", "Soulbound_HUDPaint", function()
         if GetRoundState() ~= ROUND_ACTIVE then return end
 
@@ -635,12 +637,16 @@ if CLIENT then
         local x = ScrW() - width - 20
         local y = ScrH() - 20 + margin
 
-        local chatKey = Key("messagemode")
+        local col = ROLE_COLORS[client:GetRole()]
+        if hide_role:GetBool() then
+            col = COLOR_DGRAY
+        end
 
+        local chatKey = Key("messagemode")
         if chatKey then
             y = y - titleHeight - descHight - (margin * 4)
             draw.RoundedBox(8, x, y, width, titleHeight + descHight + (margin * 3), Color(20, 20, 20, 200))
-            draw.RoundedBoxEx(8, x, y, titleHeight, titleHeight, ROLE_COLORS[client:GetRole()], true, false, false, true)
+            draw.RoundedBoxEx(8, x, y, titleHeight, titleHeight, col, true, false, false, true)
             draw.SimpleText("Messages from Beyond", "TimeLeft", x + titleHeight + (margin * 2), y + (titleHeight / 2), COLOR_WHITE, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
             CRHUD:ShadowedText(chatKey, "Trebuchet22", x + (titleHeight / 2), y + (titleHeight / 2), COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             draw.SimpleText("Press '" .. chatKey .. "' to send messages to the living", "TabLarge", x + (margin * 3), y + titleHeight + descHight + margin, COLOR_WHITE, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
@@ -664,7 +670,7 @@ if CLIENT then
                 local ready = ability:DrawHUD(client, x, y + titleHeight + margin, width, bodyHeight, Key("slot" .. slot, slot))
                 local slotColor = Color(90, 90, 90, 255)
                 if ready then
-                    slotColor = ROLE_COLORS[client:GetRole()]
+                    slotColor = col
                 end
                 draw.RoundedBoxEx(8, x, y, titleHeight, titleHeight, slotColor, true, false, false, true)
             end
@@ -710,6 +716,7 @@ if CLIENT then
 
     hook.Add("HUDDrawScoreBoard", "Soulbound_HUDDrawScoreBoard", function() -- Use HUDDrawScoreBoard instead of HUDPaint so it draws above the TTT HUD
         if GetRoundState() ~= ROUND_ACTIVE then return end
+        if hide_role:GetBool() then return end
 
         if not client then
             client = LocalPlayer()
