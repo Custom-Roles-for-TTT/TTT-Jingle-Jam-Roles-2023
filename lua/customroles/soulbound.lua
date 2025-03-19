@@ -626,14 +626,27 @@ if CLIENT then
         else
             max_abilities = ghostwhisperer_max_abilities:GetInt()
         end
-        if max_abilities == 0 then return end
 
         local margin = 2
         local width = 300
         local titleHeight = 28
+        local descHight = 14
         local bodyHeight = titleHeight * 2 + margin
         local x = ScrW() - width - 20
         local y = ScrH() - 20 + margin
+
+        local chatKey = Key("messagemode")
+
+        if chatKey then
+            y = y - titleHeight - descHight - (margin * 4)
+            draw.RoundedBox(8, x, y, width, titleHeight + descHight + (margin * 3), Color(20, 20, 20, 200))
+            draw.RoundedBoxEx(8, x, y, titleHeight, titleHeight, ROLE_COLORS[client:GetRole()], true, false, false, true)
+            draw.SimpleText("Ghostly Messages", "TimeLeft", x + titleHeight + (margin * 2), y + (titleHeight / 2), COLOR_WHITE, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            CRHUD:ShadowedText(chatKey, "Trebuchet22", x + (titleHeight / 2), y + (titleHeight / 2), COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText("Press '" .. chatKey .. "' to send messages to the living", "TabLarge", x + (margin * 3), y + titleHeight + descHight + margin, COLOR_WHITE, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
+        end
+
+        if max_abilities == 0 then return end
 
         for i = max_abilities, 1, -1 do
             local slot = tostring(i)
