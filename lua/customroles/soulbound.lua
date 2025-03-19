@@ -641,7 +641,7 @@ if CLIENT then
             y = y - titleHeight - descHight - (margin * 4)
             draw.RoundedBox(8, x, y, width, titleHeight + descHight + (margin * 3), Color(20, 20, 20, 200))
             draw.RoundedBoxEx(8, x, y, titleHeight, titleHeight, ROLE_COLORS[client:GetRole()], true, false, false, true)
-            draw.SimpleText("Ghostly Messages", "TimeLeft", x + titleHeight + (margin * 2), y + (titleHeight / 2), COLOR_WHITE, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            draw.SimpleText("Messages from Beyond", "TimeLeft", x + titleHeight + (margin * 2), y + (titleHeight / 2), COLOR_WHITE, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
             CRHUD:ShadowedText(chatKey, "Trebuchet22", x + (titleHeight / 2), y + (titleHeight / 2), COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             draw.SimpleText("Press '" .. chatKey .. "' to send messages to the living", "TabLarge", x + (margin * 3), y + titleHeight + descHight + margin, COLOR_WHITE, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
         end
