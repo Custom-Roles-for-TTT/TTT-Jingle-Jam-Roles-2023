@@ -617,6 +617,10 @@ if CLIENT then
     hook.Add("HUDPaint", "Soulbound_HUDPaint", function()
         if GetRoundState() ~= ROUND_ACTIVE then return end
 
+        if not hide_role then
+            hide_role = GetConVar("ttt_hide_role")
+        end
+
         if not client then
             client = LocalPlayer()
         end
@@ -681,7 +685,6 @@ if CLIENT then
         local crosshair_brightness = GetConVar("ttt_crosshair_brightness")
         local crosshair_size = GetConVar("ttt_crosshair_size")
         local disable_crosshair = GetConVar("ttt_disable_crosshair")
-        local hide_role = GetConVar("ttt_hide_role")
 
         if disable_crosshair:GetBool() then return end
 
