@@ -1052,6 +1052,7 @@ globals = {
     "WIN_RENEGADE",
 
     -- JJ2024
+    "ROLE_HERMIT",
     "ROLE_ZEALOT",
 
     -- Optional external mods
