@@ -1051,6 +1051,9 @@ globals = {
     "SOULBOUND",
     "WIN_RENEGADE",
 
+    -- JJ2024
+    "ROLE_ZEALOT",
+
     -- Optional external mods
     "TTTKP",
     "TTTPAP"
