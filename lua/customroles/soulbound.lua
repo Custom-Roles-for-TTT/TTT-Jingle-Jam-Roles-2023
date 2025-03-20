@@ -217,8 +217,12 @@ if SERVER then
             end
         end
         if ply:IsSoulbound() then
+            if ROLE_ZEALOT and ply:GetNWInt("TTTSoulboundOldRole") == ROLE_ZEALOT then
+                ply:SetRole(ROLE_ZEALOT)
+            else
+                ply:SetRole(ROLE_TRAITOR)
+            end
             ply:SetNWInt("TTTSoulboundOldRole", -1)
-            ply:SetRole(ROLE_TRAITOR)
             SendFullStateUpdate()
         end
     end)
