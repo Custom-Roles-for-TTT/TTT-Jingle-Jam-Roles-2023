@@ -21,6 +21,7 @@ ROLE.shortdesc = "Created by a Soulmage soulbinding a dead body and can use spec
 ROLE.team = ROLE_TEAM_TRAITOR
 
 local soulbound_max_abilities = CreateConVar("ttt_soulbound_max_abilities", "4", FCVAR_REPLICATED, "The maximum number of abilities the Soulbound can buy. (Set to 0 to disable abilities)", 0, 9)
+local ghostwhisperer_max_abilities = CreateConVar("ttt_ghostwhisperer_max_abilities", "0", FCVAR_REPLICATED, "The maximum number of Soulbound abilities the target of the Ghost Whisperer can buy. (Set to 0 to disable abilities)", 0, 9)
 
 ROLE.convars = {}
 table.insert(ROLE.convars, {
@@ -77,6 +78,17 @@ function SOULBOUND:RegisterAbility(ability, defaultEnabled)
         type = ROLE_CONVAR_TYPE_BOOL
     })
 
+    if not ability.SoulboundOnly then
+        local enabledGW = CreateConVar("ttt_ghostwhisperer_" .. ability.Id .. "_enabled", tostring(defaultEnabled), FCVAR_REPLICATED)
+        ability.EnabledGW = function()
+            return enabledGW:GetBool()
+        end
+        table.insert(ROLE_CONVARS[ROLE_GHOSTWHISPERER], {
+            cvar = "ttt_ghostwhisperer_" .. ability.Id .. "_enabled",
+            type = ROLE_CONVAR_TYPE_BOOL
+        })
+    end
+
     SOULBOUND.Abilities[ability.Id] = ability
 end
 
@@ -98,14 +110,15 @@ if SERVER then
 
     net.Receive("TTT_SoulboundUseAbility", function(len, ply)
         local num = net.ReadUInt(4)
-        if not ply:IsSoulbound() then return end
+        if not ply:IsSoulbound() and not ply.TTTIsGhosting then return end
 
         local id = ply:GetNWString("TTTSoulboundAbility" .. tostring(num), "")
         if #id == 0 then return end
 
         local ability = SOULBOUND.Abilities[id]
         if not ability.Use then return end
-        if not ability:Enabled() then return end
+        if ply:IsSoulbound() and not ability:Enabled() then return end
+        if not ply:IsSoulbound() and (ability.SoulboundOnly or not ability:EnabledGW()) then return end
 
         local target = ply:GetObserverMode() ~= OBS_MODE_ROAMING and ply:GetObserverTarget() or nil
         if not ability:Condition(ply, target) then return end
@@ -118,15 +131,21 @@ if SERVER then
 
     hook.Add("Think", "Soulbound_Think", function()
         for _, p in PlayerIterator() do
-            if p:IsSoulbound() then
-                local max = soulbound_max_abilities:GetInt()
+            if p:IsSoulbound() or p.TTTIsGhosting then
+                local max
+                if p:IsSoulbound() then
+                    max = soulbound_max_abilities:GetInt()
+                else
+                    max = ghostwhisperer_max_abilities:GetInt()
+                end
                 for i = 1, max do
                     local id = p:GetNWString("TTTSoulboundAbility" .. tostring(i), "")
                     if #id == 0 then break end
 
                     local ability = SOULBOUND.Abilities[id]
                     if not ability.Passive then continue end
-                    if not ability:Enabled() then continue end
+                    if p:IsSoulbound() and not ability:Enabled() then continue end
+                    if not p:IsSoulbound() and (ability.SoulboundOnly or not ability:EnabledGW()) then continue end
 
                     local target = p:GetObserverMode() ~= OBS_MODE_ROAMING and p:GetObserverTarget() or nil
                     if not ability:Condition(p, target) then continue end
@@ -142,9 +161,14 @@ if SERVER then
 
     net.Receive("TTT_SoulboundBuyAbility", function(len, ply)
         local id = net.ReadString()
-        if not ply:IsSoulbound() then return end
+        if not ply:IsSoulbound() and not ply.TTTIsGhosting then return end
 
-        local max = soulbound_max_abilities:GetInt()
+        local max
+        if ply:IsSoulbound() then
+            max = soulbound_max_abilities:GetInt()
+        else
+            max = ghostwhisperer_max_abilities:GetInt()
+        end
         for i = 1, max do
             local slotId = ply:GetNWString("TTTSoulboundAbility" .. tostring(i), "")
             if #slotId > 0 then continue end
@@ -164,7 +188,8 @@ if SERVER then
 
     hook.Add("TTTPrepareRound", "Soulbound_TTTPrepareRound", function()
         for _, p in PlayerIterator() do
-            for i = 1, soulbound_max_abilities:GetInt() do
+            local max = math.max(soulbound_max_abilities:GetInt(), ghostwhisperer_max_abilities:GetInt())
+            for i = 1, max do
                 local id = p:GetNWString("TTTSoulboundAbility" .. tostring(i), "")
                 if #id > 0 then
                     local ability = SOULBOUND.Abilities[id]
@@ -182,17 +207,24 @@ if SERVER then
 
     hook.Add("TTTPlayerSpawnForRound", "Soulbound_TTTPlayerSpawnForRound", function(ply, dead_only)
         if not IsPlayer(ply) then return end
+        local max = math.max(soulbound_max_abilities:GetInt(), ghostwhisperer_max_abilities:GetInt())
+        for i = 1, max do
+            local id = ply:GetNWString("TTTSoulboundAbility" .. tostring(i), "")
+            if #id > 0 then
+                local ability = SOULBOUND.Abilities[id]
+                ability:Cleanup(ply)
+                ply:SetNWString("TTTSoulboundAbility" .. tostring(i), "")
+            end
+        end
         if ply:IsSoulbound() then
-            for i = 1, soulbound_max_abilities:GetInt() do
-                local id = ply:GetNWString("TTTSoulboundAbility" .. tostring(i), "")
-                if #id > 0 then
-                    local ability = SOULBOUND.Abilities[id]
-                    ability:Cleanup(ply)
-                    ply:SetNWString("TTTSoulboundAbility" .. tostring(i), "")
-                end
+            if ROLE_ZEALOT and ply:GetNWInt("TTTSoulboundOldRole", -1) == ROLE_ZEALOT then
+                ply:SetRole(ROLE_ZEALOT)
+            elseif ROLE_HERMIT and TRAITOR_ROLES[ROLE_HERMIT] and ply:GetNWInt("TTTSoulboundOldRole", -1) == ROLE_HERMIT then
+                ply:SetRole(ROLE_HERMIT)
+            else
+                ply:SetRole(ROLE_TRAITOR)
             end
             ply:SetNWInt("TTTSoulboundOldRole", -1)
-            ply:SetRole(ROLE_TRAITOR)
             SendFullStateUpdate()
         end
     end)
@@ -238,8 +270,13 @@ if CLIENT then
     end
 
     local dshop
-    local function OpenSoulboundShop()
-        local maxAbilities = soulbound_max_abilities:GetInt()
+    local function OpenSoulboundShop(isSoulbound)
+        local maxAbilities
+        if isSoulbound then
+            maxAbilities = soulbound_max_abilities:GetInt()
+        else
+            maxAbilities = ghostwhisperer_max_abilities:GetInt()
+        end
         if maxAbilities == 0 then return end
 
         local ownedAbilities = {}
@@ -347,7 +384,8 @@ if CLIENT then
 
             local ic = nil
             for _, ability in pairs(abilities) do
-                if not ability:Enabled() then continue end
+                if isSoulbound and not ability:Enabled() then continue end
+                if not isSoulbound and (ability.SoulboundOnly or not ability:EnabledGW()) then continue end
 
                 if ability.Icon then
                     ic = vgui.Create("LayeredIcon", dlist)
@@ -429,7 +467,7 @@ if CLIENT then
                     table.insert(filtered, v)
                 end
             end
-            FillAbilityList(filtered)
+            FillAbilityList(filtered, isSoulbound)
         end
 
         dhelp:SizeToContents()
@@ -530,7 +568,7 @@ if CLIENT then
         dcancel:SetText(LANG.GetTranslation("close"))
         dcancel.DoClick = function() dframe:Close() end
 
-        FillAbilityList(SOULBOUND.Abilities)
+        FillAbilityList(SOULBOUND.Abilities, isSoulbound)
 
         dframe:MakePopup()
         dframe:SetKeyboardInputEnabled(false)
@@ -544,12 +582,12 @@ if CLIENT then
         if not client then
             client = LocalPlayer()
         end
-        if not client:IsSoulbound() then return end
+        if not client:IsSoulbound() and not client.TTTIsGhosting then return end
 
         if IsValid(dshop) then
             dshop:Close()
         else
-            OpenSoulboundShop()
+            OpenSoulboundShop(client:IsSoulbound())
         end
     end)
 
@@ -557,8 +595,9 @@ if CLIENT then
     -- ABILITIES --
     ---------------
 
-    local function UseAbility(num)
-        if num > soulbound_max_abilities:GetInt() then return end
+    local function UseAbility(num, isSoulbound)
+        if isSoulbound and num > soulbound_max_abilities:GetInt() then return end
+        if not isSoulbound and num > ghostwhisperer_max_abilities:GetInt() then return end
         net.Start("TTT_SoulboundUseAbility")
         net.WriteUInt(num, 4)
         net.SendToServer()
@@ -566,12 +605,12 @@ if CLIENT then
 
     hook.Add("PlayerBindPress", "Soulbound_PlayerBindPress", function(ply, bind, pressed)
         if not IsPlayer(ply) then return end
-        if not ply:IsSoulbound() then return end
+        if not ply:IsSoulbound() and not ply.TTTIsGhosting then return end
         if not pressed then return end
 
         if string.StartsWith(bind, "slot") then
             local num = tonumber(string.Replace(bind, "slot", "")) or 1
-            UseAbility(num)
+            UseAbility(num, ply:IsSoulbound())
         end
     end)
 
@@ -579,23 +618,51 @@ if CLIENT then
     -- HUD --
     ---------
 
+    local hide_role = GetConVar("ttt_hide_role")
+
     hook.Add("HUDPaint", "Soulbound_HUDPaint", function()
         if GetRoundState() ~= ROUND_ACTIVE then return end
+
+        if not hide_role then
+            hide_role = GetConVar("ttt_hide_role")
+        end
 
         if not client then
             client = LocalPlayer()
         end
-        if not client:IsSoulbound() then return end
+        if not client:IsSoulbound() and not client.TTTIsGhosting then return end
 
-        local max_abilities = soulbound_max_abilities:GetInt()
-        if max_abilities == 0 then return end
+        local max_abilities
+        if client:IsSoulbound() then
+            max_abilities = soulbound_max_abilities:GetInt()
+        else
+            max_abilities = ghostwhisperer_max_abilities:GetInt()
+        end
 
         local margin = 2
         local width = 300
         local titleHeight = 28
+        local descHight = 14
         local bodyHeight = titleHeight * 2 + margin
         local x = ScrW() - width - 20
         local y = ScrH() - 20 + margin
+
+        local col = ROLE_COLORS[client:GetRole()]
+        if hide_role:GetBool() then
+            col = COLOR_DGRAY
+        end
+
+        local chatKey = Key("messagemode")
+        if chatKey then
+            y = y - titleHeight - descHight - (margin * 4)
+            draw.RoundedBox(8, x, y, width, titleHeight + descHight + (margin * 3), Color(20, 20, 20, 200))
+            draw.RoundedBoxEx(8, x, y, titleHeight, titleHeight, col, true, false, false, true)
+            draw.SimpleText("Messages from Beyond", "TimeLeft", x + titleHeight + (margin * 2), y + (titleHeight / 2), COLOR_WHITE, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            CRHUD:ShadowedText(chatKey, "Trebuchet22", x + (titleHeight / 2), y + (titleHeight / 2), COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText("Press '" .. chatKey .. "' to send messages to the living", "TabLarge", x + (margin * 3), y + titleHeight + descHight + margin, COLOR_WHITE, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
+        end
+
+        if max_abilities == 0 then return end
 
         for i = max_abilities, 1, -1 do
             local slot = tostring(i)
@@ -613,7 +680,7 @@ if CLIENT then
                 local ready = ability:DrawHUD(client, x, y + titleHeight + margin, width, bodyHeight, Key("slot" .. slot, slot))
                 local slotColor = Color(90, 90, 90, 255)
                 if ready then
-                    slotColor = ROLE_COLORS[ROLE_SOULBOUND]
+                    slotColor = col
                 end
                 draw.RoundedBoxEx(8, x, y, titleHeight, titleHeight, slotColor, true, false, false, true)
             end
@@ -634,7 +701,16 @@ if CLIENT then
         local alpha = sights_opacity:GetFloat() or 1
         local bright = crosshair_brightness:GetFloat() or 1
 
-        local color = ROLE_COLORS_HIGHLIGHT[ROLE_TRAITOR]
+        local color
+        if hide_role:GetBool() then
+            color = COLOR_WHITE
+        elseif client.IsTraitorTeam and client:IsTraitorTeam() then
+            color = ROLE_COLORS_HIGHLIGHT[ROLE_TRAITOR]
+        elseif client.IsJesterTeam and client:IsJesterTeam() then
+            color = ROLE_COLORS_HIGHLIGHT[ROLE_JESTER]
+        else
+            color = ROLE_COLORS_HIGHLIGHT[ROLE_INNOCENT]
+        end
 
         local r, g, b, _ = color:Unpack()
         surface.SetDrawColor(Color(r * bright, g * bright, b * bright, 255 * alpha))
@@ -649,6 +725,7 @@ if CLIENT then
 
     hook.Add("HUDDrawScoreBoard", "Soulbound_HUDDrawScoreBoard", function() -- Use HUDDrawScoreBoard instead of HUDPaint so it draws above the TTT HUD
         if GetRoundState() ~= ROUND_ACTIVE then return end
+        if hide_role:GetBool() then return end
 
         if not client then
             client = LocalPlayer()

@@ -8,6 +8,7 @@ ABILITY.Name = "Revealing Presence"
 ABILITY.Id = "reveal"
 ABILITY.Description = "Reveal the location of the player you are spectating to your fellow traitors"
 ABILITY.Icon = "vgui/ttt/roles/sbd/abilities/icon_reveal.png"
+ABILITY.SoulboundOnly = true
 
 if SERVER then
     function ABILITY:Bought(soulbound)
