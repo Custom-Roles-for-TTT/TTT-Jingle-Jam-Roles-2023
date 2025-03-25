@@ -247,6 +247,9 @@ if CLIENT then
 
             return ROLE_NONE, false, ROLE_TRAITOR
         elseif cli:IsTraitorTeam() and ply:IsRenegade() then
+            local icon_overridden, _, _ = cli:IsTargetIDOverridden(ply)
+            if icon_overridden then return end
+
             return ROLE_RENEGADE, false, ROLE_RENEGADE
         end
     end)
@@ -261,6 +264,9 @@ if CLIENT then
 
             return true, ROLE_COLORS_RADAR[ROLE_TRAITOR]
         elseif cli:IsTraitorTeam() and ent:IsRenegade() then
+            local _, ring_overridden, _ = cli:IsTargetIDOverridden(ent)
+            if ring_overridden then return end
+
             return true, ROLE_COLORS_RADAR[ROLE_RENEGADE]
         end
     end)
@@ -276,6 +282,9 @@ if CLIENT then
             local role_string = LANG.GetParamTranslation("target_unknown_team", { targettype = LANG.GetTranslation("traitor")})
             return StringUpper(role_string), ROLE_COLORS_RADAR[ROLE_TRAITOR]
         elseif IsPlayer(ent) and cli:IsTraitorTeam() and ent:IsRenegade() then
+            local _, _, text_overridden = cli:IsTargetIDOverridden(ent)
+            if text_overridden then return end
+
             return StringUpper(ROLE_STRINGS[ROLE_RENEGADE]), ROLE_COLORS_RADAR[ROLE_RENEGADE]
         end
     end)
@@ -303,6 +312,9 @@ if CLIENT then
             return ROLE_COLORS_SCOREBOARD[ROLE_TRAITOR], ROLE_STRINGS_SHORT[ROLE_NONE]
         end
         if (cli:IsTraitorTeam() and ply:IsRenegade()) or (cli == ply and cli:IsRenegade()) then
+            local _, role_overridden = cli:IsScoreboardInfoOverridden(ply)
+            if role_overridden then return end
+
             return ROLE_COLORS_SCOREBOARD[ROLE_RENEGADE], ROLE_STRINGS_SHORT[ROLE_RENEGADE]
         end
     end)
