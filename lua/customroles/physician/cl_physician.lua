@@ -111,6 +111,11 @@ hook.Add("TTTScoreboardColumns", "Physician_TTTScoreboardColumns", function(base
         end
 
         basePanel:AddColumn(columnLabel, function(p, dLabelPanel)
+            local client = LocalPlayer()
+            if not IsValid(client) or (client:IsPhysician() and client.IsRoleAbilityDisabled and client:IsRoleAbilityDisabled()) then
+                return ""
+            end
+
             local text, color = PHYSICIAN:GetPlayerStatusText(p)
 
             dLabelPanel:SetTextColor(color or healthcolors.death)

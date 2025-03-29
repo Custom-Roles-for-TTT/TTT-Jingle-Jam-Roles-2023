@@ -64,6 +64,10 @@ TableInsert(ROLE.convars, {
 
 RegisterRole(ROLE)
 
+local function IsRenegade(ply)
+    return ply:IsRenegade() and (not ply.IsRoleAbilityDisabled or not ply:IsRoleAbilityDisabled())
+end
+
 if SERVER then
     AddCSLuaFile()
 
@@ -150,7 +154,7 @@ if SERVER then
     AddHook("PlayerSay", "Renegade_PlayerSay", function(ply, text, team_only)
         if not team_only then return end
         if not IsPlayer(ply) or not ply:Alive() or ply:IsSpec() then return end
-        if not ply:IsRenegade() then return end
+        if not IsRenegade(ply) then return end
 
         local targets = {}
         for _, v in PlayerIterator() do
@@ -184,9 +188,9 @@ if SERVER then
 
             local renegades = {}
             for _, v in PlayerIterator() do
-                if v:IsActive() and v:IsRenegade() then
-                    TableInsert(renegades, v)
-                end
+                if not v:IsActive() then continue end
+                if not IsRenegade(v) then continue end
+                TableInsert(renegades, v)
             end
 
             net.Start("TTT_RoleChat")
@@ -195,30 +199,32 @@ if SERVER then
                 net.WriteString(msg)
             net.Send(renegades)
         -- Send renegade messages to traitors and themselves
-        elseif sender:IsRenegade() then
+        elseif IsRenegade(sender) then
             for _, v in PlayerIterator() do
-                if v:IsActive() and (v:IsRenegade() or v:IsTraitorTeam()) then
+                if not v:IsActive() then continue end
+                if IsRenegade(v) or v:IsTraitorTeam() then
                     TableInsert(targets, v)
                 end
             end
         end
     end)
 
-    --- Allow renegades and traitors to see that eachother is speaking
+    --- Allow renegades and traitors to see that each other is speaking
     AddHook("TTTTeamVoiceChatTargets", "Renegade_TTTTeamVoiceChatTargets", function(speaker, targets)
         if not IsPlayer(speaker) or not speaker:Alive() or speaker:IsSpec() then return end
 
         -- Add renegades to the traitor team target list
         if speaker:IsTraitorTeam() then
             for _, v in PlayerIterator() do
-                if v:IsActive() and v:IsRenegade() then
-                    TableInsert(targets, v)
-                end
+                if not v:IsActive() then continue end
+                if not IsRenegade(v) then continue end
+                TableInsert(targets, v)
             end
         -- Send renegade messages to traitors and themselves
-        elseif speaker:IsRenegade() then
+        elseif IsRenegade(speaker) then
             for _, v in PlayerIterator() do
-                if v:IsActive() and (v:IsRenegade() or v:IsTraitorTeam()) then
+                if not v:IsActive() then continue end
+                if IsRenegade(v) or v:IsTraitorTeam() then
                     TableInsert(targets, v)
                 end
             end
@@ -228,9 +234,10 @@ end
 
 -- Allow renegades to speak to and listen to traitors
 AddHook("TTTCanUseTraitorVoice", "Renegade_TTTCanUseHearTraitorVoice", function(ply)
-    if IsPlayer(ply) and ply:IsRenegade() then
-        return true
-    end
+    if not IsPlayer(ply) then return end
+    if not IsRenegade(ply) then return end
+
+    return true
 end)
 
 if CLIENT then
@@ -241,12 +248,12 @@ if CLIENT then
 
     AddHook("TTTTargetIDPlayerRoleIcon", "Renegade_TTTTargetIDPlayerRoleIcon", function(ply, cli, role, noz, color_role, hideBeggar, showJester, hideBodysnatcher)
         if GetRoundState() < ROUND_ACTIVE then return end
-        if cli:IsRenegade() and (ply:IsTraitorTeam() or (renegade_show_glitch:GetBool() and ply:IsGlitch())) then
+        if IsRenegade(cli) and (ply:IsTraitorTeam() or (renegade_show_glitch:GetBool() and ply:IsGlitch())) then
             local icon_overridden, _, _ = ply:IsTargetIDOverridden(cli)
             if icon_overridden then return end
 
             return ROLE_NONE, false, ROLE_TRAITOR
-        elseif cli:IsTraitorTeam() and ply:IsRenegade() then
+        elseif cli:IsTraitorTeam() and IsRenegade(ply) then
             local icon_overridden, _, _ = cli:IsTargetIDOverridden(ply)
             if icon_overridden then return end
 
@@ -258,12 +265,12 @@ if CLIENT then
         if GetRoundState() < ROUND_ACTIVE then return end
         if not IsPlayer(ent) then return end
 
-        if cli:IsRenegade() and (ent:IsTraitorTeam() or (renegade_show_glitch:GetBool() and ent:IsGlitch())) then
+        if IsRenegade(cli) and (ent:IsTraitorTeam() or (renegade_show_glitch:GetBool() and ent:IsGlitch())) then
             local _, ring_overridden, _ = ent:IsTargetIDOverridden(cli)
             if ring_overridden then return end
 
             return true, ROLE_COLORS_RADAR[ROLE_TRAITOR]
-        elseif cli:IsTraitorTeam() and ent:IsRenegade() then
+        elseif cli:IsTraitorTeam() and IsRenegade(ent) then
             local _, ring_overridden, _ = cli:IsTargetIDOverridden(ent)
             if ring_overridden then return end
 
@@ -275,13 +282,13 @@ if CLIENT then
         if GetRoundState() < ROUND_ACTIVE then return end
         if not IsPlayer(ent) then return end
 
-        if cli:IsRenegade() and (ent:IsTraitorTeam() or (renegade_show_glitch:GetBool() and ent:IsGlitch())) then
+        if IsRenegade(cli) and (ent:IsTraitorTeam() or (renegade_show_glitch:GetBool() and ent:IsGlitch())) then
             local _, _, text_overridden = ent:IsTargetIDOverridden(cli)
             if text_overridden then return end
 
             local role_string = LANG.GetParamTranslation("target_unknown_team", { targettype = LANG.GetTranslation("traitor")})
             return StringUpper(role_string), ROLE_COLORS_RADAR[ROLE_TRAITOR]
-        elseif IsPlayer(ent) and cli:IsTraitorTeam() and ent:IsRenegade() then
+        elseif IsPlayer(ent) and cli:IsTraitorTeam() and IsRenegade(ent) then
             local _, _, text_overridden = cli:IsTargetIDOverridden(ent)
             if text_overridden then return end
 
@@ -293,8 +300,8 @@ if CLIENT then
         if GetRoundState() < ROUND_ACTIVE then return end
         if not IsPlayer(target) then return end
 
-        local visible = (ply:IsRenegade() and (target:IsTraitorTeam() or (renegade_show_glitch:GetBool() and target:IsGlitch()))) or
-                        (ply:IsTraitorTeam() and target:IsRenegade())
+        local visible = (IsRenegade(ply) and (target:IsTraitorTeam() or (renegade_show_glitch:GetBool() and target:IsGlitch()))) or
+                        (ply:IsTraitorTeam() and IsRenegade(target))
         ------ icon,    ring,    text
         return visible, visible, visible
     end
@@ -305,13 +312,13 @@ if CLIENT then
 
     AddHook("TTTScoreboardPlayerRole", "Renegade_TTTScoreboardPlayerRole", function(ply, cli, color, roleFileName)
         if GetRoundState() < ROUND_ACTIVE then return end
-        if cli:IsRenegade() and (ply:IsTraitorTeam() or (renegade_show_glitch:GetBool() and ply:IsGlitch())) then
+        if IsRenegade(cli) and (ply:IsTraitorTeam() or (renegade_show_glitch:GetBool() and ply:IsGlitch())) then
             local _, role_overridden = ply:IsScoreboardInfoOverridden(cli)
             if role_overridden then return end
 
             return ROLE_COLORS_SCOREBOARD[ROLE_TRAITOR], ROLE_STRINGS_SHORT[ROLE_NONE]
         end
-        if (cli:IsTraitorTeam() and ply:IsRenegade()) or (cli == ply and cli:IsRenegade()) then
+        if (cli:IsTraitorTeam() and IsRenegade(ply)) or (cli == ply and IsRenegade(cli)) then
             local _, role_overridden = cli:IsScoreboardInfoOverridden(ply)
             if role_overridden then return end
 
@@ -323,8 +330,8 @@ if CLIENT then
         if GetRoundState() < ROUND_ACTIVE then return end
         if not IsPlayer(target) then return end
 
-        local visible = (ply:IsRenegade() and (target:IsTraitorTeam() or (renegade_show_glitch:GetBool() and target:IsGlitch()))) or
-                        (ply:IsTraitorTeam() and target:IsRenegade())
+        local visible = (IsRenegade(ply) and (target:IsTraitorTeam() or (renegade_show_glitch:GetBool() and target:IsGlitch()))) or
+                        (ply:IsTraitorTeam() and IsRenegade(target))
         ------ name,  role
         return false, visible
     end

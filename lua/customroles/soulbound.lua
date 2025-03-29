@@ -111,6 +111,7 @@ if SERVER then
     net.Receive("TTT_SoulboundUseAbility", function(len, ply)
         local num = net.ReadUInt(4)
         if not ply:IsSoulbound() and not ply.TTTIsGhosting then return end
+        if ply.IsRoleAbilityDisabled and ply:IsRoleAbilityDisabled() then return end
 
         local id = ply:GetNWString("TTTSoulboundAbility" .. tostring(num), "")
         if #id == 0 then return end
@@ -131,26 +132,27 @@ if SERVER then
 
     hook.Add("Think", "Soulbound_Think", function()
         for _, p in PlayerIterator() do
-            if p:IsSoulbound() or p.TTTIsGhosting then
-                local max
-                if p:IsSoulbound() then
-                    max = soulbound_max_abilities:GetInt()
-                else
-                    max = ghostwhisperer_max_abilities:GetInt()
-                end
-                for i = 1, max do
-                    local id = p:GetNWString("TTTSoulboundAbility" .. tostring(i), "")
-                    if #id == 0 then break end
+            if not p:IsSoulbound() and not p.TTTIsGhosting then continue end
+            if p.IsRoleAbilityDisabled and p:IsRoleAbilityDisabled() then continue end
 
-                    local ability = SOULBOUND.Abilities[id]
-                    if not ability.Passive then continue end
-                    if p:IsSoulbound() and not ability:Enabled() then continue end
-                    if not p:IsSoulbound() and (ability.SoulboundOnly or not ability:EnabledGW()) then continue end
+            local max
+            if p:IsSoulbound() then
+                max = soulbound_max_abilities:GetInt()
+            else
+                max = ghostwhisperer_max_abilities:GetInt()
+            end
+            for i = 1, max do
+                local id = p:GetNWString("TTTSoulboundAbility" .. tostring(i), "")
+                if #id == 0 then break end
 
-                    local target = p:GetObserverMode() ~= OBS_MODE_ROAMING and p:GetObserverTarget() or nil
-                    if not ability:Condition(p, target) then continue end
-                    ability:Passive(p, target)
-                end
+                local ability = SOULBOUND.Abilities[id]
+                if not ability.Passive then continue end
+                if p:IsSoulbound() and not ability:Enabled() then continue end
+                if not p:IsSoulbound() and (ability.SoulboundOnly or not ability:EnabledGW()) then continue end
+
+                local target = p:GetObserverMode() ~= OBS_MODE_ROAMING and p:GetObserverTarget() or nil
+                if not ability:Condition(p, target) then continue end
+                ability:Passive(p, target)
             end
         end
     end)
