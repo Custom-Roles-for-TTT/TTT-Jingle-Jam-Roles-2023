@@ -22,17 +22,18 @@ ROLE.loadout = {"weapon_ttt_phy_tracker"}
 
 ROLE.translations = {}
 
-ROLE.convars = {}
-table.insert(ROLE.convars, {
-    cvar = "ttt_physician_tracker_range_default",
-    type = ROLE_CONVAR_TYPE_NUM,
-    decimal = 0
-})
-table.insert(ROLE.convars, {
-    cvar = "ttt_physician_tracker_range_boosted",
-    type = ROLE_CONVAR_TYPE_NUM,
-    decimal = 0
-})
+ROLE.convars = {
+    {
+        cvar = "ttt_physician_tracker_range_default",
+        type = ROLE_CONVAR_TYPE_NUM,
+        decimal = 0
+    },
+    {
+        cvar = "ttt_physician_tracker_range_boosted",
+        type = ROLE_CONVAR_TYPE_NUM,
+        decimal = 0
+    }
+}
 
 ROLE.moverolestate = function(source, target, keepOnSource)
     local sourceId = source:SteamID64()

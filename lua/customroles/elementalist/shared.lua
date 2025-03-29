@@ -28,92 +28,92 @@ if SERVER then
     ROLE.ConvarLifeExecute = CreateConVar("ttt_elementalist_lifesteal+_execute_amount", "15", FCVAR_NONE, "How much life a victim must reach before Lifesteal+ will execute them. Value must be greater than 0 and less than 101", 1, 100)
 end
 
-ROLE.convars = {}
+ROLE.convars = {
+    -- Set One
+    {
+        cvar = "ttt_elementalist_allow_effect_upgrades",
+        type = ROLE_CONVAR_TYPE_BOOL
+    },
+    {
+        cvar = "ttt_elementalist_allow_pyromancer_upgrades",
+        type = ROLE_CONVAR_TYPE_BOOL
+    },
+    {
+        cvar = "ttt_elementalist_allow_frostbite_upgrades",
+        type = ROLE_CONVAR_TYPE_BOOL
+    },
+    {
+        cvar = "ttt_elementalist_allow_windburn_upgrades",
+        type = ROLE_CONVAR_TYPE_BOOL
+    },
+    {
+        cvar = "ttt_elementalist_allow_discharge_upgrades",
+        type = ROLE_CONVAR_TYPE_BOOL
+    },
+    {
+        cvar = "ttt_elementalist_allow_midnight_upgrades",
+        type = ROLE_CONVAR_TYPE_BOOL
+    },
+    {
+        cvar = "ttt_elementalist_allow_lifesteal_upgrades",
+        type = ROLE_CONVAR_TYPE_BOOL
+    },
+    --
 
--- Set One
-table.insert(ROLE.convars, {
-    cvar = "ttt_elementalist_allow_effect_upgrades",
-    type = ROLE_CONVAR_TYPE_BOOL
-})
-table.insert(ROLE.convars, {
-    cvar = "ttt_elementalist_allow_pyromancer_upgrades",
-    type = ROLE_CONVAR_TYPE_BOOL
-})
-table.insert(ROLE.convars, {
-    cvar = "ttt_elementalist_allow_frostbite_upgrades",
-    type = ROLE_CONVAR_TYPE_BOOL
-})
-table.insert(ROLE.convars, {
-    cvar = "ttt_elementalist_allow_windburn_upgrades",
-    type = ROLE_CONVAR_TYPE_BOOL
-})
-table.insert(ROLE.convars, {
-    cvar = "ttt_elementalist_allow_discharge_upgrades",
-    type = ROLE_CONVAR_TYPE_BOOL
-})
-table.insert(ROLE.convars, {
-    cvar = "ttt_elementalist_allow_midnight_upgrades",
-    type = ROLE_CONVAR_TYPE_BOOL
-})
-table.insert(ROLE.convars, {
-    cvar = "ttt_elementalist_allow_lifesteal_upgrades",
-    type = ROLE_CONVAR_TYPE_BOOL
-})
---
+    -- Set Two
+    {
+        cvar = "ttt_elementalist_frostbite_effect_duration",
+        type = ROLE_CONVAR_TYPE_NUM
+    },
+    {
+        cvar = "ttt_elementalist_frostbite+_freeze_chance",
+        type = ROLE_CONVAR_TYPE_NUM
+    },
+    {
+        cvar = "ttt_elementalist_pyromancer_burn_duration",
+        type = ROLE_CONVAR_TYPE_NUM
+    },
+    {
+        cvar = "ttt_elementalist_pyromancer+_explode_chance",
+        type = ROLE_CONVAR_TYPE_NUM
+    },
+    {
+        cvar = "ttt_elementalist_midnight_dim_duration",
+        type = ROLE_CONVAR_TYPE_NUM
+    },
+    {
+        cvar = "ttt_elementalist_midnight+_blindness_chance",
+        type = ROLE_CONVAR_TYPE_NUM
+    },
+    --
 
--- Set Two
-table.insert(ROLE.convars, {
-    cvar = "ttt_elementalist_frostbite_effect_duration",
-    type = ROLE_CONVAR_TYPE_NUM
-})
-table.insert(ROLE.convars, {
-    cvar = "ttt_elementalist_frostbite+_freeze_chance",
-    type = ROLE_CONVAR_TYPE_NUM
-})
-table.insert(ROLE.convars, {
-    cvar = "ttt_elementalist_pyromancer_burn_duration",
-    type = ROLE_CONVAR_TYPE_NUM
-})
-table.insert(ROLE.convars, {
-    cvar = "ttt_elementalist_pyromancer+_explode_chance",
-    type = ROLE_CONVAR_TYPE_NUM
-})
-table.insert(ROLE.convars, {
-    cvar = "ttt_elementalist_midnight_dim_duration",
-    type = ROLE_CONVAR_TYPE_NUM
-})
-table.insert(ROLE.convars, {
-    cvar = "ttt_elementalist_midnight+_blindness_chance",
-    type = ROLE_CONVAR_TYPE_NUM
-})
---
-
--- Set Three
-table.insert(ROLE.convars, {
-    cvar = "ttt_elementalist_windburn_push_power",
-    type = ROLE_CONVAR_TYPE_NUM
-})
-table.insert(ROLE.convars, {
-    cvar = "ttt_elementalist_windburn+_launch_chance",
-    type = ROLE_CONVAR_TYPE_NUM
-})
-table.insert(ROLE.convars, {
-    cvar = "ttt_elementalist_discharge_punch_power",
-    type = ROLE_CONVAR_TYPE_NUM
-})
-table.insert(ROLE.convars, {
-    cvar = "ttt_elementalist_discharge+_input_chance",
-    type = ROLE_CONVAR_TYPE_NUM
-})
-table.insert(ROLE.convars, {
-    cvar = "ttt_elementalist_lifesteal_heal_percentage",
-    type = ROLE_CONVAR_TYPE_NUM
-})
-table.insert(ROLE.convars, {
-    cvar = "ttt_elementalist_lifesteal+_execute_amount",
-    type = ROLE_CONVAR_TYPE_NUM
-})
---
+    -- Set Three
+    {
+        cvar = "ttt_elementalist_windburn_push_power",
+        type = ROLE_CONVAR_TYPE_NUM
+    },
+    {
+        cvar = "ttt_elementalist_windburn+_launch_chance",
+        type = ROLE_CONVAR_TYPE_NUM
+    },
+    {
+        cvar = "ttt_elementalist_discharge_punch_power",
+        type = ROLE_CONVAR_TYPE_NUM
+    },
+    {
+        cvar = "ttt_elementalist_discharge+_input_chance",
+        type = ROLE_CONVAR_TYPE_NUM
+    },
+    {
+        cvar = "ttt_elementalist_lifesteal_heal_percentage",
+        type = ROLE_CONVAR_TYPE_NUM
+    },
+    {
+        cvar = "ttt_elementalist_lifesteal+_execute_amount",
+        type = ROLE_CONVAR_TYPE_NUM
+    }
+    --
+}
 
 ROLE.nameraw = "elementalist"
 ROLE.name = "Elementalist"

@@ -23,12 +23,13 @@ ROLE.team = ROLE_TEAM_TRAITOR
 local soulbound_max_abilities = CreateConVar("ttt_soulbound_max_abilities", "4", FCVAR_REPLICATED, "The maximum number of abilities the Soulbound can buy. (Set to 0 to disable abilities)", 0, 9)
 local ghostwhisperer_max_abilities = CreateConVar("ttt_ghostwhisperer_max_abilities", "0", FCVAR_REPLICATED, "The maximum number of Soulbound abilities the target of the Ghost Whisperer can buy. (Set to 0 to disable abilities)", 0, 9)
 
-ROLE.convars = {}
-table.insert(ROLE.convars, {
-    cvar = "ttt_soulbound_max_abilities",
-    type = ROLE_CONVAR_TYPE_NUM,
-    decimal = 0
-})
+ROLE.convars = {
+    {
+        cvar = "ttt_soulbound_max_abilities",
+        type = ROLE_CONVAR_TYPE_NUM,
+        decimal = 0
+    }
+}
 
 ROLE.translations = {
     ["english"] = {

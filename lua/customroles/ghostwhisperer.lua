@@ -16,21 +16,22 @@ ROLE.shortdesc = "Has a Ghosting Device that they can use on dead players to all
 
 ROLE.team = ROLE_TEAM_INNOCENT
 
-ROLE.convars = {}
-table.insert(ROLE.convars, {
-    cvar = "ttt_ghostwhisperer_ghosting_time",
-    type = ROLE_CONVAR_TYPE_NUM,
-    decimal = 0
-})
-table.insert(ROLE.convars, {
-    cvar = "ttt_ghostwhisperer_limited_chat",
-    type = ROLE_CONVAR_TYPE_BOOL
-})
-table.insert(ROLE.convars, {
-    cvar = "ttt_ghostwhisperer_max_abilities",
-    type = ROLE_CONVAR_TYPE_NUM,
-    decimal = 0
-})
+ROLE.convars = {
+    {
+        cvar = "ttt_ghostwhisperer_ghosting_time",
+        type = ROLE_CONVAR_TYPE_NUM,
+        decimal = 0
+    },
+    {
+        cvar = "ttt_ghostwhisperer_limited_chat",
+        type = ROLE_CONVAR_TYPE_BOOL
+    },
+    {
+        cvar = "ttt_ghostwhisperer_max_abilities",
+        type = ROLE_CONVAR_TYPE_NUM,
+        decimal = 0
+    }
+}
 
 ROLE.translations = {
     ["english"] = {

@@ -52,15 +52,16 @@ ROLE.canseemia = true
 
 local renegade_show_glitch = CreateConVar("ttt_renegade_show_glitch", "0", FCVAR_REPLICATED, "Whether to allow the renegade to see the glitch. They will show as an unknown traitor", 0, 1)
 
-ROLE.convars = {}
-TableInsert(ROLE.convars, {
-    cvar = "ttt_renegade_warn_all",
-    type = ROLE_CONVAR_TYPE_BOOL
-})
-TableInsert(ROLE.convars, {
-    cvar = "ttt_renegade_show_glitch",
-    type = ROLE_CONVAR_TYPE_BOOL
-})
+ROLE.convars = {
+    {
+        cvar = "ttt_renegade_warn_all",
+        type = ROLE_CONVAR_TYPE_BOOL
+    },
+    {
+        cvar = "ttt_renegade_show_glitch",
+        type = ROLE_CONVAR_TYPE_BOOL
+    }
+}
 
 RegisterRole(ROLE)
 
