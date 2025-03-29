@@ -133,282 +133,286 @@ end
 function SWEP:PrimaryAttack()
     if not IsFirstTimePredicted() then return end
     self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
-    if CLIENT then
 
-        local m = 5
-        local listWidth = 120
-        local titleBarHeight = 25
-        local width = listWidth * 4 + m * 5
-        local height = 300
-        local labelHeight = 15
-        local listHeight = height - titleBarHeight - labelHeight - m * 2
-        local buttonHeight = 22
+    if not CLIENT then return end
 
-        local dframe = vgui.Create("DFrame")
-        dframe:SetSize(width, height)
-        dframe:Center()
-        dframe:SetTitle("Admin Menu")
-        dframe:SetVisible(true)
-        dframe:ShowCloseButton(true)
-        dframe:SetMouseInputEnabled(true)
-        dframe:SetDeleteOnClose(true)
+    local owner = self:GetOwner()
+    if not IsValid(owner) then return end
+    if owner.IsRoleAbilityDisabled and owner:IsRoleAbilityDisabled() then return end
 
-        local dcommandsLabel = vgui.Create("DLabel", dframe)
-        dcommandsLabel:SetFont("TabLarge")
-        dcommandsLabel:SetText("Commands:")
-        dcommandsLabel:SetWidth(listWidth)
-        dcommandsLabel:SetPos(m, titleBarHeight)
+    local m = 5
+    local listWidth = 120
+    local titleBarHeight = 25
+    local width = listWidth * 4 + m * 5
+    local height = 300
+    local labelHeight = 15
+    local listHeight = height - titleBarHeight - labelHeight - m * 2
+    local buttonHeight = 22
 
-        local dcommands = vgui.Create("DListView", dframe)
-        dcommands:SetSize(listWidth, listHeight)
-        dcommands:SetPos(m, titleBarHeight + labelHeight + m)
-        dcommands:SetHideHeaders(true)
-        dcommands:SetMultiSelect(false)
-        dcommands:AddColumn("Commands")
+    local dframe = vgui.Create("DFrame")
+    dframe:SetSize(width, height)
+    dframe:Center()
+    dframe:SetTitle("Admin Menu")
+    dframe:SetVisible(true)
+    dframe:ShowCloseButton(true)
+    dframe:SetMouseInputEnabled(true)
+    dframe:SetDeleteOnClose(true)
 
-        local commands = {"slap", "bring", "goto", "send", "jail", "ignite", "blind", "freeze", "ragdoll", "strip", "respawn", "slay", "kick"}
-        local validCommands = {}
+    local dcommandsLabel = vgui.Create("DLabel", dframe)
+    dcommandsLabel:SetFont("TabLarge")
+    dcommandsLabel:SetText("Commands:")
+    dcommandsLabel:SetWidth(listWidth)
+    dcommandsLabel:SetPos(m, titleBarHeight)
 
-        if TTTKP then -- Only add 'punish' to the list if karma punishments are installed
-            TableInsert(commands, "punish")
+    local dcommands = vgui.Create("DListView", dframe)
+    dcommands:SetSize(listWidth, listHeight)
+    dcommands:SetPos(m, titleBarHeight + labelHeight + m)
+    dcommands:SetHideHeaders(true)
+    dcommands:SetMultiSelect(false)
+    dcommands:AddColumn("Commands")
+
+    local commands = {"slap", "bring", "goto", "send", "jail", "ignite", "blind", "freeze", "ragdoll", "strip", "respawn", "slay", "kick"}
+    local validCommands = {}
+
+    if TTTKP then -- Only add 'punish' to the list if karma punishments are installed
+        TableInsert(commands, "punish")
+    end
+
+    for _, v in ipairs(commands) do
+        local cost = GetConVar("ttt_admin_" .. v .. "_cost"):GetInt()
+        if IsTimedCommand(v) then
+            cost = math.min(5 * cost, 100)
+        end
+        if cost > 0 then
+            TableInsert(validCommands, {command = v, cost = cost})
+        end
+    end
+
+    table.sort(validCommands, function(a, b)
+        if a.cost == b.cost then
+            return a.command < b.command
+        else
+            return a.cost < b.cost
+        end
+    end)
+
+    for _, v in ipairs(validCommands) do
+        dcommands:AddLine(v.command)
+    end
+
+    local dparams = vgui.Create("DPanel", dframe)
+    dparams:SetSize(listWidth * 3 + m * 2, listHeight + labelHeight)
+    dparams:SetPos(listWidth + m * 2, titleBarHeight + m)
+    dparams:SetPaintBackground(false)
+
+    local descriptions = {
+        ["slap"] = "Slaps the target around randomly.",
+        ["bring"] = "Teleports the target to you.",
+        ["goto"] = "Teleports you to the target.",
+        ["send"] = "Teleports the first target to the second.",
+        ["jail"] = "Puts the target in jail for the specified amount of seconds.",
+        ["ignite"] = "Lights the target on fire for the specified amount of seconds.",
+        ["blind"] = "Blinds the target for the specified amount of seconds.",
+        ["freeze"] = "Freezes the target for the specified amount of seconds.",
+        ["ragdoll"] = "Ragdolls the target for the specified amount of seconds.",
+        ["strip"] = "Strips all weapons from the target, except for the crowbar and magneto stick.",
+        ["respawn"] = "Respawns the target somewhere on the map.",
+        ["slay"] = "Kills the target.",
+        ["kick"] = "Kicks the target from the server.",
+        ["punish"] = "Applies a random karma punishment to the target."
+    }
+
+    dcommands.OnRowSelected = function(_, _, row)
+        dparams:Clear()
+        local command = row:GetValue(1)
+        local cost = GetConVar("ttt_admin_" .. command .. "_cost"):GetInt()
+
+        local dtargetLabel = vgui.Create("DLabel", dparams)
+        dtargetLabel:SetFont("TabLarge")
+        dtargetLabel:SetText("Target:")
+        dtargetLabel:SetWidth(listWidth)
+        dtargetLabel:SetPos(0, -m)
+
+        local dtarget = vgui.Create("DListView", dparams)
+        dtarget:SetSize(listWidth, listHeight)
+        dtarget:SetPos(0, labelHeight)
+        dtarget:SetHideHeaders(true)
+        dtarget:SetMultiSelect(false)
+        dtarget:AddColumn("Players")
+
+        local dtargetto
+        if command == "send" then
+            dtargetLabel:SetText("From:")
+
+            local dtargettoLabel = vgui.Create("DLabel", dparams)
+            dtargettoLabel:SetFont("TabLarge")
+            dtargettoLabel:SetText("To:")
+            dtargettoLabel:SetWidth(listWidth)
+            dtargettoLabel:SetPos(listWidth + m, -m)
+
+            dtargetto = vgui.Create("DListView", dparams)
+            dtargetto:SetSize(listWidth, listHeight)
+            dtargetto:SetPos(listWidth + m, labelHeight)
+            dtargetto:SetHideHeaders(true)
+            dtargetto:SetMultiSelect(false)
+            dtargetto:AddColumn("Players")
         end
 
-        for _, v in ipairs(commands) do
-            local cost = GetConVar("ttt_admin_" .. v .. "_cost"):GetInt()
-            if IsTimedCommand(v) then
-                cost = math.min(5 * cost, 100)
-            end
-            if cost > 0 then
-                TableInsert(validCommands, {command = v, cost = cost})
+        local ownerSid64 = owner:SteamID64()
+        for _, p in PlayerIterator() do
+            -- Skip players who are true spectators, not just dead players
+            if p:IsSpec() and p:GetRole() == ROLE_NONE then continue end
+
+            local sid64 = p:SteamID64()
+            if sid64 == ownerSid64 and CantTargetSelf(command) then continue end
+
+            dtarget:AddLine(p:Nick(), sid64)
+            if command == "send" then
+                dtargetto:AddLine(p:Nick(), sid64)
             end
         end
 
-        table.sort(validCommands, function(a, b)
-            if a.cost == b.cost then
-                return a.command < b.command
+        local runX = listWidth + m
+        if command == "send" then
+            runX = runX + listWidth + m
+        end
+
+        local drunLabel = vgui.Create("DLabel", dparams)
+        drunLabel:SetFont("TabLarge")
+        drunLabel:SetText("Execute:")
+        drunLabel:SetWidth(listWidth)
+        drunLabel:SetPos(runX, -m)
+
+        local range = math.floor(100 / cost)
+        local time = 1
+        if IsTimedCommand(command) then
+            time = math.min(5, range)
+        end
+        local reason = "No reason given"
+
+        local drun = vgui.Create("DButton", dparams)
+        drun:SetWidth(listWidth)
+        drun:SetPos(runX, labelHeight)
+        drun:SetText(command)
+        drun:SetEnabled(false)
+        drun.DoClick = function()
+            local power = owner:GetNWInt("TTTAdminPower")
+            if power < cost then
+                owner:PrintMessage(HUD_PRINTTALK, "You do not have enough admin power to use this command!")
             else
-                return a.cost < b.cost
+                net.Start("TTT_Admin" .. command:gsub("^%l", string.upper) .. "Command")
+                local sid64 = dtarget:GetSelected()[1]:GetValue(2)
+                net.WriteUInt64(sid64)
+                if command == "send" then
+                    net.WriteUInt64(dtargetto:GetSelected()[1]:GetValue(2))
+                elseif IsTimedCommand(command) then
+                    net.WriteUInt(time, 8)
+                elseif command == "kick" then
+                    net.WriteString(reason)
+                end
+                net.SendToServer()
+                if ShouldCloseAfterSelfUse(command) and sid64 == owner:SteamID64() then
+                    dframe:Close()
+                end
             end
-        end)
-
-        for _, v in ipairs(validCommands) do
-            dcommands:AddLine(v.command)
         end
 
-        local dparams = vgui.Create("DPanel", dframe)
-        dparams:SetSize(listWidth * 3 + m * 2, listHeight + labelHeight)
-        dparams:SetPos(listWidth + m * 2, titleBarHeight + m)
-        dparams:SetPaintBackground(false)
-
-        local descriptions = {
-            ["slap"] = "Slaps the target around randomly.",
-            ["bring"] = "Teleports the target to you.",
-            ["goto"] = "Teleports you to the target.",
-            ["send"] = "Teleports the first target to the second.",
-            ["jail"] = "Puts the target in jail for the specified amount of seconds.",
-            ["ignite"] = "Lights the target on fire for the specified amount of seconds.",
-            ["blind"] = "Blinds the target for the specified amount of seconds.",
-            ["freeze"] = "Freezes the target for the specified amount of seconds.",
-            ["ragdoll"] = "Ragdolls the target for the specified amount of seconds.",
-            ["strip"] = "Strips all weapons from the target, except for the crowbar and magneto stick.",
-            ["respawn"] = "Respawns the target somewhere on the map.",
-            ["slay"] = "Kills the target.",
-            ["kick"] = "Kicks the target from the server.",
-            ["punish"] = "Applies a random karma punishment to the target."
-        }
-
-        dcommands.OnRowSelected = function(_, _, row)
-            dparams:Clear()
-            local command = row:GetValue(1)
-            local cost = GetConVar("ttt_admin_" .. command .. "_cost"):GetInt()
-
-            local dtargetLabel = vgui.Create("DLabel", dparams)
-            dtargetLabel:SetFont("TabLarge")
-            dtargetLabel:SetText("Target:")
-            dtargetLabel:SetWidth(listWidth)
-            dtargetLabel:SetPos(0, -m)
-
-            local dtarget = vgui.Create("DListView", dparams)
-            dtarget:SetSize(listWidth, listHeight)
-            dtarget:SetPos(0, labelHeight)
-            dtarget:SetHideHeaders(true)
-            dtarget:SetMultiSelect(false)
-            dtarget:AddColumn("Players")
-
-            local dtargetto
+        dtarget.OnRowSelected = function(_, _, _)
             if command == "send" then
-                dtargetLabel:SetText("From:")
-
-                local dtargettoLabel = vgui.Create("DLabel", dparams)
-                dtargettoLabel:SetFont("TabLarge")
-                dtargettoLabel:SetText("To:")
-                dtargettoLabel:SetWidth(listWidth)
-                dtargettoLabel:SetPos(listWidth + m, -m)
-
-                dtargetto = vgui.Create("DListView", dparams)
-                dtargetto:SetSize(listWidth, listHeight)
-                dtargetto:SetPos(listWidth + m, labelHeight)
-                dtargetto:SetHideHeaders(true)
-                dtargetto:SetMultiSelect(false)
-                dtargetto:AddColumn("Players")
-            end
-
-            local ownerSid64 = self:GetOwner():SteamID64()
-            for _, p in PlayerIterator() do
-                -- Skip players who are true spectators, not just dead players
-                if p:IsSpec() and p:GetRole() == ROLE_NONE then continue end
-
-                local sid64 = p:SteamID64()
-                if sid64 == ownerSid64 and CantTargetSelf(command) then continue end
-
-                dtarget:AddLine(p:Nick(), sid64)
-                if command == "send" then
-                    dtargetto:AddLine(p:Nick(), sid64)
+                local to = dtargetto:GetSelected()
+                if to and #to > 0 then
+                    drun:SetEnabled(true)
                 end
+            else
+                drun:SetEnabled(true)
             end
+        end
 
-            local runX = listWidth + m
-            if command == "send" then
-                runX = runX + listWidth + m
-            end
-
-            local drunLabel = vgui.Create("DLabel", dparams)
-            drunLabel:SetFont("TabLarge")
-            drunLabel:SetText("Execute:")
-            drunLabel:SetWidth(listWidth)
-            drunLabel:SetPos(runX, -m)
-
-            local range = math.floor(100 / cost)
-            local time = 1
-            if IsTimedCommand(command) then
-                time = math.min(5, range)
-            end
-            local reason = "No reason given"
-
-            local drun = vgui.Create("DButton", dparams)
-            drun:SetWidth(listWidth)
-            drun:SetPos(runX, labelHeight)
-            drun:SetText(command)
-            drun:SetEnabled(false)
-            drun.DoClick = function()
-                local power = self:GetOwner():GetNWInt("TTTAdminPower")
-                if power < cost then
-                    self:GetOwner():PrintMessage(HUD_PRINTTALK, "You do not have enough admin power to use this command!")
-                else
-                    net.Start("TTT_Admin" .. command:gsub("^%l", string.upper) .. "Command")
-                    local sid64 = dtarget:GetSelected()[1]:GetValue(2)
-                    net.WriteUInt64(sid64)
-                    if command == "send" then
-                        net.WriteUInt64(dtargetto:GetSelected()[1]:GetValue(2))
-                    elseif IsTimedCommand(command) then
-                        net.WriteUInt(time, 8)
-                    elseif command == "kick" then
-                        net.WriteString(reason)
-                    end
-                    net.SendToServer()
-                    if ShouldCloseAfterSelfUse(command) and sid64 == self:GetOwner():SteamID64() then
-                        dframe:Close()
-                    end
-                end
-            end
-
-            dtarget.OnRowSelected = function(_, _, _)
-                if command == "send" then
-                    local to = dtargetto:GetSelected()
-                    if to and #to > 0 then
-                        drun:SetEnabled(true)
-                    end
-                else
+        if command == "send" then
+            dtargetto.OnRowSelected = function(_, _, _)
+                local from = dtarget:GetSelected()
+                if from and #from > 0 then
                     drun:SetEnabled(true)
                 end
             end
-
-            if command == "send" then
-                dtargetto.OnRowSelected = function(_, _, _)
-                    local from = dtarget:GetSelected()
-                    if from and #from > 0 then
-                        drun:SetEnabled(true)
-                    end
-                end
-            end
-
-            local costY = buttonHeight + labelHeight
-
-            local dcost = vgui.Create("DLabel", dparams)
-            dcost:SetText("Costs " .. cost * time .. " admin power.")
-            dcost:SetWidth(listWidth)
-            dcost:SetPos(runX, costY)
-
-            local ddesc = vgui.Create("DLabel", dparams)
-            ddesc:SetText(descriptions[command])
-            ddesc:SetWrap(true)
-            ddesc:SetAutoStretchVertical(true)
-            ddesc:SetWidth(listWidth)
-            ddesc:SetPos(runX, costY + labelHeight + m)
-
-            if IsTimedCommand(command) then
-                local dtimelabel = vgui.Create("DLabel", dparams)
-                dtimelabel:SetWidth(20)
-                dtimelabel:SetPos(runX + listWidth - 20, costY)
-                dtimelabel:SetText(time .. "s")
-
-                local dtime = vgui.Create("DSlider", dparams)
-                dtime:SetLockY(0.5)
-                dtime:SetSlideX(time / range)
-                dtime:SetTrapInside(true)
-                dtime:SetWidth(listWidth - 20)
-                dtime:SetPos(runX, buttonHeight + labelHeight)
-                dtime:SetNotches(range)
-                Derma_Hook( dtime, "Paint", "Paint", "NumSlider" )
-
-                dtime.OnValueChanged = function(_, x, _)
-                    time = math.max(math.ceil(x * range), 1)
-                    dtimelabel:SetText(time .. "s")
-                    dcost:SetText("Costs " .. cost * time .. " admin power.")
-                end
-
-                dcost:SetPos(runX, costY + labelHeight + m)
-                ddesc:SetPos(runX, costY + (labelHeight + m) * 2)
-            elseif command == "kick" then
-                local dreason = vgui.Create("DTextEntry", dparams)
-                dreason:SetWidth(listWidth)
-                dreason:SetPos(listWidth + m, buttonHeight + labelHeight + m)
-                dreason:SetPlaceholderText("Reason")
-                dreason.OnChange = function()
-                    local text = dreason:GetValue()
-                    if not text or #text == 0 then
-                        reason = "No reason given"
-                    else
-                        reason = text
-                    end
-                end
-
-                dcost:SetPos(runX, costY + buttonHeight + m)
-                ddesc:SetPos(runX, costY + buttonHeight + labelHeight + m * 2)
-            end
         end
 
-        dframe.OnClose = function()
+        local costY = buttonHeight + labelHeight
+
+        local dcost = vgui.Create("DLabel", dparams)
+        dcost:SetText("Costs " .. cost * time .. " admin power.")
+        dcost:SetWidth(listWidth)
+        dcost:SetPos(runX, costY)
+
+        local ddesc = vgui.Create("DLabel", dparams)
+        ddesc:SetText(descriptions[command])
+        ddesc:SetWrap(true)
+        ddesc:SetAutoStretchVertical(true)
+        ddesc:SetWidth(listWidth)
+        ddesc:SetPos(runX, costY + labelHeight + m)
+
+        if IsTimedCommand(command) then
+            local dtimelabel = vgui.Create("DLabel", dparams)
+            dtimelabel:SetWidth(20)
+            dtimelabel:SetPos(runX + listWidth - 20, costY)
+            dtimelabel:SetText(time .. "s")
+
+            local dtime = vgui.Create("DSlider", dparams)
+            dtime:SetLockY(0.5)
+            dtime:SetSlideX(time / range)
+            dtime:SetTrapInside(true)
+            dtime:SetWidth(listWidth - 20)
+            dtime:SetPos(runX, buttonHeight + labelHeight)
+            dtime:SetNotches(range)
+            Derma_Hook( dtime, "Paint", "Paint", "NumSlider" )
+
+            dtime.OnValueChanged = function(_, x, _)
+                time = math.max(math.ceil(x * range), 1)
+                dtimelabel:SetText(time .. "s")
+                dcost:SetText("Costs " .. cost * time .. " admin power.")
+            end
+
+            dcost:SetPos(runX, costY + labelHeight + m)
+            ddesc:SetPos(runX, costY + (labelHeight + m) * 2)
+        elseif command == "kick" then
+            local dreason = vgui.Create("DTextEntry", dparams)
+            dreason:SetWidth(listWidth)
+            dreason:SetPos(listWidth + m, buttonHeight + labelHeight + m)
+            dreason:SetPlaceholderText("Reason")
+            dreason.OnChange = function()
+                local text = dreason:GetValue()
+                if not text or #text == 0 then
+                    reason = "No reason given"
+                else
+                    reason = text
+                end
+            end
+
+            dcost:SetPos(runX, costY + buttonHeight + m)
+            ddesc:SetPos(runX, costY + buttonHeight + labelHeight + m * 2)
+        end
+    end
+
+    dframe.OnClose = function()
+        hook.Remove("Think", "Admin_Think_" .. self:EntIndex())
+    end
+
+    dframe:MakePopup()
+
+    local client = LocalPlayer()
+    hook.Add("Think", "Admin_Think_" .. self:EntIndex(), function()
+        if not dframe or not IsValid(dframe) then
+            hook.Remove("Think", "Admin_Think_" .. self:EntIndex())
+            return
+        end
+
+        local round_state = GetRoundState()
+        -- Automatically close the menu when the player dies or the round is in a state where they wouldn't have the weapon anymore
+        if not client:Alive() or (round_state ~= ROUND_ACTIVE and round_state ~= ROUND_POST) then
+            dframe:Close()
             hook.Remove("Think", "Admin_Think_" .. self:EntIndex())
         end
-
-        dframe:MakePopup()
-
-        local client = LocalPlayer()
-        hook.Add("Think", "Admin_Think_" .. self:EntIndex(), function()
-            if not dframe or not IsValid(dframe) then
-                hook.Remove("Think", "Admin_Think_" .. self:EntIndex())
-                return
-            end
-
-            local round_state = GetRoundState()
-            -- Automatically close the menu when the player dies or the round is in a state where they wouldn't have the weapon anymore
-            if not client:Alive() or (round_state ~= ROUND_ACTIVE and round_state ~= ROUND_POST) then
-                dframe:Close()
-                hook.Remove("Think", "Admin_Think_" .. self:EntIndex())
-            end
-        end)
-    end
+    end)
 end
 
 if SERVER then
