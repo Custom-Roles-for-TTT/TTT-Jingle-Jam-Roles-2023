@@ -31,15 +31,15 @@ hook.Add("TTTSpeedMultiplier", "Elementalist_TTTSpeedMultiplier", function(ply, 
 end)
 
 hook.Add("EntityTakeDamage", "Elementalist_EntityTakeDamage", function(ent, dmginfo)
+    if not IsValidPlayerEnt(ent) then return end
+    -- For some reason, crowbar attacks return true on this
+    if not dmginfo:IsBulletDamage() then return end
+
     local att = dmginfo:GetAttacker()
+    if not IsValidPlayerEnt(att) then return end
 
-    if not IsValidPlayerEnt(ent) or not IsValidPlayerEnt(att) or not dmginfo:IsBulletDamage() then -- For some reason, crowbar attacks return true on this
-        return
-    end
-
-    if not att:IsElementalist() then
-        return
-    end
+    if not att:IsElementalist() then return end
+    if att.IsRoleAbilityDisabled and att:IsRoleAbilityDisabled() then return end
 
     -- Att is a valid elementalist damaging a valid player
     local ROLE = ROLE_DATA_EXTERNAL[ROLE_ELEMENTALIST]
@@ -60,7 +60,7 @@ hook.Add("EntityTakeDamage", "Elementalist_EntityTakeDamage", function(ent, dmgi
                 net.WriteBool(true)
             net.Send(ent)
         else
-            --Base fucntionality
+            --Base functionality
             chilledPlayers[vicId] = 1 - (MovementSlow * 0.01)
 
             net.Start("BeginIceScreen")

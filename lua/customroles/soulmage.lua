@@ -19,12 +19,13 @@ ROLE.team = ROLE_TEAM_TRAITOR
 
 ROLE.startingcredits = 0
 
-ROLE.convars = {}
-table.insert(ROLE.convars, {
-    cvar = "ttt_soulmage_soulbinding_time",
-    type = ROLE_CONVAR_TYPE_NUM,
-    decimal = 0
-})
+ROLE.convars = {
+    {
+        cvar = "ttt_soulmage_soulbinding_time",
+        type = ROLE_CONVAR_TYPE_NUM,
+        decimal = 0
+    }
+}
 
 ROLE.translations = {
     ["english"] = {
