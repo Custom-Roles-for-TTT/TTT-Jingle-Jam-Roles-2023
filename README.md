@@ -5,7 +5,7 @@ Also be sure to check out the supplementary Randomat event created by Logan in s
 
 # Roles
 
-## Admin
+## ![Role Icon](/gamemodes/terrortown/content/materials/vgui/ttt/roles/adm/tab_adm.png) Admin
 _Contributed By_: Noxx\
 The Admin is a detective role who slowly gains power over time which can be spent to run admin commands.
 \
@@ -39,7 +39,7 @@ ttt_admin_shop_random_percent 0   // The percent chance that a weapon in the sho
 ttt_admin_shop_random_enabled 0   // Whether role shop randomization is enabled for the admin
 ```
 
-## Elementalist
+## ![Role Icon](/gamemodes/terrortown/content/materials/vgui/ttt/roles/elm/tab_elm.png) Elementalist
 _Contributed By_: Logan\
 The Elementalist is a traitor role who, instead of regular traitor weapons, gains access to special elemental power-ups in their shop.
 \
@@ -76,7 +76,7 @@ ttt_elementalist_shop_random_percent        0   // The percent chance that a wea
 ttt_elementalist_shop_random_enabled        0   // Whether role shop randomization is enabled for elementalists
 ```
 
-## Ghost Whisperer
+## ![Role Icon](/gamemodes/terrortown/content/materials/vgui/ttt/roles/gwh/tab_gwh.png) Ghost Whisperer
 _Suggested By_: Spaaz\
 The Ghost Whisperer is an innocent role who spawns with a ghosting device that can be used to grant a dead player the ability to talk using in game chat.
 \
@@ -111,7 +111,7 @@ ttt_ghostwhisperer_beebarrel_enabled        1   // Whether the place bee barrel 
 ttt_ghostwhisperer_packapunch_enabled       1   // Whether the Pack-a-Punch ability is enabled or not. Requires Pack-a-Punch mod
 ```
 
-## Physician
+## ![Role Icon](/gamemodes/terrortown/content/materials/vgui/ttt/roles/phy/tab_phy.png) Physician
 _Contributed By_: Logan\
 The Physician is a detective role who spawns with a Health Tracker. The Physician can use their custom weapon to place trackers on terrorists to monitor their health from the scoreboard.
 \
@@ -131,7 +131,7 @@ ttt_physician_shop_random_percent   0   // The percent chance that a weapon in t
 ttt_physician_shop_random_enabled   0   // Whether role shop randomization is enabled for the physician
 ```
 
-## Renegade
+## ![Role Icon](/gamemodes/terrortown/content/materials/vgui/ttt/roles/ren/tab_ren.png) Renegade
 _Suggested By_: Corvatile\
 The Renegade is an independent role that wins by being the last player standing. The Renegade knows who the traitors are and the traitors know who the Renegade is.
 \
@@ -150,7 +150,7 @@ ttt_renegade_can_see_jesters   1   // Whether jesters are revealed (via head ico
 ttt_renegade_update_scoreboard 1   // Whether the renegade shows dead players as missing in action
 ```
 
-## Soulbound
+## ![Role Icon](/gamemodes/terrortown/content/materials/vgui/ttt/roles/sbd/tab_sbd.png) Soulbound
 _Suggested By_: Spaaz\
 The Soulbound is a traitor role who is created by the Soulmage. The Soulbound can use special abilities while they are spectating to help fellow traitors.
 \
@@ -222,7 +222,7 @@ ttt_soulbound_packapunch_uses           1   // How many uses should of the Pack-
 ttt_soulbound_packapunch_cooldown       5   // How long should the Soulbound have to wait between uses of the Pack-a-Punch ability. Requires Pack-a-Punch mod
 ```
 
-## Soulmage
+## ![Role Icon](/gamemodes/terrortown/content/materials/vgui/ttt/roles/smg/tab_smg.png) Soulmage
 _Suggested By_: Spaaz\
 The Soulmage is a traitor role who spawns with a soulbinding device that can be used to convert a dead player into a Soulbound.
 \
