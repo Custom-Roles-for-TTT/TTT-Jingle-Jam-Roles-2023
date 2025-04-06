@@ -43,7 +43,7 @@ function SWEP:PlaceTracker()
 
     local owner = self:GetOwner()
     if not IsValid(owner) then return end
-    if owner.IsRoleAbilityDisabled and owner:IsRoleAbilityDisabled() then return end
+    if owner:IsRoleAbilityDisabled() then return end
 
     local trace = owner:GetEyeTrace()
     local traceEnt = trace.Entity

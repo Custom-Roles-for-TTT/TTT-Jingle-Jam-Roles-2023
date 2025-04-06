@@ -39,7 +39,7 @@ hook.Add("EntityTakeDamage", "Elementalist_EntityTakeDamage", function(ent, dmgi
     if not IsValidPlayerEnt(att) then return end
 
     if not att:IsElementalist() then return end
-    if att.IsRoleAbilityDisabled and att:IsRoleAbilityDisabled() then return end
+    if att:IsRoleAbilityDisabled() then return end
 
     -- Att is a valid elementalist damaging a valid player
     local ROLE = ROLE_DATA_EXTERNAL[ROLE_ELEMENTALIST]
