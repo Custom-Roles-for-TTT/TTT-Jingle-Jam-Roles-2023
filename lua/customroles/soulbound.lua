@@ -112,7 +112,7 @@ if SERVER then
     net.Receive("TTT_SoulboundUseAbility", function(len, ply)
         local num = net.ReadUInt(4)
         if not ply:IsSoulbound() and not ply.TTTIsGhosting then return end
-        if ply.IsRoleAbilityDisabled and ply:IsRoleAbilityDisabled() then return end
+        if ply:IsRoleAbilityDisabled() then return end
 
         local id = ply:GetNWString("TTTSoulboundAbility" .. tostring(num), "")
         if #id == 0 then return end
@@ -134,7 +134,7 @@ if SERVER then
     hook.Add("Think", "Soulbound_Think", function()
         for _, p in PlayerIterator() do
             if not p:IsSoulbound() and not p.TTTIsGhosting then continue end
-            if p.IsRoleAbilityDisabled and p:IsRoleAbilityDisabled() then continue end
+            if p:IsRoleAbilityDisabled() then continue end
 
             local max
             if p:IsSoulbound() then

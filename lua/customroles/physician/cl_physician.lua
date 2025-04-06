@@ -112,7 +112,7 @@ hook.Add("TTTScoreboardColumns", "Physician_TTTScoreboardColumns", function(base
 
         basePanel:AddColumn(columnLabel, function(p, dLabelPanel)
             local client = LocalPlayer()
-            if not IsValid(client) or (client:IsPhysician() and client.IsRoleAbilityDisabled and client:IsRoleAbilityDisabled()) then
+            if not IsValid(client) or (client:IsPhysician() and client:IsRoleAbilityDisabled()) then
                 return ""
             end
 

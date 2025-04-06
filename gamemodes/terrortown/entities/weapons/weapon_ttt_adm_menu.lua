@@ -138,7 +138,7 @@ function SWEP:PrimaryAttack()
 
     local owner = self:GetOwner()
     if not IsValid(owner) then return end
-    if owner.IsRoleAbilityDisabled and owner:IsRoleAbilityDisabled() then return end
+    if owner:IsRoleAbilityDisabled() then return end
 
     local m = 5
     local listWidth = 120

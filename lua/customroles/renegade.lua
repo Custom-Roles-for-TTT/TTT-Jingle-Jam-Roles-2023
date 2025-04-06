@@ -66,7 +66,7 @@ ROLE.convars = {
 RegisterRole(ROLE)
 
 local function IsRenegade(ply)
-    return ply:IsRenegade() and (not ply.IsRoleAbilityDisabled or not ply:IsRoleAbilityDisabled())
+    return ply:IsRenegade() and not ply:IsRoleAbilityDisabled()
 end
 
 if SERVER then
