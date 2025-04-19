@@ -31,7 +31,7 @@ ROLE.team = ROLE_TEAM_INDEPENDENT
 ROLE.translations = {
     ["english"] = {
         ["win_renegade"] = "The {role} has overpowered their enemies to win!",
-        ["ev_win_renegade"] = "The powerful {renegade} has fought their way to victory!",
+        ["ev_win_renegade"] = "The powerful {role} has fought their way to victory!",
         ["info_popup_renegade_glitch"] = [[You are {role}! Beware of the {traitors}!
 You can see who they are, but they can see who you are as well.
 Create a silent partnership or secretly work to undermine them,
