@@ -146,6 +146,8 @@ surface.CreateFont("C4Timer", {
 local disarm
 
 local function ShowC4Disarm(ent)
+    local client = LocalPlayer()
+
     local dframe = vgui.Create("DFrame")
     local w, h = 420, 340
     dframe:SetSize(w, h)
@@ -207,6 +209,19 @@ local function ShowC4Disarm(ent)
     dstatus:SetPos(m, m * 2 + 30)
     dstatus:CenterHorizontal()
 
+    if CRVersion("2.3.2") then
+        local ddisarm = vgui.Create("DButton", dright)
+        ddisarm:SetPos(m, right_h - m * 3 - bh * 3)
+        ddisarm:SetSize(bw, bh)
+        ddisarm:CenterHorizontal()
+        ddisarm:SetText(T("c4_defuser_disarm"))
+        ddisarm:SetDisabled(not client:HasWeapon("weapon_ttt_defuser"))
+        ddisarm.DoClick = function()
+            if not LocalPlayer():Alive() then return end
+            RunConsoleCommand("ttt_fake_c4_disarm", tostring(ent:EntIndex()))
+        end
+    end
+
     local dgrab = vgui.Create("DButton", dright)
     dgrab:SetPos(m, right_h - m * 2 - bh * 2)
     dgrab:SetSize(bw, bh)
@@ -229,7 +244,7 @@ local function ShowC4Disarm(ent)
     ddesc:SetFont("DermaDefaultBold")
     ddesc:SetSize(256, desc_h)
     ddesc:SetWrap(true)
-    if LocalPlayer():IsTraitorTeam() or LocalPlayer() == ent:GetOwner() then
+    if client:IsTraitorTeam() or client == ent:GetOwner() then
         ddesc:SetText(T("c4_disarm_fake"))
     else
         ddesc:SetText(T("c4_disarm_other"))
