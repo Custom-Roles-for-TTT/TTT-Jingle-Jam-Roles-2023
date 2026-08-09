@@ -170,9 +170,8 @@ if CLIENT then
     -- HUD --
     ---------
 
-    local function Admin_HUDDrawScoreBoard() -- Use HUDDrawScoreBoard instead of HUDPaint so it draws above the TTT HUD
-        local client = LocalPlayer()
-        local wep = client:GetActiveWeapon()
+    local function Admin_TTTHUDInfoPaint(cli, label_left, label_top, active_labels, x, y)
+        local wep = cli:GetActiveWeapon()
         if not IsValid(wep) or wep:GetClass() ~= "weapon_ttt_adm_menu" then return end
 
         local power_colors = {
@@ -180,13 +179,15 @@ if CLIENT then
             background = Color(17, 115, 135, 222),
             fill = Color(82, 226, 255, 255)
         }
-        local current_power = client:GetNWInt("TTTAdminPower")
+        local current_power = cli:GetNWInt("TTTAdminPower")
 
         local power_percentage = current_power / 100
 
-        CRHUD:PaintBar(8, 20, ScrH() - 59, 230, 25, power_colors, power_percentage)
-        draw.SimpleText(LANG.GetTranslation("admin_power_title"), "HealthAmmo", 30, ScrH() - 59, Color(0, 0, 10, 200), TEXT_ALIGN_LEFT)
-        CRHUD:ShadowedText(tostring(current_power), "HealthAmmo", 230, ScrH() - 59, COLOR_WHITE, TEXT_ALIGN_RIGHT)
+        local barX = x + 10
+        local barY = y + 75
+        CRHUD:PaintBar(8, barX, barY, 230, 25, power_colors, power_percentage)
+        draw.SimpleText(LANG.GetTranslation("admin_power_title"), "HealthAmmo", barX + 10, barY, Color(0, 0, 10, 200), TEXT_ALIGN_LEFT)
+        CRHUD:ShadowedText(tostring(current_power), "HealthAmmo", barX + 210, barY, COLOR_WHITE, TEXT_ALIGN_RIGHT)
     end
 
     --------------
@@ -375,7 +376,7 @@ if CLIENT then
     ------------------
 
     ROLE.registeredhooks = {
-        ["HUDDrawScoreBoard"] = Admin_HUDDrawScoreBoard
+        ["TTTHUDInfoPaint"] = Admin_TTTHUDInfoPaint
     }
 end
 
